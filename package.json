@@ -10,9 +10,12 @@
     "prettier": "prettier . --write"
   },
   "dependencies": {
-    "@openai/agents": "^0.4.1",
+    "@langchain/core": "^1.1.17",
+    "@langchain/openai": "^1.2.3",
+    "langchain": "^1.2.13",
     "next": "16.1.4",
-    "openai": "^6.16.0",
+    "opik": "^1.9.98",
+    "opik-langchain": "^1.9.98",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zod": "^4.3.5"
