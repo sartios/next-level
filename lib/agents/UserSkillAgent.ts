@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { createOpikHandler } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
+import { saveSuggestedSkillsTool } from '@/lib/tools/saveSuggestedSkillsTool';
 
 export interface SuggestedSkill {
   name: string;
@@ -33,18 +34,25 @@ class UserSkillAgent {
   constructor() {
     this.agent = createAgent({
       model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
-      tools: [fetchUserTool],
+      tools: [fetchUserTool, saveSuggestedSkillsTool],
       systemPrompt: new SystemMessage(
         `
 You are a career development assistant.
 
-Given a user profile fetched via the fetchUser tool, suggest a list of 10 skills that will help them achieve their career goals.
+Your goal is to:
+1. Fetch the user profile using the fetchUser tool
+2. Suggest a list of 10 skills that will help them achieve their career goals
+3. IMPORTANT: Save the suggested skills to the database using the saveSuggestedSkills tool
 
 **Do NOT include skills the user already has** (from the "skills" array in their profile).
 
 For each suggested skill, provide a short reasoning explaining why it is important and how it helps the individual.
 
-Prioritize skills from most important to least important.
+Prioritize skills from most important to least important (priority: 1 is highest, 10 is lowest).
+
+You have access to the following tools:
+- fetchUser: fetch the user's profile including their current skills and career goals
+- saveSuggestedSkills: save the generated skill suggestions to the database (MUST be called after generating skills)
     `.trim()
       ),
       responseFormat: providerStrategy(SuggestedSkillSchema)

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { createOpikHandler } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
+import { updateGoalResourcesTool } from '@/lib/tools/updateGoalResourcesTool';
 import { SuggestedSkill } from '@/lib/agents/UserSkillAgent';
 
 interface Resource {
@@ -39,14 +40,16 @@ class SkillResourceAgent {
   constructor() {
     this.agent = createAgent({
       model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
-      tools: [fetchUserTool, fetchUserGoalTool],
+      tools: [fetchUserTool, fetchUserGoalTool, updateGoalResourcesTool],
       systemPrompt: new SystemMessage(
         `
 You are a career development assistant.
 
-Use the following tools to gather context before suggesting resources:
-- fetchUser: fetch the user's full profile including skills, role, and career goals.
-- fetchUserGoal: fetch the specific skill or growth goal the user wants to focus on.
+Your goal is to:
+1. Fetch the user profile using the fetchUser tool
+2. Fetch the user's goal using the fetchUserGoal tool
+3. Suggest learning resources based on the user's profile and goal
+4. IMPORTANT: Save the resources to the database using the updateGoalResources tool
 
 Based on the user's profile and selected goal, suggest learning resources (articles, courses, videos, tutorials) relevant to the skill the user wants to grow in.
 
@@ -54,6 +57,11 @@ For each resource, provide:
 - title of the resource
 - link to the resource
 - reasoning why this resource is important and how it helps the user achieve mastery of the skill.
+
+You have access to the following tools:
+- fetchUser: fetch the user's full profile including skills, role, and career goals
+- fetchUserGoal: fetch the specific skill or growth goal the user wants to focus on
+- updateGoalResources: save the generated resources to the database (MUST be called after generating resources)
 
 Respond ONLY in structured JSON matching this schema:
 

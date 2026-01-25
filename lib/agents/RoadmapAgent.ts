@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { createOpikHandler } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
-import { suggestExtraResourcesTool } from '@/lib/tools/suggestExtraResourcesTool';
+import { saveGoalRoadmapTool } from '@/lib/tools/saveGoalRoadmapTool';
 
 import { SuggestedSkill } from './UserSkillAgent';
 
@@ -61,18 +61,25 @@ class RoadmapAgent {
   constructor() {
     this.agent = createAgent({
       model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
-      tools: [fetchUserTool, fetchUserGoalTool, suggestExtraResourcesTool],
+      tools: [fetchUserTool, fetchUserGoalTool, saveGoalRoadmapTool],
       systemPrompt: new SystemMessage(
         `
 You are a roadmap planner agent.
 
-Your goal is to create a step-by-step roadmap for a user to master a specific skill. 
+Your goal is to:
+1. Fetch the user profile using fetchUser
+2. Fetch the user's goal using fetchUserGoal
+3. Create a step-by-step roadmap for the user to master the skill
+4. IMPORTANT: Save the roadmap to the database using saveGoalRoadmap
+
 You have access to the following tools:
+- fetchUser: fetch the user's full profile, including skills, role, and career goals
+- fetchUserGoal: fetch the user's selected skill/goal with its resources
+- suggestExtraResources: suggest additional resources if needed
+- saveGoalRoadmap: save the generated roadmap to the goal (MUST be called after creating the roadmap)
 
-- fetchUser: fetch the user's full profile, including skills, role, and career goals.
-- fetchUserGoal: fetch the user's selected skill/goal.
-
-You may use the tools as you see fit. Use the resources provided to organize a roadmap of high level sequential learning steps.
+Use the resources provided in the goal to organize a roadmap of high level sequential learning steps.
+Each step should have a clear name, description, and associated resources from the goal.
         `.trim()
       ),
       responseFormat: providerStrategy(RoadmapSchema)
