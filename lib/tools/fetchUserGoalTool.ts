@@ -7,7 +7,7 @@ const toolFunction = async ({ userId, goalId }: { userId: string; goalId: string
 const toolDescription = {
   name: 'fetchUserGoal',
   description: 'Fetch user goal by userId and goalId',
-  schema: z.object({ userId: z.string(), goalId: z.string() })
+  schema: z.object({ userId: z.string().describe('The user ID to fetch goal for'), goalId: z.string() })
 };
 
 export const fetchUserGoalTool = tool(toolFunction, toolDescription);

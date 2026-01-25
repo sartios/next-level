@@ -7,7 +7,7 @@ const toolFunction = async ({ userId }: { userId: string }) => repository.getUse
 const toolDescription = {
   name: 'fetchUser',
   description: 'Fetch user information by userId',
-  schema: z.object({ userId: z.string() })
+  schema: z.object({ userId: z.string().describe('The user ID to fetch information for') })
 };
 
 export const fetchUserTool = tool(toolFunction, toolDescription);
