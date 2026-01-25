@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as repository from '@/lib/repository';
 import multiWeekPlanningAgent from '@/lib/agents/MultiWeekPlanningAgent';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: goalId } = await params;
     const { roadmap, userId } = await req.json();

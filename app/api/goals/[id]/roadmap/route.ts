@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import roadmapAgent from '@/lib/agents/RoadmapAgent';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: goalId } = await params;
     const { selectedResources, userId } = await req.json();

@@ -1,7 +1,9 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface SuggestedSkill {
   name: string;
@@ -17,8 +19,7 @@ const getPriorityLabel = (priority: number): { label: string; style: string } =>
 
 export default function SkillSelectPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const userId = searchParams.get('userId');
+  const userId = '123';
   const [skills, setSkills] = useState<SuggestedSkill[]>([]);
   const [selectedSkill, setSelectedSkill] = useState<SuggestedSkill | null>(null);
   const [loading, setLoading] = useState(true);

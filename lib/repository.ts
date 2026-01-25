@@ -1,6 +1,6 @@
 import { db, Plan, RoadmapStep, User, WeeklyAvailability } from './mockDb';
 
-export const createUser = (userData: User) => {
+export const createUser = (userData: Omit<User, 'id'>) => {
   const userId = Date.now().toString();
   db.user = {
     id: userId,

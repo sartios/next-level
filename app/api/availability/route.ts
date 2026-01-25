@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ errorMessage: 'All fields are required: userId, startDate, totalHours, availableSlots' }, { status: 400 });
     }
 
-    const availability = saveWeeklyAvailability({
+    const availability = saveWeeklyAvailability(userId, {
       userId,
       startDate,
       totalHours,
