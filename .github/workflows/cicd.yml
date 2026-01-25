@@ -1,4 +1,4 @@
-name: CI
+name: CICD
 
 on:
   push:
@@ -7,10 +7,6 @@ on:
   pull_request:
     branches:
       - master
-
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   lint:
@@ -37,6 +33,10 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Deploy to Vercel
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPIK_PROJECT_NAME: ${{ secrets.OPIK_PROJECT_NAME }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel --prod --token=$VERCEL_TOKEN
