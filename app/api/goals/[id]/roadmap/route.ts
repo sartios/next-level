@@ -4,9 +4,11 @@ import roadmapAgent from '@/lib/agents/RoadmapAgent';
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id: goalId } = await params;
-    const { selectedResources } = await req.json();
+    const { selectedResources, userId } = await req.json();
 
-    const userId = '123';
+    if (!userId) {
+      return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
+    }
     const result = await roadmapAgent.createRoadmap(userId, goalId, selectedResources, {
       tags: ['roadmap-creation'],
       metadata: { invokedBy: 'api/post-goal-roadmap' }

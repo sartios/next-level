@@ -1,10 +1,15 @@
 // import  { runUserAgent } from '@/lib/agents/SkillPrioritizationAgent';
 import UserSkillAgent from '@/lib/agents/UserSkillAgent';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const userId = '123';
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
+    }
     const result = await UserSkillAgent.suggestSkills(userId, {
       tags: ['skill-suggestion'],
       metadata: { invokedBy: 'api/get-goal-skills' }
