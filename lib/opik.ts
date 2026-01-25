@@ -1,8 +1,5 @@
 import { OpikCallbackHandler } from 'opik-langchain';
 
-export function logOpik(event: string, payload: unknown) {
-  console.log(`[OPIK] ${event}`, payload);
-}
 /**
  * Factory function to create a new Opik callback handler
  * with optional tags and metadata for each agent.
