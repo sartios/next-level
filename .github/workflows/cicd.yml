@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  lint:
+  CICD:
     name: Lint
     runs-on: ubuntu-latest
     steps:

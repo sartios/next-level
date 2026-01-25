@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  lint:
+  checks:
     name: Lint
     runs-on: ubuntu-latest
     steps:
