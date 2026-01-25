@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  checks:
-    name: Lint
+  pre-merge:
+    name: Run PR Checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
