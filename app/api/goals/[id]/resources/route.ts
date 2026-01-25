@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import skillResourceAgentInstance from '@/lib/agents/SkillResourceAgent';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: goalId } = await params;
     const { searchParams } = new URL(req.url);

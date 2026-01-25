@@ -1,7 +1,8 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 interface Resource {
   title: string;
@@ -62,8 +63,7 @@ interface Props {
 }
 
 export default function GoalResourcesPage({ params }: Props) {
-  const searchParams = useSearchParams();
-  const userId = searchParams.get('userId');
+  const userId = '123';
   const [goal, setGoal] = useState<Goal>();
   const [resources, setResources] = useState<Resource[]>([]);
   const [roadmap, setRoadmap] = useState<RoadmapStep[]>([]);

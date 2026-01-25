@@ -36,10 +36,7 @@ export default function Home() {
         throw new Error(`API Error: ${response.status}`);
       }
 
-      const data = await response.json();
-
-      // Redirect to availability page with userId
-      router.push(`/availability?userId=${data.user.id}`);
+      router.push(`/availability`);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
