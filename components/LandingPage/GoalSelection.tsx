@@ -16,9 +16,9 @@ export default function GoalSelection() {
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const [isSearchingSkills, setIsSearchingSkills] = useState(false);
   const [isRegeneratingSkills, setIsRegeneratingSkills] = useState(false);
-  const [aiGeneratedSkills, setAiGeneratedSkills] = useState();
+  const [aiGeneratedSkills, setAiGeneratedSkills] = useState<{ name: string; reasoning: string }[]>();
   const [selectedSkill, setSelectedSkill] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const handleProfileCreation = useCallback(async () => {
     if (userId) return;

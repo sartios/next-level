@@ -19,7 +19,8 @@ export default function HeroSection({ onDefineGoal }: HeroSectionProps) {
         </h1>
 
         <p className="mt-6 max-w-2xl text-xl font-medium opacity-90 sm:text-2xl">
-          Stop wishing and start achieving. Our AI analyzes your goals, creates personalized learning roadmaps, and adapts to your progress—so you actually stick with it past February.
+          Stop wishing and start achieving. Our AI analyzes your goals, creates personalized learning roadmaps, and adapts to your
+          progress—so you actually stick with it past February.
         </p>
 
         <div className="mt-10 flex flex-col w-full sm:w-auto sm:flex-row items-center justify-center gap-4">

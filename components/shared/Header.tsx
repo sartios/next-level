@@ -50,20 +50,14 @@ const Header = () => {
               Profile <ChevronDown className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 border-2 border-border">
-              <DropdownMenuItem
-                className="font-bold text-foreground min-h-[44px] cursor-pointer focus:bg-muted focus:text-accent focus-visible:ring-2 focus-visible:ring-ring"
-              >
+              <DropdownMenuItem className="font-bold text-foreground min-h-[44px] cursor-pointer focus:bg-muted focus:text-accent focus-visible:ring-2 focus-visible:ring-ring">
                 Archived Goals
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="font-bold text-foreground min-h-[44px] cursor-pointer focus:bg-muted focus:text-accent focus-visible:ring-2 focus-visible:ring-ring"
-              >
+              <DropdownMenuItem className="font-bold text-foreground min-h-[44px] cursor-pointer focus:bg-muted focus:text-accent focus-visible:ring-2 focus-visible:ring-ring">
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="font-bold text-foreground min-h-[44px] cursor-pointer focus:bg-muted focus:text-accent focus-visible:ring-2 focus-visible:ring-ring"
-              >
+              <DropdownMenuItem className="font-bold text-foreground min-h-[44px] cursor-pointer focus:bg-muted focus:text-accent focus-visible:ring-2 focus-visible:ring-ring">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
