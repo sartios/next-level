@@ -1,5 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveWeeklyAvailability } from '@/lib/repository';
+import * as repository from '@/lib/repository';
+
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
+    }
+
+    const availability = repository.getWeeklyAvailability(userId);
+
+    return NextResponse.json({ availability }, { status: 200 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+
+    return NextResponse.json({ errorMessage }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +29,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ errorMessage: 'All fields are required: userId, startDate, totalHours, availableSlots' }, { status: 400 });
     }
 
-    const availability = saveWeeklyAvailability(userId, {
+    const availability = repository.saveWeeklyAvailability(userId, {
       userId,
       startDate,
       totalHours,
