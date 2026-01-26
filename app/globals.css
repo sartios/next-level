@@ -1,64 +1,64 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
   --font-size: 16px;
-  
+
   /* Base colors - AAA Compliant Palette */
   --background: hsl(210 40% 98%); /* Clarity White #F8FAFC */
   --foreground: hsl(222 47% 11%); /* Deep Focus #0F172A - Primary text */
-  
+
   /* Card colors */
   --card: hsl(210 40% 98%); /* Clarity White */
   --card-foreground: hsl(222 47% 11%); /* Deep Focus */
-  
+
   /* Popover colors */
   --popover: hsl(210 40% 98%); /* Clarity White */
   --popover-foreground: hsl(222 47% 11%); /* Deep Focus */
-  
+
   /* Primary button/action colors */
   --primary: hsl(222 47% 11%); /* Deep Focus #0F172A */
   --primary-foreground: hsl(210 40% 98%); /* Clarity White for contrast */
-  
+
   /* Secondary colors */
   --secondary: hsl(214 32% 91%); /* Soft Slate #E2E8F0 */
   --secondary-foreground: hsl(222 47% 11%); /* Deep Focus */
-  
+
   /* Muted colors */
   --muted: hsl(214 32% 91%); /* Soft Slate #E2E8F0 - Decorative backgrounds */
   --muted-foreground: hsl(215 25% 27%); /* Slate Deep #334155 - AAA Secondary text */
-  
+
   /* Accent colors - Amber Tone #C2410C */
   --accent: hsl(16 84% 40%); /* HSL for #C2410C */
   --accent-foreground: hsl(210 40% 98%); /* Clarity White for AAA contrast */
-  
+
   /* Destructive colors */
   --destructive: hsl(0 84% 60%); /* High contrast red */
   --destructive-foreground: hsl(210 40% 98%); /* Clarity White */
-  
+
   /* Border and input colors */
   --border: hsl(215 16% 47%); /* Slate Bold #64748B - AAA Compliant borders */
   --input: hsl(215 16% 47%); /* Slate Bold */
   --input-background: hsl(210 40% 98%); /* Clarity White */
   --switch-background: hsl(215 16% 47%); /* Slate Bold */
-  
+
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  
+
   /* Ring color for focus states */
   --ring: hsl(222 47% 11%); /* Deep Focus - highly visible */
-  
+
   /* Chart colors - maintaining contrast */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  
+
   --radius: 0.625rem;
-  
+
   /* Sidebar colors */
   --sidebar: hsl(210 40% 98%); /* Clarity White */
   --sidebar-foreground: hsl(222 47% 11%); /* Deep Focus */

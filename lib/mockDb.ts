@@ -6,7 +6,8 @@ export interface User {
   careerGoals: string[];
 }
 
-interface TimeSlot {
+export interface AvailableSlot {
+  day: string;
   startTime: string;
   endTime: string;
   durationMinutes: number;
@@ -16,15 +17,7 @@ export interface WeeklyAvailability {
   userId: string;
   startDate: string;
   totalHours: number;
-  availableSlots: {
-    Monday: TimeSlot[] | [];
-    Tuesday: TimeSlot[] | [];
-    Wednesday: TimeSlot[] | [];
-    Thursday: TimeSlot[] | [];
-    Friday: TimeSlot[] | [];
-    Saturday: TimeSlot[] | [];
-    Sunday: TimeSlot[] | [];
-  };
+  availableSlots: AvailableSlot[];
 }
 
 export interface Goal {
@@ -46,7 +39,7 @@ interface Resource {
 export interface RoadmapStep {
   step: string;
   description: string;
-  resources: Resource[]
+  resources: Resource[];
 }
 
 export interface Plan {
@@ -82,18 +75,11 @@ export const db = {
     userId: '123',
     startDate: '2026-01-26',
     totalHours: 1.5,
-    availableSlots: {
-      Monday: [
-        { startTime: '08:30', endTime: '09:00', durationMinutes: 30 },
-        { startTime: '16:45', endTime: '17:15', durationMinutes: 30 }
-      ],
-      Tuesday: [{ startTime: '08:30', endTime: '09:00', durationMinutes: 30 }],
-      Wednesday: [],
-      Thursday: [],
-      Friday: [],
-      Saturday: [],
-      Sunday: []
-    }
+    availableSlots: [
+      { day: 'Monday', startTime: '08:30', endTime: '09:00', durationMinutes: 30 },
+      { day: 'Monday', startTime: '16:45', endTime: '17:15', durationMinutes: 30 },
+      { day: 'Tuesday', startTime: '08:30', endTime: '09:00', durationMinutes: 30 }
+    ]
   } as WeeklyAvailability,
   suggestedSkills: [
     {
