@@ -9,12 +9,8 @@ import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
 import { saveGoalRoadmapTool } from '@/lib/tools/saveGoalRoadmapTool';
 
 import { SuggestedSkill } from './UserSkillAgent';
-
-interface Resource {
-  title: string;
-  link: string;
-  reasoning: string;
-}
+import { Resource } from '../mockDb';
+import { ResourceSchema } from '@/lib/schemas';
 
 interface RoadmapStep {
   step: string;
@@ -37,22 +33,10 @@ const RoadmapSchema = z.object({
     z.object({
       step: z.string(),
       description: z.string(),
-      resources: z.array(
-        z.object({
-          title: z.string(),
-          link: z.string(),
-          reasoning: z.string()
-        })
-      )
+      resources: z.array(ResourceSchema)
     })
   ),
-  extraResources: z.array(
-    z.object({
-      title: z.string(),
-      link: z.string(),
-      reasoning: z.string()
-    })
-  )
+  extraResources: z.array(ResourceSchema)
 });
 
 class RoadmapAgent {

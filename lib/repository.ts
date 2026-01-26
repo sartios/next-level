@@ -1,4 +1,4 @@
-import { db, Plan, RoadmapStep, User, WeeklyAvailability } from './mockDb';
+import { db, Plan, Resource, RoadmapStep, User, WeeklyAvailability } from './mockDb';
 
 export const createUser = (userData: Omit<User, 'id'>) => {
   const userId = Date.now().toString();
@@ -33,7 +33,7 @@ export const createGoal = (goalData: CreateGoalDTO) => {
   return db.goal;
 };
 
-export const updateGoalResources = (resources: { title: string; link: string; reasoning: string }[]) => {
+export const updateGoalResources = (resources: Resource[]) => {
   db.goal.resources = resources;
 
   return db.goal;
