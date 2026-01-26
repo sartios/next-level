@@ -5,8 +5,13 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Goal } from '@/lib/mockDb';
 
-export default function GoalSelection() {
+interface GoalSelectionInterface {
+  onGoalCreation: (goal: Goal) => void;
+}
+
+export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface) {
   const [userId, setUserId] = useState();
   const [name, setName] = useState('Alice Johnson');
   const [occupation, setOccupation] = useState('Software Engineer');
@@ -18,6 +23,7 @@ export default function GoalSelection() {
   const [isRegeneratingSkills, setIsRegeneratingSkills] = useState(false);
   const [aiGeneratedSkills, setAiGeneratedSkills] = useState<{ name: string; reasoning: string }[]>();
   const [selectedSkill, setSelectedSkill] = useState('');
+  const [isConfirming, setIsConfirming] = useState(false);
   const [, setError] = useState<string | null>(null);
 
   const handleProfileCreation = useCallback(async () => {
@@ -121,6 +127,42 @@ export default function GoalSelection() {
     setTimeout(() => {
       document.getElementById('top-skills')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
+
+  const handleConfirm = useCallback(async () => {
+    if (!userId || !selectedSkill || !aiGeneratedSkills) return;
+
+    // Extract skill index from "skill-0", "skill-1", etc.
+    const skillIndex = parseInt(selectedSkill.replace('skill-', ''), 10);
+    const skill = aiGeneratedSkills[skillIndex];
+
+    if (!skill) return;
+
+    setIsConfirming(true);
+    try {
+      const response = await fetch('/api/goals', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId,
+          name: skill.name,
+          reasoning: skill.reasoning
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+      const data = await response.json();
+      onGoalCreation(data.goal);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(errorMessage);
+    } finally {
+      setIsConfirming(false);
+    }
+  }, [userId, selectedSkill, aiGeneratedSkills, onGoalCreation]);
 
   return (
     <>
@@ -240,10 +282,10 @@ export default function GoalSelection() {
         <div className="pt-10 space-y-4">
           <Button
             className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
-            disabled={!selectedSkill}
-            // onClick={handleConfirm}
+            disabled={!selectedSkill || isConfirming}
+            onClick={handleConfirm}
           >
-            Confirm My 2026 Goal
+            {isConfirming ? 'Creating your goal...' : 'Confirm My 2026 Goal'}
           </Button>
           <Button
             variant="ghost"

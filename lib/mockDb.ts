@@ -30,10 +30,19 @@ export interface Goal {
   plan?: Plan;
 }
 
-interface Resource {
+export interface Resource {
   title: string;
   link: string;
   reasoning: string;
+  provider: string;
+  approximateHours: number;
+  relevancePercentage: number;
+  sections: ResourceSection[];
+}
+
+interface ResourceSection {
+  skill: string;
+  location: string;
 }
 
 export interface RoadmapStep {

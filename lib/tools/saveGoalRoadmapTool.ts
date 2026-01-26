@@ -1,17 +1,12 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import * as repository from '@/lib/repository';
-
-const resourceSchema = z.object({
-  title: z.string().describe('The title of the resource'),
-  link: z.string().describe('URL link to the resource'),
-  reasoning: z.string().describe('Explanation of why this resource is helpful')
-});
+import { ResourceSchema } from '@/lib/schemas';
 
 const roadmapStepSchema = z.object({
   step: z.string().describe('The name/title of this learning step'),
   description: z.string().describe('Description of what to learn in this step'),
-  resources: z.array(resourceSchema).describe('Resources to use for this step')
+  resources: z.array(ResourceSchema)
 });
 
 const toolFunction = async ({
