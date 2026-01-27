@@ -19,7 +19,7 @@ export default function HeroSection({ onDefineGoal }: HeroSectionProps) {
         </h1>
 
         <p className="mt-6 max-w-2xl text-xl font-medium opacity-90 sm:text-2xl">
-          Stop wishing and start achiving. Define your next concrete learning milestone and get the structure you need to actually stick
+          Stop wishing and start achieving. Define your next concrete learning milestone and get the structure you need to actually stick
           with it past February.
         </p>
 
