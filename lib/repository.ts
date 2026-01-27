@@ -15,6 +15,7 @@ export const createUser = (userData: Omit<User, 'id'>) => {
 
 export const getUserById = (userId: string) => ({ ...db.user, id: userId });
 export const getUserGoalById = (userId: string, goalId: string) => ({ ...db.goal, id: goalId, userId: userId });
+export const getCurrentUserGoal = (userId: string) => ({ ...db.goal, userId });
 
 interface CreateGoalDTO {
   userId: string;

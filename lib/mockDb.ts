@@ -45,10 +45,21 @@ interface ResourceSection {
   location: string;
 }
 
+export type RoadmapStepStatus = 'pending' | 'started' | 'completed';
+
+export interface Timeline {
+  date: string;
+  startTime: string;
+  endTime: string;
+  durationMinutes: number;
+}
+
 export interface RoadmapStep {
   step: string;
   description: string;
   resources: Resource[];
+  status: RoadmapStepStatus;
+  timeline: Timeline[];
 }
 
 export interface Plan {
@@ -72,14 +83,23 @@ export interface SuggestedSkill {
   reasoning: string;
 }
 
-export const db = {
+interface MockDb {
+  user: User;
+  weeklyAvailability: WeeklyAvailability;
+  suggestedSkills: SuggestedSkill[];
+  goal: Goal;
+  engagement: { missed: number; inactiveDays: number };
+  reflections: string[];
+}
+
+const createInitialDb = (): MockDb => ({
   user: {
     id: '123',
     name: 'Alice Johnson',
     role: 'Software Engineer',
     skills: ['JavaScript', 'React', 'Node.js'],
     careerGoals: ['Team lead role', 'Learn AI/ML']
-  } as User,
+  },
   weeklyAvailability: {
     userId: '123',
     startDate: '2026-01-26',
@@ -183,28 +203,53 @@ export const db = {
         title: 'Developing Leadership Skills for Engineers',
         link: 'https://www.coursera.org/learn/leadership-engineers',
         reasoning:
-          'This course is designed specifically for engineers like Alice to build foundational leadership skills, focusing on managing technical teams, decision-making, and communication strategies important for a team lead role.'
+          'This course is designed specifically for engineers like Alice to build foundational leadership skills, focusing on managing technical teams, decision-making, and communication strategies important for a team lead role.',
+        provider: 'Coursera',
+        approximateHours: 8,
+        relevancePercentage: 95,
+        sections: [{ skill: 'Team Management', location: 'Module 1-3' }]
       },
       {
         title: 'Harvard Business Review Leadership Articles',
         link: 'https://hbr.org/topic/leadership',
         reasoning:
-          'A collection of insightful articles from HBR offering practical leadership advice and strategies that Alice can apply to lead and motivate her team effectively.'
+          'A collection of insightful articles from HBR offering practical leadership advice and strategies that Alice can apply to lead and motivate her team effectively.',
+        provider: 'Harvard Business Review',
+        approximateHours: 4,
+        relevancePercentage: 85,
+        sections: [{ skill: 'Leadership Strategy', location: 'Featured Articles' }]
       },
       {
-        title: 'TED Talk: How Great Leaders Inspire Action by Simon Sinek',
+        title: 'TED Talk: How Great Leaders Inspire Action',
         link: 'https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action',
         reasoning:
-          "Simon Sinek's talk provides inspiring perspectives on leadership and motivation, helping Alice understand how to inspire her team with a clear vision and purpose."
+          'This talk provides inspiring perspectives on leadership and motivation, helping Alice understand how to inspire her team with a clear vision and purpose.',
+        provider: 'TED',
+        approximateHours: 0.5,
+        relevancePercentage: 80,
+        sections: [{ skill: 'Inspiration', location: 'Full Talk' }]
       },
       {
-        title: 'Book: The Five Dysfunctions of a Team by Patrick Lencioni',
+        title: 'Book: The Five Dysfunctions of a Team',
         link: 'https://www.tablegroup.com/books/dysfunctions',
         reasoning:
-          'This book helps leaders understand common team challenges and how to overcome them, which is valuable for Alice as she prepares to lead and cultivate a high-performing team.'
+          'This book helps leaders understand common team challenges and how to overcome them, which is valuable for Alice as she prepares to lead and cultivate a high-performing team.',
+        provider: 'Table Group',
+        approximateHours: 6,
+        relevancePercentage: 90,
+        sections: [{ skill: 'Team Dynamics', location: 'Chapters 1-5' }]
       }
     ]
-  } as Goal,
+  },
   engagement: { missed: 0, inactiveDays: 0 },
-  reflections: [] as string[]
-};
+  reflections: []
+});
+
+// Use globalThis to persist the db across module reloads in development
+const globalForDb = globalThis as unknown as { mockDb: MockDb | undefined };
+
+export const db: MockDb = globalForDb.mockDb ?? createInitialDb();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForDb.mockDb = db;
+}

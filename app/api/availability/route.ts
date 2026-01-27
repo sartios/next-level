@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as repository from '@/lib/repository';
+import RoadmapAgent from '@/lib/agents/RoadmapAgent';
 
 export async function GET(req: NextRequest) {
   try {
@@ -34,6 +35,12 @@ export async function POST(req: NextRequest) {
       startDate,
       totalHours,
       availableSlots
+    });
+
+    const goalId = '123';
+    await RoadmapAgent.createRoadmap(userId, goalId, {
+      tags: ['roadmap-creation'],
+      metadata: { invokedBy: 'api/goals', goalId }
     });
 
     return NextResponse.json({ success: true, availability }, { status: 201 });

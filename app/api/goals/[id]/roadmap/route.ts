@@ -4,17 +4,17 @@ import roadmapAgent from '@/lib/agents/RoadmapAgent';
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: goalId } = await params;
-    const { selectedResources, userId } = await req.json();
+    const { userId } = await req.json();
 
     if (!userId) {
       return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
     }
-    const result = await roadmapAgent.createRoadmap(userId, goalId, selectedResources, {
+    const result = await roadmapAgent.createRoadmap(userId, goalId, {
       tags: ['roadmap-creation'],
       metadata: { invokedBy: 'api/post-goal-roadmap' }
     });
 
-    return NextResponse.json({ roadmap: result.roadmap, extraResources: result.extraResources });
+    return NextResponse.json({ roadmap: result.roadmap });
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
