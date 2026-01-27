@@ -12,9 +12,8 @@ const features = [
   {
     id: 2,
     icon: Route,
-    title: 'Smart Learning Roadmaps',
-    description:
-      'AI generates personalized weekly schedules with curated resources, adapting the pace and content to match your learning style.'
+    title: 'Structured Timelines',
+    description: 'Break down big ambitions into weekly milestones with built-in accountability checkpoints.'
   },
   {
     id: 3,
@@ -26,7 +25,8 @@ const features = [
     id: 4,
     icon: Trophy,
     title: 'Adaptive Rewards System',
-    description: 'AI-designed challenges and milestones that evolve with your progress, keeping you motivated with meaningful achievements.'
+    description:
+      'AI-designed challenges and milestones that evolve with your progress, keeping you motivated with meaningful achievements and delightful surprices.'
   }
 ];
 
@@ -36,9 +36,9 @@ export default function FeaturesSection() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-foreground sm:text-5xl">AI that understands your learning journey</h2>
+          <h2 className="text-4xl font-extrabold text-foreground sm:text-5xl">Everything you need to succeed</h2>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our intelligent agents work behind the scenes to create personalized experiences that adapt to how you learn best.
+            Built for people who are serious about making their learning goals stick.
           </p>
         </div>
 

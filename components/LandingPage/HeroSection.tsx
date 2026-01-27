@@ -13,14 +13,14 @@ export default function HeroSection({ onDefineGoal }: HeroSectionProps) {
       />
 
       <div className="container mx-auto flex flex-col items-center px-4 py-24 text-center md:py-32 lg:py-40">
-        <h1 className="max-w-4xl text-5xl font-extrabold sm:text-6xl md:text-7xl">
+        <h1 className="max-w-4xl text-5xl font-black sm:text-6xl md:text-7xl leading-tight tracking-tight">
           Your AI-powered path from resolution to{' '}
           <span className="underline decoration-4 underline-offset-4 decoration-accent">reality</span>.
         </h1>
 
         <p className="mt-6 max-w-2xl text-xl font-medium opacity-90 sm:text-2xl">
-          Stop wishing and start achieving. Our AI analyzes your goals, creates personalized learning roadmaps, and adapts to your
-          progress—so you actually stick with it past February.
+          Stop wishing and start achiving. Define your next concrete learning milestone and get the structure you need to actually stick
+          with it past February.
         </p>
 
         <div className="mt-10 flex flex-col w-full sm:w-auto sm:flex-row items-center justify-center gap-4">
@@ -42,7 +42,7 @@ export default function HeroSection({ onDefineGoal }: HeroSectionProps) {
           </Button>
         </div>
 
-        <p className="mt-8 text-base font-medium opacity-80">Powered by AI. Free to start. No credit card required.</p>
+        <p className="mt-8 text-base font-medium opacity-80">Free to start. No credit card required.</p>
       </div>
     </section>
   );

@@ -31,33 +31,37 @@ const steps = [
   {
     id: 5,
     step: 'Step 5',
-    title: 'Celebrate AI-recognized achievements',
-    description: 'Earn rewards as our AI tracks your growth, identifies breakthroughs, and celebrates milestones you might have missed.'
+    title: 'Celebrate achievements',
+    description: 'Earn rewards and identify breakthroughs on your path to mastery.'
   }
 ];
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="bg-muted py-20 md:py-28">
-      <div className="container mx-auto px-4">
+    <section id="how-it-works" className="relative bg-muted py-20 md:py-28">
+      {/* Blurred gradient circle background */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-225 h-225 rounded-full opacity-60 blur-[120px]"
+        style={{
+          background: 'radial-gradient(circle, #FFA500 0%, #FF6B6B 40%, transparent 70%)'
+        }}
+        aria-hidden="true"
+      />
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-foreground sm:text-5xl">How our AI guides you</h2>
+          <h2 className="text-4xl font-extrabold text-foreground sm:text-5xl">From Goal to Done</h2>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            A personalized, AI-driven process that adapts to your unique learning style and goals.
+            A clear, step-by-step path to help you cross the finish line.
           </p>
         </div>
-
         {/* Steps in Single Card */}
-        <div className="max-w-3xl mx-auto">
-          <Card className="border-2 border-border">
+        <div className="max-w-2xl mx-auto">
+          <Card className="border-2 border-muted">
             <CardContent className="p-0">
-              {steps.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`flex flex-col sm:flex-row gap-4 p-6 ${index !== steps.length - 1 ? 'border-b-2 border-muted' : ''}`}
-                >
-                  <div className="flex-shrink-0">
+              {steps.map((item) => (
+                <div key={item.id} className={`flex flex-col sm:flex-row gap-4 p-6`}>
+                  <div className="shrink-0">
                     <Badge variant="outline" className="text-base font-bold px-4 py-2 border-0 text-accent bg-accent/10">
                       {item.step}
                     </Badge>
