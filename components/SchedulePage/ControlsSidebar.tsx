@@ -34,7 +34,7 @@ export default function ControlsSidebar({ weeksToComplete, onClick, disabled }: 
         <div className="pt-4 border-t border-muted">
           <div className="flex items-start gap-3 text-sm font-medium text-muted-foreground">
             <Info className="h-5 w-5 text-accent shrink-0" />
-            <p>
+            <p className="text-foreground">
               {weeksToComplete ? (
                 <>
                   Based on this schedule, your graduation target is <strong className="text-foreground">{getGraduationDate()}</strong>.
@@ -47,7 +47,7 @@ export default function ControlsSidebar({ weeksToComplete, onClick, disabled }: 
         </div>
 
         <Button
-          className="w-full min-h-[56px] bg-foreground text-background text-lg hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+          className="w-full min-h-14 bg-foreground text-background text-lg hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
           onClick={onClick}
           disabled={disabled}
         >
