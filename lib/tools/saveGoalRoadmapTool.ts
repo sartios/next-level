@@ -23,7 +23,9 @@ const toolDescription = {
   schema: z.object({
     userId: z.string().describe('The user ID to save goal roadmap for'),
     goalId: z.string().describe('Goal ID of the current goal'),
-    roadmap: z.array(RoadmapStepSchema).describe('Array of roadmap steps to save, each with step, description, resources, status, and timeline')
+    roadmap: z
+      .array(RoadmapStepSchema)
+      .describe('Array of roadmap steps to save, each with step, description, resources, status, and timeline')
   })
 };
 
