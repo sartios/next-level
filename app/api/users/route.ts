@@ -4,9 +4,9 @@ import { createUser } from '@/lib/repository';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, role, skills, careerGoals } = body;
+    const { role, skills, careerGoals } = body;
 
-    if (!name || !role || !skills || !careerGoals) {
+    if (!role || !skills || !careerGoals) {
       return NextResponse.json({ errorMessage: 'All fields are required: name, role, skills, careerGoals' }, { status: 400 });
     }
 
@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
     const careerGoalsArray = Array.isArray(careerGoals) ? careerGoals : careerGoals.split(',').map((g: string) => g.trim());
 
     const user = createUser({
-      name,
       role,
       skills: skillsArray,
       careerGoals: careerGoalsArray

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import ControlsSidebar from '@/components/SchedulePage/ControlsSidebar';
 import Calendar from '@/components/SchedulePage/Calendar';
@@ -9,6 +10,7 @@ export default function SchedulePage() {
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAvailability = async () => {
@@ -78,6 +80,7 @@ export default function SchedulePage() {
       if (!response.ok) {
         throw new Error('Failed to save availability');
       }
+      router.push('/goal');
     } catch (error) {
       console.error('Error saving schedule:', error);
     } finally {

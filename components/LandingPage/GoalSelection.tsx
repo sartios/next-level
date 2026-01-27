@@ -14,10 +14,9 @@ interface GoalSelectionInterface {
 
 export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface) {
   const [userId, setUserId] = useState();
-  const [name, setName] = useState('Alice Johnson');
-  const [occupation, setOccupation] = useState('Software Engineer');
-  const [skills, setSkills] = useState('JavaScript, React, Node.js');
-  const [careerGoals, setCareerGoals] = useState('Team lead role, Learn AI/ML');
+  const [occupation, setOccupation] = useState('');
+  const [skills, setSkills] = useState('');
+  const [careerGoals, setCareerGoals] = useState('');
   const [disableSkillDefinitionForm, setDisableSkillDefinitionForm] = useState(false);
   const [isCreatingProfile, setIsCreatingProfile] = useState(false);
   const [isSearchingSkills, setIsSearchingSkills] = useState(false);
@@ -39,7 +38,6 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name,
           role: occupation,
           skills,
           careerGoals
@@ -58,7 +56,7 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
     } finally {
       setIsCreatingProfile(false);
     }
-  }, [careerGoals, name, occupation, skills, userId]);
+  }, [careerGoals, occupation, skills, userId]);
 
   const handleAiGeneratedSkillSearch = useCallback(async () => {
     if (!userId) return;
@@ -176,21 +174,6 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
 
       <section className="space-y-3">
         <Label htmlFor="occupation" className="text-sm font-bold uppercase tracking-widest text-border">
-          Your Name
-        </Label>
-        <Input
-          id="occupation"
-          type="text"
-          placeholder="e.g., Alice Cooper"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          disabled={disableSkillDefinitionForm}
-          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
-        />
-      </section>
-
-      <section className="space-y-3">
-        <Label htmlFor="occupation" className="text-sm font-bold uppercase tracking-widest text-border">
           Your Current Occupation
         </Label>
         <Input
@@ -239,7 +222,7 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           <Button
             className="w-full h-20 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold"
             onClick={handleProfileCreation}
-            disabled={!name.trim() || !occupation.trim() || !skills.trim() || !careerGoals.trim() || isSearchingSkills}
+            disabled={!occupation.trim() || !skills.trim() || !careerGoals.trim() || isSearchingSkills}
           >
             Search Top Skills
           </Button>
