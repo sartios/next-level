@@ -4,7 +4,6 @@ export const createUser = (userData: Omit<User, 'id'>) => {
   const userId = Date.now().toString();
   db.user = {
     id: userId,
-    name: userData.name,
     role: userData.role,
     skills: userData.skills,
     careerGoals: userData.careerGoals

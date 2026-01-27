@@ -1,6 +1,5 @@
 export interface User {
   id: string;
-  name: string;
   role: string;
   skills: string[];
   careerGoals: string[];
@@ -95,7 +94,6 @@ interface MockDb {
 const createInitialDb = (): MockDb => ({
   user: {
     id: '123',
-    name: 'Alice Johnson',
     role: 'Software Engineer',
     skills: ['JavaScript', 'React', 'Node.js'],
     careerGoals: ['Team lead role', 'Learn AI/ML']
