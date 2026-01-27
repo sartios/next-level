@@ -119,7 +119,7 @@ export default function SkillSelectPage() {
                       <h3 className="text-lg font-bold text-black">{skillItem.name}</h3>
                       <span className={`text-xs px-2 py-1 rounded font-semibold ${priorityInfo.style}`}>{priorityInfo.label} Priority</span>
                     </div>
-                    <p className="text-gray-700 text-sm">{skillItem.reasoning}</p>
+                    <p className="text-muted-foreground text-sm">{skillItem.reasoning}</p>
                   </div>
                   {isSelected && (
                     <div className="ml-4">
