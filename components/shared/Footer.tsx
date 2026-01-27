@@ -18,9 +18,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="md:col-span-1">
             <h3 className="text-2xl font-extrabold text-foreground mb-4">NextLevel</h3>
-            <p className="text-base text-muted-foreground">
-              AI-powered learning journeys that adapt to you. Turn career aspirations into achievements.
-            </p>
+            <p className="text-base text-muted-foreground">AI-powered learning journeys that adapt to you.</p>
+            <p className="text-base text-muted-foreground">Turn career aspirations into achievements.</p>
           </div>
 
           <div>
@@ -56,7 +55,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <Separator className="mb-8 bg-border" />
+        <Separator className="mb-8 bg-muted" />
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} NextLevel. All rights reserved.</p>
