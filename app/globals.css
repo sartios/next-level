@@ -28,7 +28,7 @@
 
   /* Muted colors */
   --muted: hsl(214 32% 91%); /* Soft Slate #E2E8F0 - Decorative backgrounds */
-  --muted-foreground: hsl(215 25% 27%); /* Slate Deep #334155 - AAA Secondary text */
+  --muted-foreground: hsl(214.7 24.9% 44.9%); /* Slate Medium #566E8F - AA Secondary text */
 
   /* Accent colors - Amber Tone #C2410C */
   --accent: hsl(16 84% 40%); /* HSL for #C2410C */
@@ -164,6 +164,10 @@
 
   html {
     font-size: var(--font-size);
+  }
+
+  body {
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
   }
 
   h1 {

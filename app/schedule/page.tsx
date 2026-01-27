@@ -89,8 +89,8 @@ export default function SchedulePage() {
     <div className="max-w-6xl mx-auto px-6 py-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div className="space-y-2">
-          <h1 className="text-4xl font-black text-foreground">Architect your week.</h1>
-          <p className="text-muted-foreground font-medium">Select your recurring deep-focus slots.</p>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight">Architect your week</h1>
+          <p className="text-xl text-muted-foreground font-medium leading-relaxed">Select your recurring deep-focus slots.</p>
         </div>
 
         <Card className="bg-background border-2 border-border p-4 flex gap-8">

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Goal } from '@/lib/mockDb';
+import { Sparkle } from 'lucide-react';
 
 interface GoalSelectionInterface {
   onGoalCreation: (goal: Goal) => void;
@@ -168,7 +169,7 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
     <>
       <div className="space-y-4">
         <h1 className="text-4xl md:text-6xl font-black tracking-tight">Focus your ambition.</h1>
-        <p className="text-xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
+        <p className="text-xl text-muted-foreground font-medium leading-relaxed">
           Tell us about yourself and we&apos;ll identify the top skills to accelerate your career growth in 2026.
         </p>
       </div>
@@ -184,7 +185,7 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={disableSkillDefinitionForm}
-          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         />
       </section>
 
@@ -199,7 +200,7 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           value={occupation}
           onChange={(e) => setOccupation(e.target.value)}
           disabled={disableSkillDefinitionForm}
-          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         />
       </section>
 
@@ -214,7 +215,7 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           value={skills}
           onChange={(e) => setSkills(e.target.value)}
           disabled={disableSkillDefinitionForm}
-          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         />
       </section>
 
@@ -229,14 +230,14 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           value={careerGoals}
           onChange={(e) => setCareerGoals(e.target.value)}
           disabled={disableSkillDefinitionForm}
-          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="w-full h-14 border-2 border-border bg-background font-medium text-lg focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         />
       </section>
 
       {!aiGeneratedSkills && (
         <div className="pt-6">
           <Button
-            className="w-full h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 font-bold"
+            className="w-full h-20 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold"
             onClick={handleProfileCreation}
             disabled={!name.trim() || !occupation.trim() || !skills.trim() || !careerGoals.trim() || isSearchingSkills}
           >
@@ -246,20 +247,26 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
       )}
 
       {isCreatingProfile && <div>Creating user profile...</div>}
-      {isSearchingSkills && <div>AI generating top skills...</div>}
+      {isSearchingSkills && (
+        <div className="flex flex-row p-4 bg-muted rounded-2xl">
+          <Sparkle className="pr-2" /> <div className="text-xl">AI generating top skills...</div>
+        </div>
+      )}
 
       {aiGeneratedSkills && (
         <section className="space-y-8" id="top-skills">
           <div className="border-l-4 border-foreground pl-6">
-            <h2 className="text-3xl font-extrabold">Top 10 Skills for {occupation}</h2>
-            <p className="text-muted-foreground font-medium mt-1">Select the one skill you will master this year.</p>
+            <h2 className="text-3xl xl:text-4xl font-extrabold mt-16">
+              Top 10 Skills for <span className="text-accent">{occupation}</span>
+            </h2>
+            <p className="text-muted-foreground font-medium mt-1 xl:text-lg">Select the one skill you will master this year.</p>
           </div>
 
-          <RadioGroup value={selectedSkill} onValueChange={setSelectedSkill} className="grid grid-cols-1 gap-3">
+          <RadioGroup value={selectedSkill} onValueChange={setSelectedSkill} className="grid xl:grid-cols-2 grid-col-1 gap-3">
             {aiGeneratedSkills.map((skill, index) => (
               <div
                 key={skill.name}
-                className="flex items-start space-x-4 p-5 min-h-15 rounded-xl border-2 border-border bg-background hover:bg-muted transition-colors cursor-pointer focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
+                className="flex items-start space-x-4 p-5 min-h-15 rounded-xl border-2 border-border bg-background hover:bg-muted transition-colors cursor-pointer focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2"
               >
                 <RadioGroupItem
                   value={`skill-${index}`}
@@ -267,10 +274,10 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
                   className="h-6 w-6 border-2 border-foreground shrink-0 mt-1"
                 />
                 <div className="flex-1">
-                  <Label htmlFor={`skill-${index}`} className="text-lg font-bold cursor-pointer block text-foreground">
+                  <Label htmlFor={`skill-${index}`} className="text-lg xl:text-xl font-bold cursor-pointer block text-foreground">
                     {skill.name}
                   </Label>
-                  <p className="text-sm text-muted-foreground font-medium mt-1 cursor-pointer">{skill.reasoning}</p>
+                  <p className="text-base text-muted-foreground font-medium mt-1 cursor-pointer">{skill.reasoning}</p>
                 </div>
               </div>
             ))}
@@ -279,9 +286,9 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
       )}
 
       {aiGeneratedSkills && (
-        <div className="pt-10 space-y-4">
+        <div className="pt-6 space-y-4">
           <Button
-            className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+            className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2"
             disabled={!selectedSkill || isConfirming}
             onClick={handleConfirm}
           >
@@ -290,12 +297,16 @@ export default function GoalSelection({ onGoalCreation }: GoalSelectionInterface
           <Button
             variant="ghost"
             disabled={isRegeneratingSkills}
-            className="w-full h-14 text-lg font-bold min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="w-full h-14 text-lg font-bold min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2"
             onClick={handleSkillRegeneration}
           >
             Regenerate New Skills
           </Button>
-          {isRegeneratingSkills && <div>AI regenerating top skills...</div>}
+          {isRegeneratingSkills && (
+            <div className="flex flex-row p-4 bg-muted rounded-2xl">
+              <Sparkle className="pr-2" /> <div className="text-xl">AI generating top skills...</div>
+            </div>
+          )}
         </div>
       )}
     </>
