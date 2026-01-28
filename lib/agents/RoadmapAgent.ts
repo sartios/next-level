@@ -3,7 +3,7 @@ import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { createOpikHandler } from '@/lib/opik';
+import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { Goal, RoadmapStep } from '@/lib/mockDb';
 import { GoalSchema, ResourceSchema, RoadmapStepSchema } from '@/lib/schemas';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
@@ -25,8 +25,10 @@ const RoadmapSchema = z.object({
 
 class RoadmapAgent {
   private agent;
+  private agentName;
 
   constructor() {
+    this.agentName = 'RoadmapAgent';
     this.agent = createAgent({
       model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
       tools: [fetchUserTool, fetchUserGoalTool, fetchUserAvailabilityTool, saveGoalRoadmapTool],
@@ -65,16 +67,21 @@ For each roadmap step:
     });
   }
 
-  public async createRoadmap(
-    userId: string,
-    goalId: string,
-    opikOptions?: { tags?: string[]; metadata?: Record<string, unknown> }
-  ): Promise<RoadmapResult> {
-    const handler = createOpikHandler(opikOptions);
+  public async createRoadmap(userId: string, goalId: string, opikOptions?: OpikHandlerOptions): Promise<RoadmapResult> {
+    const handler = createOpikHandler({
+      tags: ['agent:roadmap', 'operation:create', ...(opikOptions?.tags || [])],
+      metadata: {
+        agentName: this.agentName,
+        userId,
+        goalId,
+        ...opikOptions?.metadata
+      },
+      threadId: opikOptions?.threadId
+    });
 
     const result = await this.agent.invoke(
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
-      { callbacks: [handler], runName: 'RoadmapAgent' }
+      { callbacks: [handler], runName: this.agentName }
     );
 
     return {

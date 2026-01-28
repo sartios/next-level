@@ -3,7 +3,7 @@ import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { createOpikHandler } from '@/lib/opik';
+import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserAvailabilityTool } from '@/lib/tools/fetchUserAvailabilityTool';
 import { fetchAcceptedRoadmapTool } from '@/lib/tools/fetchAcceptedRoadmapTool';
@@ -59,8 +59,10 @@ const MultiWeekPlanSchema = z.object({
 
 class MultiWeekPlanningAgent {
   private agent;
+  private agentName;
 
   constructor() {
+    this.agentName = 'MultiWeekPlanningAgent';
     this.agent = createAgent({
       model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
       tools: [fetchUserTool, fetchUserAvailabilityTool, fetchAcceptedRoadmapTool, saveMultiWeekPlanTool],
@@ -109,13 +111,23 @@ CRITICAL Guidelines for Time-Based Planning:
     userId: string,
     goalId: string,
     startDate: string,
-    opikOptions?: { tags?: string[]; metadata?: Record<string, unknown> }
+    opikOptions?: OpikHandlerOptions
   ): Promise<MultiWeekPlan> {
-    const handler = createOpikHandler(opikOptions);
+    const handler = createOpikHandler({
+      tags: ['agent:multi-week-planning', 'operation:create', ...(opikOptions?.tags || [])],
+      metadata: {
+        agentName: this.agentName,
+        userId,
+        goalId,
+        startDate,
+        ...opikOptions?.metadata
+      },
+      threadId: opikOptions?.threadId
+    });
 
     const result = await this.agent.invoke(
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId, startDate }))] },
-      { callbacks: [handler], runName: 'MultiWeekPlanningAgent' }
+      { callbacks: [handler], runName: this.agentName }
     );
 
     return {
