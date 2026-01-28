@@ -25,8 +25,8 @@ const ResponseSchema = z.object({
 });
 
 class SkillResourceAgent {
-  private agent;
-  private agentName;
+  private agent: ReturnType<typeof createAgent>;
+  private agentName: string;
 
   constructor() {
     this.agentName = 'SkillResourceAgent';

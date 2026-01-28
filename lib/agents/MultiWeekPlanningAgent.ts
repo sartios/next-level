@@ -58,8 +58,8 @@ const MultiWeekPlanSchema = z.object({
 });
 
 class MultiWeekPlanningAgent {
-  private agent;
-  private agentName;
+  private agent: ReturnType<typeof createAgent>;
+  private agentName: string;
 
   constructor() {
     this.agentName = 'MultiWeekPlanningAgent';

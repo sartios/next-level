@@ -29,8 +29,8 @@ const SuggestedSkillSchema = z.object({
 });
 
 class UserSkillAgent {
-  private agent;
-  private agentName;
+  private agent: ReturnType<typeof createAgent>;
+  private agentName: string;
 
   constructor() {
     this.agentName = 'UserSkillAgent';

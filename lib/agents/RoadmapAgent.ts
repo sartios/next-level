@@ -24,8 +24,8 @@ const RoadmapSchema = z.object({
 });
 
 class RoadmapAgent {
-  private agent;
-  private agentName;
+  private agent: ReturnType<typeof createAgent>;
+  private agentName: string;
 
   constructor() {
     this.agentName = 'RoadmapAgent';
