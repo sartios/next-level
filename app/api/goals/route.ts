@@ -15,8 +15,7 @@ export async function POST(req: NextRequest) {
 
     // Invoke SkillResourceAgent to fetch resources for the new goal
     const resourceResult = await SkillResourceAgent.suggestResources(userId, goal.id, {
-      tags: ['resource-suggestion'],
-      metadata: { invokedBy: 'api/goals', goalId: goal.id }
+      metadata: { invokedBy: 'POST /api/goals' }
     });
 
     // Save resources to the goal

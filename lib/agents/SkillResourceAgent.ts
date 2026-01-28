@@ -3,7 +3,7 @@ import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { createOpikHandler } from '@/lib/opik';
+import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
 import { updateGoalResourcesTool } from '@/lib/tools/updateGoalResourcesTool';
@@ -25,9 +25,11 @@ const ResponseSchema = z.object({
 });
 
 class SkillResourceAgent {
-  private agent;
+  private agent: ReturnType<typeof createAgent>;
+  private agentName: string;
 
   constructor() {
+    this.agentName = 'SkillResourceAgent';
     this.agent = createAgent({
       model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
       tools: [fetchUserTool, fetchUserGoalTool, updateGoalResourcesTool],
@@ -71,16 +73,21 @@ ${ResponseSchema}
     });
   }
 
-  public async suggestResources(
-    userId: string,
-    goalId: string,
-    opikOptions?: { tags?: string[]; metadata?: Record<string, unknown> }
-  ): Promise<ResourceSuggestionResult> {
-    const handler = createOpikHandler(opikOptions);
+  public async suggestResources(userId: string, goalId: string, opikOptions?: OpikHandlerOptions): Promise<ResourceSuggestionResult> {
+    const handler = createOpikHandler({
+      tags: ['agent:skill-resource', 'operation:suggest', ...(opikOptions?.tags || [])],
+      metadata: {
+        agentName: this.agentName,
+        userId,
+        goalId,
+        ...opikOptions?.metadata
+      },
+      threadId: opikOptions?.threadId
+    });
 
     const result = await this.agent.invoke(
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
-      { callbacks: [handler], runName: 'SkillResourceAgent' }
+      { callbacks: [handler], runName: this.agentName }
     );
 
     return {

@@ -14,8 +14,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const savedRoadmap = repository.saveRoadmap(userId, goalId, roadmap);
     const startDate = new Date().toISOString().split('T')[0];
     const multiWeekPlan = await multiWeekPlanningAgent.createMultiWeekPlan(userId, goalId, startDate, {
-      tags: ['multi-week-plan-creation'],
-      metadata: { invokedBy: 'roadmap-acceptance', goalId, startDate }
+      metadata: { invokedBy: 'POST /api/goals/{id}/roadmap/accept' }
     });
 
     return NextResponse.json({ success: true, roadmap: savedRoadmap, multiWeekPlan });

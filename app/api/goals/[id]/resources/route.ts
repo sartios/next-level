@@ -11,8 +11,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
     }
     const result = await skillResourceAgentInstance.suggestResources(userId, goalId, {
-      tags: ['resource-retrieval'],
-      metadata: { invokedBy: 'api/get-goal-resources' }
+      metadata: { invokedBy: 'GET /api/goals/{id}/resources' }
     });
 
     return NextResponse.json({ resources: result.resources });
