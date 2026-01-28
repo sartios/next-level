@@ -10,8 +10,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await userSkillAgent.suggestSkills(userId, {
-      tags: ['skill-suggestion'],
-      metadata: { invokedBy: 'availability-flow', userId }
+      metadata: { invokedBy: 'POST /api/skills/suggest' }
     });
 
     return NextResponse.json({ success: true, skills: result.skills });
