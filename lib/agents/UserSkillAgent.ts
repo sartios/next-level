@@ -65,7 +65,10 @@ You have access to the following tools:
   ): Promise<SkillSuggestionResult> {
     const handler = createOpikHandler(opikOptions);
 
-    const result = await this.agent.invoke({ messages: [new HumanMessage(JSON.stringify({ userId }))] }, { callbacks: [handler] });
+    const result = await this.agent.invoke(
+      { messages: [new HumanMessage(JSON.stringify({ userId }))] },
+      { callbacks: [handler], runName: 'UserSkillAgent' }
+    );
 
     return {
       userId,
