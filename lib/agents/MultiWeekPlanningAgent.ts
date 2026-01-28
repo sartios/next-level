@@ -115,7 +115,7 @@ CRITICAL Guidelines for Time-Based Planning:
 
     const result = await this.agent.invoke(
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId, startDate }))] },
-      { callbacks: [handler] }
+      { callbacks: [handler], runName: 'MultiWeekPlanningAgent' }
     );
 
     return {

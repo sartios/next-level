@@ -78,7 +78,10 @@ ${ResponseSchema}
   ): Promise<ResourceSuggestionResult> {
     const handler = createOpikHandler(opikOptions);
 
-    const result = await this.agent.invoke({ messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] }, { callbacks: [handler] });
+    const result = await this.agent.invoke(
+      { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
+      { callbacks: [handler], runName: 'SkillResourceAgent' }
+    );
 
     return {
       goal: result.structuredResponse.goal,

@@ -72,7 +72,10 @@ For each roadmap step:
   ): Promise<RoadmapResult> {
     const handler = createOpikHandler(opikOptions);
 
-    const result = await this.agent.invoke({ messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] }, { callbacks: [handler] });
+    const result = await this.agent.invoke(
+      { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
+      { callbacks: [handler], runName: 'RoadmapAgent' }
+    );
 
     return {
       goal: result.structuredResponse.goal,
