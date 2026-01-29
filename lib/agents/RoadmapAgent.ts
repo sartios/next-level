@@ -70,7 +70,7 @@ class RoadmapAgent {
       threadId: opikOptions?.threadId
     });
 
-    const result = await this.agent!.invoke(
+    const result = await this.agent.invoke(
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
       { callbacks: [handler], runName: this.agentName }
     );
