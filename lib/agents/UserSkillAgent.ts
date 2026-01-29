@@ -33,13 +33,18 @@ class UserSkillAgent {
 
     if (!this.initPromise) {
       this.initPromise = (async () => {
-        const systemPrompt = await getAgentPrompt(this.agentName);
-        this.agent = createAgent({
-          model: new ChatOpenAI({ model: this.model }),
-          tools: [fetchUserTool, saveSuggestedSkillsTool],
-          systemPrompt: new SystemMessage(systemPrompt),
-          responseFormat: providerStrategy(SkillSuggestionResponseSchema)
-        });
+        try {
+          const systemPrompt = await getAgentPrompt(this.agentName);
+          this.agent = createAgent({
+            model: new ChatOpenAI({ model: this.model }),
+            tools: [fetchUserTool, saveSuggestedSkillsTool],
+            systemPrompt: new SystemMessage(systemPrompt),
+            responseFormat: providerStrategy(SkillSuggestionResponseSchema)
+          });
+        } catch (error) {
+          this.initPromise = null;
+          throw error;
+        }
       })();
     }
 

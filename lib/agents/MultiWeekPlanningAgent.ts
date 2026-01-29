@@ -72,13 +72,18 @@ class MultiWeekPlanningAgent {
 
     if (!this.initPromise) {
       this.initPromise = (async () => {
-        const systemPrompt = await getAgentPrompt('multi-week-planning-agent');
-        this.agent = createAgent({
-          model: new ChatOpenAI({ model: 'gpt-4o-mini' }),
-          tools: [fetchUserTool, fetchUserAvailabilityTool, fetchAcceptedRoadmapTool, saveMultiWeekPlanTool],
-          systemPrompt: new SystemMessage(systemPrompt),
-          responseFormat: providerStrategy(MultiWeekPlanSchema)
-        });
+        try {
+          const systemPrompt = await getAgentPrompt('multi-week-planning-agent');
+          this.agent = createAgent({
+            model: new ChatOpenAI({ model: 'gpt-4o-mini' }),
+            tools: [fetchUserTool, fetchUserAvailabilityTool, fetchAcceptedRoadmapTool, saveMultiWeekPlanTool],
+            systemPrompt: new SystemMessage(systemPrompt),
+            responseFormat: providerStrategy(MultiWeekPlanSchema)
+          });
+        } catch (error) {
+          this.initPromise = null;
+          throw error;
+        }
       })();
     }
 
