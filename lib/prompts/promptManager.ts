@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { Opik, Prompt } from 'opik';
 
 import { AGENT_PROMPTS, AgentPromptName } from './agentPrompts';
@@ -6,6 +7,7 @@ let opikClient: Opik | null = null;
 
 function getOpikClient(): Opik {
   if (!opikClient) {
+    assert(process.env.OPIK_PROJECT_NAME, 'Expected environment variable OPIK_PROJECT_NAME not found');
     opikClient = new Opik({
       projectName: process.env.OPIK_PROJECT_NAME
     });
