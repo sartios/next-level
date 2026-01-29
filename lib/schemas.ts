@@ -74,3 +74,9 @@ export const GoalSchema = z.object({
   roadmap: z.array(RoadmapStepSchema).optional().describe('The step-by-step roadmap for achieving the goal'),
   plan: PlanSchema.optional().describe('The weekly plan for the goal')
 });
+
+export const SuggestedSkillSchema = z.object({
+  name: z.string(),
+  priority: z.number(),
+  reasoning: z.string()
+});
