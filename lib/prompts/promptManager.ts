@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import { Opik, Prompt } from 'opik';
 
 import { AGENT_PROMPTS, AgentPromptName } from './agentPrompts';

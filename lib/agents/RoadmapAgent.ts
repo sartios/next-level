@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import { createAgent, providerStrategy } from 'langchain';
 import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
