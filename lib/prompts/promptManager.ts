@@ -69,4 +69,7 @@ export async function syncPromptsToOpik(): Promise<void> {
   }
 
   console.log('Prompt sync complete');
+
+  promptCache.clear();
+  console.log('Prompt cache cleared');
 }
