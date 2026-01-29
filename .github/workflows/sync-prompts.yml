@@ -1,0 +1,32 @@
+name: Sync Prompts to Opik
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'lib/prompts/**'
+
+jobs:
+  sync-prompts:
+    name: Sync Prompts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Sync prompts to Opik
+        run: npm run prompts:sync
+        env:
+          OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
+          OPIK_PROJECT_NAME: ${{ secrets.OPIK_PROJECT_NAME }}
