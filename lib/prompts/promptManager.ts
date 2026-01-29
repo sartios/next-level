@@ -2,17 +2,18 @@ import { Opik, Prompt } from 'opik';
 
 import { AGENT_PROMPTS, AgentPromptName } from './agentPrompts';
 
+let opikClient: Opik | null = null;
 /**
  * Get the Opik client instance.
  * Returns null if OPIK_PROJECT_NAME is not set.
  */
 function getOpikClient(): Opik | null {
-  let opikClient: Opik | null = null;
   if (!opikClient && process.env.OPIK_PROJECT_NAME) {
     opikClient = new Opik({
       projectName: process.env.OPIK_PROJECT_NAME
     });
   }
+
   return opikClient;
 }
 
