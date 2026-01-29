@@ -1,13 +1,14 @@
-import assert from 'node:assert';
 import { Opik, Prompt } from 'opik';
 
 import { AGENT_PROMPTS, AgentPromptName } from './agentPrompts';
 
-let opikClient: Opik | null = null;
-
-function getOpikClient(): Opik {
-  if (!opikClient) {
-    assert(process.env.OPIK_PROJECT_NAME, 'Expected environment variable OPIK_PROJECT_NAME not found');
+/**
+ * Get the Opik client instance.
+ * Returns null if OPIK_PROJECT_NAME is not set.
+ */
+function getOpikClient(): Opik | null {
+  let opikClient: Opik | null = null;
+  if (!opikClient && process.env.OPIK_PROJECT_NAME) {
     opikClient = new Opik({
       projectName: process.env.OPIK_PROJECT_NAME
     });
@@ -32,16 +33,18 @@ export async function getAgentPrompt(name: AgentPromptName): Promise<string> {
     return cached.prompt.prompt;
   }
 
-  try {
-    const client = getOpikClient();
-    const prompt = await client.getPrompt({ name });
+  const client = getOpikClient();
+  if (client) {
+    try {
+      const prompt = await client.getPrompt({ name });
 
-    if (prompt) {
-      promptCache.set(name, { prompt, timestamp: Date.now() });
-      return prompt.prompt;
+      if (prompt) {
+        promptCache.set(name, { prompt, timestamp: Date.now() });
+        return prompt.prompt;
+      }
+    } catch (error) {
+      console.warn(`Failed to fetch prompt "${name}" from Opik, using local fallback:`, error);
     }
-  } catch (error) {
-    console.warn(`Failed to fetch prompt "${name}" from Opik, using local fallback:`, error);
   }
 
   return localPrompt.prompt;
@@ -53,6 +56,9 @@ export async function getAgentPrompt(name: AgentPromptName): Promise<string> {
  */
 export async function syncPromptsToOpik(): Promise<void> {
   const client = getOpikClient();
+  if (!client) {
+    throw new Error('Cannot sync prompts: OPIK_PROJECT_NAME environment variable is not set');
+  }
 
   for (const [name, promptDef] of Object.entries(AGENT_PROMPTS)) {
     try {
