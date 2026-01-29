@@ -18,7 +18,7 @@ interface SkillSuggestionResponse {
 
 const SkillSuggestionResponseSchema = z.object({
   userId: z.string(),
-  resources: z.array(SuggestedSkillSchema)
+  skills: z.array(SuggestedSkillSchema)
 });
 
 class UserSkillAgent {
