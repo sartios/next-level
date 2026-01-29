@@ -27,7 +27,7 @@ const RoadmapResultSchema = z.object({
 
 class RoadmapAgent {
   private readonly agentName = 'roadmap-agent';
-  private readonly model = 'gpt-4.1-mini';
+  private readonly model = 'gpt-4o-mini';
 
   private agent: ReturnType<typeof createAgent> | null = null;
   private initPromise: Promise<void> | null = null;
