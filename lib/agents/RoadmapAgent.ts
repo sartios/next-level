@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { createAgent, providerStrategy } from 'langchain';
 import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
@@ -10,13 +11,14 @@ import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
 import { fetchUserAvailabilityTool } from '@/lib/tools/fetchUserAvailabilityTool';
 import { saveGoalRoadmapTool } from '@/lib/tools/saveGoalRoadmapTool';
+import { getAgentPrompt } from '@/lib/prompts';
 
 interface RoadmapResult {
   goal: Goal;
   roadmap: RoadmapStep[];
 }
 
-const RoadmapSchema = z.object({
+const RoadmapResultSchema = z.object({
   goal: GoalSchema.extend({
     resources: z.array(ResourceSchema).describe('Learning resources for the goal')
   }).omit({ roadmap: true, plan: true }),
@@ -24,52 +26,36 @@ const RoadmapSchema = z.object({
 });
 
 class RoadmapAgent {
-  private agent: ReturnType<typeof createAgent>;
-  private agentName: string;
+  private readonly agentName = 'roadmap-agent';
+  private readonly model = 'gpt-4.1-mini';
 
-  constructor() {
-    this.agentName = 'RoadmapAgent';
-    this.agent = createAgent({
-      model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
-      tools: [fetchUserTool, fetchUserGoalTool, fetchUserAvailabilityTool, saveGoalRoadmapTool],
-      systemPrompt: new SystemMessage(
-        `
-You are a roadmap planner agent.
+  private agent: ReturnType<typeof createAgent> | null = null;
+  private initPromise: Promise<void> | null = null;
 
-Your goal is to:
-1. Fetch the user profile using fetchUser
-2. Fetch the user's goal using fetchUserGoal
-3. Fetch the user's weekly availability using fetchUserAvailability
-4. Create a step-by-step roadmap for the user to master the skill based on their available time
-5. IMPORTANT: Save the roadmap to the database using saveGoalRoadmap
+  private async initialize(): Promise<void> {
+    if (this.agent) return;
 
-You have access to the following tools:
-- fetchUser: fetch the user's full profile, including skills, role, and career goals
-- fetchUserGoal: fetch the user's selected skill/goal with its resources
-- fetchUserAvailability: fetch the user's weekly availability including available time slots and total hours per week
-- saveGoalRoadmap: save the generated roadmap to the goal (MUST be called after creating the roadmap)
+    if (!this.initPromise) {
+      this.initPromise = (async () => {
+        const systemPrompt = await getAgentPrompt(this.agentName);
+        this.agent = createAgent({
+          model: new ChatOpenAI({ model: this.model }),
+          tools: [fetchUserTool, fetchUserGoalTool, fetchUserAvailabilityTool, saveGoalRoadmapTool],
+          systemPrompt: new SystemMessage(systemPrompt),
+          responseFormat: providerStrategy(RoadmapResultSchema)
+        });
+      })();
+    }
 
-Use the resources provided in the goal to organize a roadmap of high level sequential learning steps.
-Each step should have a clear name, description, and associated resources from the goal.
-
-For each roadmap step:
-- Set "status" to "pending" (all steps start as pending)
-- Assign a "timeline" array with scheduled sessions. Each timeline entry must include:
-  - "date": a specific date in YYYY-MM-DD format (start from the user's availability startDate and schedule across multiple weeks as needed)
-  - "startTime": the start time (e.g., "08:30")
-  - "endTime": the end time (e.g., "09:00")
-  - "durationMinutes": the duration in minutes
-- Use the user's weekly availability slots to determine valid times for each day
-- Distribute the learning activities across the scheduled dates based on the resources' approximate hours and the slot durations
-        `.trim()
-      ),
-      responseFormat: providerStrategy(RoadmapSchema)
-    });
+    await this.initPromise;
   }
 
   public async createRoadmap(userId: string, goalId: string, opikOptions?: OpikHandlerOptions): Promise<RoadmapResult> {
+    await this.initialize();
+    assert(this.agent, `${this.agentName} not ready`);
+
     const handler = createOpikHandler({
-      tags: ['agent:roadmap', 'operation:create', ...(opikOptions?.tags || [])],
+      tags: [this.agentName, 'operation:create', ...(opikOptions?.tags || [])],
       metadata: {
         agentName: this.agentName,
         userId,
@@ -79,7 +65,7 @@ For each roadmap step:
       threadId: opikOptions?.threadId
     });
 
-    const result = await this.agent.invoke(
+    const result = await this.agent!.invoke(
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
       { callbacks: [handler], runName: this.agentName }
     );
