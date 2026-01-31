@@ -60,7 +60,8 @@ export const learningResourceSections = pgTable(
       .references(() => learningResources.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
     estimatedMinutes: integer('estimated_minutes'),
-    orderIndex: integer('order_index').notNull()
+    orderIndex: integer('order_index').notNull(),
+    topics: jsonb('topics').$type<string[]>().default([])
   },
   (table) => [index('learning_resource_sections_resource_id_idx').on(table.resourceId)]
 );
