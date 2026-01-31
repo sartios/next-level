@@ -69,12 +69,8 @@
           "name": "learning_resource_sections_resource_id_learning_resources_id_fk",
           "tableFrom": "learning_resource_sections",
           "tableTo": "learning_resources",
-          "columnsFrom": [
-            "resource_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["resource_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -214,9 +210,7 @@
         "learning_resources_url_unique": {
           "name": "learning_resources_url_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "url"
-          ]
+          "columns": ["url"]
         }
       },
       "policies": {},
@@ -330,12 +324,8 @@
           "name": "resource_embeddings_resource_id_learning_resources_id_fk",
           "tableFrom": "resource_embeddings",
           "tableTo": "learning_resources",
-          "columnsFrom": [
-            "resource_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["resource_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -343,12 +333,8 @@
           "name": "resource_embeddings_section_id_learning_resource_sections_id_fk",
           "tableFrom": "resource_embeddings",
           "tableTo": "learning_resource_sections",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["section_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
