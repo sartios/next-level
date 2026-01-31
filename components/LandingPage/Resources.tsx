@@ -32,12 +32,14 @@ export default function Resources({ goal }: ResourcesProps) {
                   </a>
                 </h2>
 
-                <div className="flex gap-8 mb-8">
-                  <div className="flex items-center gap-2">
-                    <Timer className="h-5 w-5 text-accent" />
-                    <span className="font-bold text-foreground">{resource.totalHours} Hours</span>
+                {resource.totalHours && (
+                  <div className="flex gap-8 mb-8">
+                    <div className="flex items-center gap-2">
+                      <Timer className="h-5 w-5 text-accent" />
+                      <span className="font-bold text-foreground">{resource.totalHours} Hours</span>
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="text-base leading-normal text-foreground pb-4">{resource.reasoning}</div>
                 <Accordion type="single" collapsible defaultValue={index === 0 ? 'sections' : undefined} className="w-full">
                   <AccordionItem value="sections" className="border-none">

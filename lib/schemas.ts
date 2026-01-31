@@ -24,7 +24,7 @@ const LearningResourceSchema = z.object({
   provider: z.string(),
   resourceType: z.enum(['course', 'book', 'tutorial', 'article']),
   learningObjectives: z.array(z.string()).default([]),
-  totalHours: z.string().nullable(),
+  totalHours: z.number().nullable(),
   createdAt: z.string(),
   updatedAt: z.string()
 });

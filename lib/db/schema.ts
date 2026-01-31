@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, decimal, unique } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, real, unique } from 'drizzle-orm/pg-core';
 
 // ============================================================================
 // Learning Resources System
@@ -37,7 +37,7 @@ export const learningResources = pgTable(
     provider: text('provider').notNull(),
     resourceType: text('resource_type').$type<'course' | 'book' | 'tutorial' | 'article'>().notNull(),
     learningObjectives: jsonb('learning_objectives').$type<string[]>().default([]),
-    totalHours: decimal('total_hours', { precision: 6, scale: 2 }),
+    totalHours: real('total_hours'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull()
   },

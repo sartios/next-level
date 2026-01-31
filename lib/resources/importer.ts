@@ -177,7 +177,7 @@ async function importSingleResource(resource: ImportResource, career: string, op
       provider: resource.provider,
       resourceType: resource.resourceType,
       learningObjectives: resource.learningObjectives ?? [],
-      totalHours: resource.totalHours?.toString() ?? null
+      totalHours: resource.totalHours ?? null
     };
 
     // Insert the learning resource
