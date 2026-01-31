@@ -72,7 +72,6 @@ async function main(): Promise<void> {
     options: {
       file: { type: 'string', short: 'f' },
       'dry-run': { type: 'boolean', short: 'd', default: false },
-      'skip-embeddings': { type: 'boolean', default: false },
       'validate-only': { type: 'boolean', default: false },
       help: { type: 'boolean', short: 'h', default: false }
     },
