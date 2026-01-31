@@ -21,6 +21,18 @@ function truncateText(text: string, maxChars: number = 30000): string {
   return text.slice(0, maxChars);
 }
 
+/**
+ * Create an embedding for a single text
+ */
+export async function createEmbedding(text: string): Promise<number[]> {
+  const client = getEmbeddingsClient();
+  const truncated = truncateText(text);
+  return client.embedQuery(truncated);
+}
+
+/**
+ * Create embeddings for multiple texts (batch)
+ */
 export async function createEmbeddings(texts: string[]): Promise<number[][]> {
   if (texts.length === 0) return [];
 
