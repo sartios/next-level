@@ -49,14 +49,14 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run Tests
-        run: npm run test
-
       - name: Run database migrations
         run: npm run db:migrate
 
       - name: Validate Resources
         run: npm run resources:sync -- --dry-run
+
+      - name: Run Tests
+        run: npm run test
 
       - name: Build
         run: npm run build
