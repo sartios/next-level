@@ -1,0 +1,164 @@
+{
+  "resources": [
+    {
+      "url": "https://www.udemy.com/course/the-python-bible/",
+      "title": "The Python Bible | Everything You Need to Program in Python",
+      "provider": "udemy",
+      "resourceType": "course",
+      "description": "Build 11 Projects and go from Beginner to Expert in Python with the World's Most Fun Project-Based Python Course!",
+      "learningObjectives": [
+        "Python variables and data storage",
+        "Numeric operations and calculations in Python",
+        "String manipulation and text processing",
+        "Conditional logic and control flow statements",
+        "Python data structures: lists, dictionaries, and tuples",
+        "Loops and iteration for automation",
+        "Creating reusable functions",
+        "Object-oriented programming with classes and objects",
+        "Building complete Python projects and scripts",
+        "Python fundamentals for data science, web development, and AI"
+      ],
+      "targetAudience": [
+        "Complete beginners with no programming experience",
+        "Professionals looking to transition into data science or software development",
+        "Students seeking a practical, project-based introduction to Python",
+        "Anyone wanting to automate tasks or build scripts"
+      ],
+      "totalHours": 9,
+      "sections": [
+        {
+          "title": "Introduction to Python",
+          "estimatedMinutes": 15
+        },
+        {
+          "title": "Variables and Data Types",
+          "estimatedMinutes": 45
+        },
+        {
+          "title": "Control Flow",
+          "estimatedMinutes": 60
+        },
+        {
+          "title": "Functions",
+          "estimatedMinutes": 50
+        },
+        {
+          "title": "Data Structures",
+          "estimatedMinutes": 90
+        },
+        {
+          "title": "Object-Oriented Programming",
+          "estimatedMinutes": 75
+        },
+        {
+          "title": "File Handling",
+          "estimatedMinutes": 40
+        },
+        {
+          "title": "Error Handling",
+          "estimatedMinutes": 30
+        },
+        {
+          "title": "Final Projects",
+          "estimatedMinutes": 135
+        }
+      ]
+    },
+    {
+      "url": "https://www.coursera.org/learn/machine-learning",
+      "title": "Machine Learning by Stanford University",
+      "provider": "coursera",
+      "resourceType": "course",
+      "description": "This course provides a broad introduction to machine learning, datamining, and statistical pattern recognition.",
+      "learningObjectives": [
+        "Supervised learning (parametric/non-parametric algorithms, support vector machines, kernels, neural networks)",
+        "Unsupervised learning (clustering, dimensionality reduction, recommender systems, deep learning)",
+        "Best practices in machine learning (bias/variance theory, innovation process in ML and AI)",
+        "Apply learning algorithms to building smart robots, text understanding, computer vision, medical informatics"
+      ],
+      "targetAudience": [
+        "Software engineers looking to transition into machine learning roles",
+        "Data analysts wanting to expand into predictive modeling",
+        "Graduate students in computer science or related fields",
+        "Professionals with basic programming and math background seeking ML foundations"
+      ],
+      "totalHours": 30,
+      "sections": [
+        {
+          "title": "Introduction",
+          "estimatedMinutes": 60
+        },
+        {
+          "title": "Linear Regression with One Variable",
+          "estimatedMinutes": 120
+        },
+        {
+          "title": "Linear Algebra Review",
+          "estimatedMinutes": 90
+        },
+        {
+          "title": "Linear Regression with Multiple Variables",
+          "estimatedMinutes": 150
+        },
+        {
+          "title": "Logistic Regression",
+          "estimatedMinutes": 120
+        },
+        {
+          "title": "Regularization",
+          "estimatedMinutes": 90
+        },
+        {
+          "title": "Neural Networks: Representation",
+          "estimatedMinutes": 180
+        },
+        {
+          "title": "Neural Networks: Learning",
+          "estimatedMinutes": 180
+        },
+        {
+          "title": "Advice for Applying Machine Learning",
+          "estimatedMinutes": 120
+        },
+        {
+          "title": "Machine Learning System Design",
+          "estimatedMinutes": 90
+        }
+      ]
+    },
+    {
+      "url": "https://learning.oreilly.com/library/view/deep-learning/9781491924570/",
+      "title": "Deep Learning",
+      "provider": "oreilly",
+      "resourceType": "book",
+      "description": "Deep learning is a form of machine learning that enables computers to learn from experience and understand the world in terms of a hierarchy of concepts.",
+      "learningObjectives": [
+        "Mathematical foundations of deep learning",
+        "Modern practical deep learning techniques",
+        "Deep learning research",
+        "Sequence modeling with recurrent and recursive nets"
+      ],
+      "targetAudience": [
+        "Machine learning practitioners seeking deep theoretical understanding",
+        "Researchers and PhD students in AI and machine learning",
+        "Senior data scientists looking to specialize in deep learning",
+        "Engineers with strong math background wanting to understand neural network internals"
+      ],
+      "totalHours": 14,
+      "sections": [
+        {
+          "title": "Part I: Applied Math and Machine Learning Basics",
+          "estimatedMinutes": 480
+        },
+        {
+          "title": "Part II: Modern Practical Deep Networks",
+          "estimatedMinutes": 720
+        },
+        {
+          "title": "Part III: Deep Learning Research",
+          "estimatedMinutes": 600
+        }
+      ]
+    }
+  ]
+}
