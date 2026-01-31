@@ -94,7 +94,8 @@ export async function searchEmbeddings(
   `;
 
   if (contentTypes && contentTypes.length > 0) {
-    query = sql`${query} WHERE content_type = ANY(${contentTypes})`;
+    const contentTypesArray = `{${contentTypes.join(',')}}`;
+    query = sql`${query} WHERE content_type = ANY(${contentTypesArray}::text[])`;
   }
 
   query = sql`${query} ORDER BY embedding <=> ${vectorStr}::vector LIMIT ${limit}`;
