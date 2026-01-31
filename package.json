@@ -12,7 +12,8 @@
     "prompts:sync": "tsx scripts/sync-prompts.ts",
     "db:migrate": "drizzle-kit push --force",
     "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "resources:sync": "tsx scripts/syncResources.ts"
   },
   "dependencies": {
     "@langchain/core": "^1.1.17",
