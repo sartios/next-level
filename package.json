@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "vercel-build": "npm run db:migrate && npm run resources:sync && next build",
+    "build:vercel": "npm run db:migrate && npm run resources:sync && next build",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
