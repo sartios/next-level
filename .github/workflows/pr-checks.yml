@@ -56,7 +56,7 @@ jobs:
         run: npm run db:migrate
 
       - name: Validate Resources
-        run: npm run resources:sync
+        run: npm run resources:sync -- --dry-run
 
       - name: Build
         run: npm run build
