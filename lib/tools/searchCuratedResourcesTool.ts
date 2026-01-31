@@ -1,7 +1,13 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { createEmbedding } from '@/lib/embeddings';
-import { searchEmbeddings, getUniqueResourcesFromResults, type EmbeddingSearchResult } from '@/lib/db/knowledgeBaseRepository';
+import { EmbeddingSearchResult, getUniqueResourcesFromResults, searchEmbeddings } from '../db/embeddingRepository';
+
+interface CuratedResourceSection {
+  title: string;
+  estimatedMinutes: number | null;
+  topics: string[];
+}
 
 interface CuratedResourceResult {
   id: string;
@@ -12,6 +18,7 @@ interface CuratedResourceResult {
   resourceType: string;
   learningObjectives: string[];
   totalHours: string | null;
+  sections: CuratedResourceSection[];
   matchedContent: {
     type: string;
     text: string;
@@ -44,6 +51,11 @@ const toolFunction = async ({ query, skillLevel, limit }: ToolFunctionProps): Pr
     resourceType: resource.resourceType,
     learningObjectives: resource.learningObjectives ?? [],
     totalHours: resource.totalHours,
+    sections: resource.sections.map((s) => ({
+      title: s.title,
+      estimatedMinutes: s.estimatedMinutes,
+      topics: s.topics ?? []
+    })),
     matchedContent: {
       type: resource.bestMatch.contentType,
       text: resource.bestMatch.contentText,
@@ -68,10 +80,7 @@ The search uses semantic similarity to find resources matching the query across 
       .enum(['beginner', 'intermediate', 'expert'])
       .nullable()
       .describe('The target skill level to filter resources. Pass null if not specified.'),
-    limit: z
-      .number()
-      .nullable()
-      .describe('Maximum number of resources to return. Pass null for default (10).')
+    limit: z.number().nullable().describe('Maximum number of resources to return. Pass null for default (10).')
   })
 };
 

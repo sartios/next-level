@@ -8,16 +8,11 @@ import {
   type ImportResourceResult,
   type ImportOptions
 } from './types';
-import {
-  upsertSkill,
-  insertLearningResource,
-  getLearningResourceByUrl,
-  insertResourceSections,
-  linkSkillToResource,
-  insertResourceEmbeddings
-} from '../db/knowledgeBaseRepository';
 import { createEmbeddings } from '../embeddings';
 import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../db/schema';
+import { insertResourceEmbeddings } from '../db/embeddingRepository';
+import { getLearningResourceByUrl, insertLearningResource, insertResourceSections, linkSkillToResource } from '../db/resourceRepository';
+import { upsertSkill } from '../db/skillRepository';
 
 /**
  * Prepare full resource text for embedding (combines all content)

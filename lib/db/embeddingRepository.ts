@@ -1,73 +1,34 @@
-import { eq, and, sql, inArray } from 'drizzle-orm';
+import { sql, inArray } from 'drizzle-orm';
 import { requireDb } from './index';
 import {
-  skills,
   learningResources,
-  learningResourceSections,
-  skillResources,
   resourceEmbeddings,
-  type NewLearningResource,
-  type NewLearningResourceSection,
   type NewResourceEmbedding,
-  type Skill,
-  type LearningResource,
-  type LearningResourceSection,
-  type SkillResource,
   type ResourceEmbedding,
   type EmbeddingContentType
 } from './schema';
 
-// ============================================================================
-// Skills
-// ============================================================================
-
-/**
- * Insert a skill or return existing one if it already exists
- */
-export async function upsertSkill(name: string, career: string): Promise<Skill> {
-  const db = requireDb();
-
-  // Try to find existing skill
-  const existing = await db
-    .select()
-    .from(skills)
-    .where(and(eq(skills.name, name), eq(skills.career, career)))
-    .limit(1);
-
-  if (existing.length > 0) {
-    return existing[0];
-  }
-
-  // Insert new skill
-  const [inserted] = await db.insert(skills).values({ name, career }).returning();
-
-  return inserted;
-}
+import { getResourceSectionsBatch, type LearningResourceWithSections } from './resourceRepository';
 
 // ============================================================================
-// Learning Resources
+// Types
 // ============================================================================
 
 /**
- * Insert a learning resource
+ * Search result type including the matched content
  */
-export async function insertLearningResource(resource: NewLearningResource): Promise<LearningResource> {
-  const db = requireDb();
-  const [inserted] = await db.insert(learningResources).values(resource).returning();
-  return inserted;
-}
-
-/**
- * Get a learning resource by URL
- */
-export async function getLearningResourceByUrl(url: string): Promise<LearningResource | undefined> {
-  const db = requireDb();
-  const results = await db.select().from(learningResources).where(eq(learningResources.url, url)).limit(1);
-  return results[0];
+export interface EmbeddingSearchResult {
+  resourceId: string;
+  contentType: EmbeddingContentType;
+  contentIndex: number | null;
+  sectionId: string | null;
+  contentText: string;
+  similarity: number;
+  resource?: LearningResourceWithSections;
 }
 
 // ============================================================================
-// Resource Embeddings
+// Embedding CRUD Operations
 // ============================================================================
 
 /**
@@ -88,18 +49,9 @@ export async function insertResourceEmbeddings(embeddings: NewResourceEmbedding[
   return db.insert(resourceEmbeddings).values(embeddings).returning();
 }
 
-/**
- * Search result type including the matched content
- */
-export interface EmbeddingSearchResult {
-  resourceId: string;
-  contentType: EmbeddingContentType;
-  contentIndex: number | null;
-  sectionId: string | null;
-  contentText: string;
-  similarity: number;
-  resource?: LearningResource;
-}
+// ============================================================================
+// Embedding Search Operations
+// ============================================================================
 
 /**
  * Search embeddings by similarity across all content types
@@ -139,7 +91,12 @@ export async function searchEmbeddings(
     const resourceIds = [...new Set(searchResults.map((r) => r.resourceId))];
     const resources = await db.select().from(learningResources).where(inArray(learningResources.id, resourceIds));
 
-    const resourceMap = new Map(resources.map((r) => [r.id, r]));
+    // Fetch sections for all resources
+    const sectionsMap = await getResourceSectionsBatch(resourceIds);
+
+    const resourceMap = new Map(
+      resources.map((r) => [r.id, { ...r, sections: sectionsMap.get(r.id) || [] } as LearningResourceWithSections])
+    );
     for (const result of searchResults) {
       result.resource = resourceMap.get(result.resourceId);
     }
@@ -197,10 +154,10 @@ export async function searchByResource(queryEmbedding: number[], limit: number =
  */
 export function getUniqueResourcesFromResults(
   results: EmbeddingSearchResult[]
-): (LearningResource & { bestMatch: { contentType: EmbeddingContentType; contentText: string; similarity: number } })[] {
+): (LearningResourceWithSections & { bestMatch: { contentType: EmbeddingContentType; contentText: string; similarity: number } })[] {
   const resourceMap = new Map<
     string,
-    LearningResource & { bestMatch: { contentType: EmbeddingContentType; contentText: string; similarity: number } }
+    LearningResourceWithSections & { bestMatch: { contentType: EmbeddingContentType; contentText: string; similarity: number } }
   >();
 
   for (const result of results) {
@@ -220,59 +177,4 @@ export function getUniqueResourcesFromResults(
   }
 
   return Array.from(resourceMap.values()).sort((a, b) => b.bestMatch.similarity - a.bestMatch.similarity);
-}
-
-// ============================================================================
-// Learning Resource Sections
-// ============================================================================
-
-/**
- * Insert multiple sections for a resource
- */
-export async function insertResourceSections(
-  resourceId: string,
-  sections: Array<{ title: string; estimatedMinutes?: number; topics?: string[] }>
-): Promise<LearningResourceSection[]> {
-  if (sections.length === 0) return [];
-
-  const db = requireDb();
-  const sectionsToInsert: NewLearningResourceSection[] = sections.map((section, index) => ({
-    resourceId,
-    title: section.title,
-    estimatedMinutes: section.estimatedMinutes ?? null,
-    orderIndex: index,
-    topics: section.topics ?? []
-  }));
-
-  return db.insert(learningResourceSections).values(sectionsToInsert).returning();
-}
-
-// ============================================================================
-// Skill-Resource Links
-// ============================================================================
-
-/**
- * Link a skill to a resource with a proficiency level
- */
-export async function linkSkillToResource(
-  skillId: string,
-  resourceId: string,
-  level: 'beginner' | 'intermediate' | 'expert'
-): Promise<SkillResource> {
-  const db = requireDb();
-
-  // Check if link already exists
-  const existing = await db
-    .select()
-    .from(skillResources)
-    .where(and(eq(skillResources.skillId, skillId), eq(skillResources.resourceId, resourceId), eq(skillResources.level, level)))
-    .limit(1);
-
-  if (existing.length > 0) {
-    return existing[0];
-  }
-
-  const [inserted] = await db.insert(skillResources).values({ skillId, resourceId, level }).returning();
-
-  return inserted;
 }
