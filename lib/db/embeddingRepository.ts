@@ -10,6 +10,15 @@ import type {
   EmbeddingSearchResult
 } from '../types';
 
+/**
+ * Convert embedding array to pgvector format string.
+ * Drizzle's sql template parameterizes this value ($1, $2, etc.),
+ * protecting against SQL injection.
+ */
+function toVectorString(embedding: number[]): string {
+  return JSON.stringify(embedding);
+}
+
 // ============================================================================
 // Embedding CRUD Operations
 // ============================================================================
@@ -49,6 +58,7 @@ export async function searchEmbeddings(
 ): Promise<EmbeddingSearchResult[]> {
   const { limit = 10, contentTypes, includeResource = true } = options;
   const db = requireDb();
+  const serializedEmbedding = toVectorString(queryEmbedding);
 
   let query = sql`
     SELECT
@@ -57,7 +67,7 @@ export async function searchEmbeddings(
       re.content_index as "contentIndex",
       re.section_id as "sectionId",
       re.content_text as "contentText",
-      1 - (re.embedding <=> ${JSON.stringify(queryEmbedding)}::vector) as similarity
+      1 - (re.embedding <=> ${serializedEmbedding}::vector) as similarity
     FROM resource_embeddings re
   `;
 
@@ -65,7 +75,7 @@ export async function searchEmbeddings(
     query = sql`${query} WHERE re.content_type = ANY(${contentTypes})`;
   }
 
-  query = sql`${query} ORDER BY re.embedding <=> ${JSON.stringify(queryEmbedding)}::vector LIMIT ${limit}`;
+  query = sql`${query} ORDER BY re.embedding <=> ${serializedEmbedding}::vector LIMIT ${limit}`;
 
   const results = await db.execute(query);
   const searchResults = results.rows as unknown as EmbeddingSearchResult[];
