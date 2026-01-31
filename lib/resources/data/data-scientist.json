@@ -2,7 +2,7 @@
   "career": "data-scientist",
   "resources": [
     {
-      "skill": "Python",
+      "skill": "Python Programming",
       "level": "beginner",
       "url": "https://www.udemy.com/course/the-python-bible/",
       "title": "The Python Bible | Everything You Need to Program in Python",
@@ -150,7 +150,7 @@
       ]
     },
     {
-      "skill": "Python",
+      "skill": "Python Programming",
       "level": "beginner",
       "url": "https://www.udemy.com/course/python-for-beginners-hands-on/",
       "title": "Python for Beginners: Learn Python with Hands-on Projects",
@@ -223,7 +223,7 @@
       ]
     },
     {
-      "skill": "Python programming",
+      "skill": "Python Programming",
       "level": "beginner",
       "url": "https://www.udemy.com/course/ultimate-python-tutorial/",
       "title": "Python Programming Bootcamp",
