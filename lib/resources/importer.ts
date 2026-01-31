@@ -1,13 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  ImportFileSchema,
-  type ImportFile,
-  type ImportResource,
-  type ImportResult,
-  type ImportResourceResult,
-  type ImportOptions
-} from './types';
+import { ImportFileSchema, type ImportFile, type ImportResource, type ImportResult, type ImportResourceResult, type ImportOptions } from './types';
 import { createEmbeddings } from '../embeddings';
 import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../types';
 import { insertResourceEmbeddings } from '../db/embeddingRepository';
@@ -193,10 +186,8 @@ async function importSingleResource(resource: ImportResource, career: string, op
     await linkSkillToResource(skill.id, insertedResource.id, resource.level);
 
     // Generate and store embeddings for all content types
-    if (!options.skipEmbeddings) {
-      const embeddingItems = prepareEmbeddingItems(resource, insertedSections);
-      await generateAndStoreEmbeddings(insertedResource.id, embeddingItems);
-    }
+    const embeddingItems = prepareEmbeddingItems(resource, insertedSections);
+    await generateAndStoreEmbeddings(insertedResource.id, embeddingItems);
 
     return {
       url: resource.url,
@@ -323,4 +314,83 @@ export function validateImportFile(filePath: string): {
       error: error instanceof Error ? error.message : String(error)
     };
   }
+}
+
+/**
+ * Get all JSON files from the data directory
+ */
+export function getDataFiles(): string[] {
+  if (!fs.existsSync(DATA_DIR)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(DATA_DIR)
+    .filter((file) => file.endsWith('.json'))
+    .sort();
+}
+
+/**
+ * Import all resources from all JSON files in the data directory
+ */
+export async function importAllResources(options: ImportOptions = {}): Promise<{
+  totalFiles: number;
+  results: Array<{ file: string; result: ImportResult | { error: string } }>;
+}> {
+  const files = getDataFiles();
+
+  if (files.length === 0) {
+    console.log('No JSON files found in data directory');
+    return { totalFiles: 0, results: [] };
+  }
+
+  console.log(`Found ${files.length} resource file(s) to process\n`);
+  console.log('='.repeat(60));
+
+  const results: Array<{ file: string; result: ImportResult | { error: string } }> = [];
+
+  for (const file of files) {
+    console.log(`\nProcessing: ${file}`);
+    console.log('-'.repeat(40));
+
+    try {
+      const result = await importResourcesFromJson(file, options);
+      results.push({ file, result });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.log(`✗ Error processing ${file}: ${errorMessage}`);
+      results.push({ file, result: { error: errorMessage } });
+    }
+  }
+
+  // Print final summary
+  console.log('\n' + '='.repeat(60));
+  console.log('SYNC COMPLETE');
+  console.log('='.repeat(60));
+
+  let totalResources = 0;
+  let totalSuccess = 0;
+  let totalSkipped = 0;
+  let totalFailed = 0;
+
+  for (const { file, result } of results) {
+    if ('error' in result) {
+      console.log(`\n${file}: ERROR - ${result.error}`);
+    } else {
+      totalResources += result.totalResources;
+      totalSuccess += result.successCount;
+      totalSkipped += result.results.filter((r) => r.error?.includes('skipped')).length;
+      totalFailed += result.failureCount;
+      console.log(`\n${file}: ${result.successCount} imported, ${result.results.filter((r) => r.error?.includes('skipped')).length} skipped, ${result.failureCount} failed`);
+    }
+  }
+
+  console.log('\n--- Overall Summary ---');
+  console.log(`Total files processed: ${files.length}`);
+  console.log(`Total resources: ${totalResources}`);
+  console.log(`Successfully imported: ${totalSuccess}`);
+  console.log(`Skipped (already exist): ${totalSkipped}`);
+  console.log(`Failed: ${totalFailed}`);
+
+  return { totalFiles: files.length, results };
 }

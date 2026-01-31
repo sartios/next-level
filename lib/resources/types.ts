@@ -73,5 +73,4 @@ export interface ImportResult {
  */
 export interface ImportOptions {
   dryRun?: boolean;
-  skipEmbeddings?: boolean;
 }
