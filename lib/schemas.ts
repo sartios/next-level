@@ -8,8 +8,8 @@ export const AvailableSlotSchema = z.object({
 });
 
 const LearningResourceSectionSchema = z.object({
-  id: z.uuid(),
-  resourceId: z.uuid(),
+  id: z.string(),
+  resourceId: z.string(),
   title: z.string(),
   estimatedMinutes: z.number().int().nullable(),
   orderIndex: z.number().int(),
@@ -17,16 +17,16 @@ const LearningResourceSectionSchema = z.object({
 });
 
 const LearningResourceSchema = z.object({
-  id: z.uuid(),
-  url: z.url(),
+  id: z.string(),
+  url: z.string(),
   title: z.string(),
   description: z.string().nullable(),
   provider: z.string(),
   resourceType: z.enum(['course', 'book', 'tutorial', 'article']),
   learningObjectives: z.array(z.string()).default([]),
   totalHours: z.string().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date()
+  createdAt: z.string(),
+  updatedAt: z.string()
 });
 
 const LearningResourceWithSectionsSchema = LearningResourceSchema.extend({
