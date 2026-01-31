@@ -1,6 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 import { requireDb } from './index';
-import { skills, type Skill } from './schema';
+import { skills } from './schema';
+import { Skill } from '../types';
 
 // ============================================================================
 // Skills

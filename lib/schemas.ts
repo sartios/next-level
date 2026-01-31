@@ -7,21 +7,35 @@ export const AvailableSlotSchema = z.object({
   durationMinutes: z.number().describe('The duration of the slot in minutes')
 });
 
-export const ResourceSchema = z.object({
-  title: z.string().describe('The title of the resource'),
-  link: z.string().describe('The link of the resource'),
-  reasoning: z.string().describe('The reason of resource relevance to the skill'),
-  provider: z.string().describe('The provider of the resource'),
-  approximateHours: z.number().describe('The approximate hours for completing the resource'),
+const LearningResourceSectionSchema = z.object({
+  id: z.uuid(),
+  resourceId: z.uuid(),
+  title: z.string(),
+  estimatedMinutes: z.number().int().nullable(),
+  orderIndex: z.number().int(),
+  topics: z.array(z.string()).default([])
+});
+
+const LearningResourceSchema = z.object({
+  id: z.uuid(),
+  url: z.url(),
+  title: z.string(),
+  description: z.string().nullable(),
+  provider: z.string(),
+  resourceType: z.enum(['course', 'book', 'tutorial', 'article']),
+  learningObjectives: z.array(z.string()).default([]),
+  totalHours: z.string().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date()
+});
+
+const LearningResourceWithSectionsSchema = LearningResourceSchema.extend({
+  sections: z.array(LearningResourceSectionSchema)
+});
+
+export const GoalResourceSchema = LearningResourceWithSectionsSchema.extend({
   relevancePercentage: z.number().describe('The relevance percentage of the resource to the goal'),
-  sections: z
-    .array(
-      z.object({
-        skill: z.string().describe('The skill of section focus'),
-        location: z.string().describe('The specific place of the section within the resource')
-      })
-    )
-    .describe('The relevant sections within the resource')
+  reasoning: z.string().describe('The reason of resource relevance to the skill')
 });
 
 export const RoadmapStepStatusSchema = z.enum(['pending', 'started', 'completed']).describe('The status of the roadmap step');
@@ -36,7 +50,7 @@ export const TimelineSchema = z.object({
 export const RoadmapStepSchema = z.object({
   step: z.string().describe('The name of the roadmap step'),
   description: z.string().describe('A detailed description of what this step involves'),
-  resources: z.array(ResourceSchema).describe('The learning resources associated with this step'),
+  resources: z.array(GoalResourceSchema).describe('The learning resources associated with this step'),
   status: RoadmapStepStatusSchema.describe('The current status of the step: pending, started, or completed'),
   timeline: z.array(TimelineSchema).describe('The scheduled time slots for working on this step')
 });
@@ -70,7 +84,7 @@ export const GoalSchema = z.object({
   userId: z.string().describe('The user ID who owns this goal'),
   name: z.string().describe('The name of the goal'),
   reasoning: z.string().describe('The reasoning behind why this goal is important'),
-  resources: z.array(ResourceSchema).optional().describe('Learning resources for the goal'),
+  resources: z.array(GoalResourceSchema).optional().describe('Learning resources for the goal'),
   roadmap: z.array(RoadmapStepSchema).optional().describe('The step-by-step roadmap for achieving the goal'),
   plan: PlanSchema.optional().describe('The weekly plan for the goal')
 });

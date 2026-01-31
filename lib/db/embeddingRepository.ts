@@ -1,31 +1,14 @@
 import { sql, inArray } from 'drizzle-orm';
 import { requireDb } from './index';
-import {
-  learningResources,
-  resourceEmbeddings,
-  type NewResourceEmbedding,
-  type ResourceEmbedding,
-  type EmbeddingContentType
-} from './schema';
-
-import { getResourceSectionsBatch, type LearningResourceWithSections } from './resourceRepository';
-
-// ============================================================================
-// Types
-// ============================================================================
-
-/**
- * Search result type including the matched content
- */
-export interface EmbeddingSearchResult {
-  resourceId: string;
-  contentType: EmbeddingContentType;
-  contentIndex: number | null;
-  sectionId: string | null;
-  contentText: string;
-  similarity: number;
-  resource?: LearningResourceWithSections;
-}
+import { learningResources, resourceEmbeddings } from './schema';
+import { getResourceSectionsBatch } from './resourceRepository';
+import type {
+  NewResourceEmbedding,
+  ResourceEmbedding,
+  EmbeddingContentType,
+  LearningResourceWithSections,
+  EmbeddingSearchResult
+} from '../types';
 
 // ============================================================================
 // Embedding CRUD Operations

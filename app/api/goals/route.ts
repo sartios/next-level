@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createGoal, updateGoalResources } from '@/lib/repository';
 import SkillResourceAgent from '@/lib/agents/SkillResourceAgent';
+import { GoalResource } from '@/lib/types';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Save resources to the goal
-    const updatedGoal = updateGoalResources(resourceResult.resources);
+    const updatedGoal = updateGoalResources(resourceResult.resources as GoalResource[]);
 
     return NextResponse.json({ goal: updatedGoal, resources: resourceResult.resources });
   } catch (err: unknown) {

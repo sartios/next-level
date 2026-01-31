@@ -9,7 +9,7 @@ import {
   type ImportOptions
 } from './types';
 import { createEmbeddings } from '../embeddings';
-import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../db/schema';
+import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../types';
 import { insertResourceEmbeddings } from '../db/embeddingRepository';
 import { getLearningResourceByUrl, insertLearningResource, insertResourceSections, linkSkillToResource } from '../db/resourceRepository';
 import { upsertSkill } from '../db/skillRepository';

@@ -69,12 +69,8 @@
           "name": "learning_resource_sections_resource_id_learning_resources_id_fk",
           "tableFrom": "learning_resource_sections",
           "tableTo": "learning_resources",
-          "columnsFrom": [
-            "resource_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["resource_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -207,9 +203,7 @@
         "learning_resources_url_unique": {
           "name": "learning_resources_url_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "url"
-          ]
+          "columns": ["url"]
         }
       },
       "policies": {},
@@ -323,12 +317,8 @@
           "name": "resource_embeddings_resource_id_learning_resources_id_fk",
           "tableFrom": "resource_embeddings",
           "tableTo": "learning_resources",
-          "columnsFrom": [
-            "resource_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["resource_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -336,12 +326,8 @@
           "name": "resource_embeddings_section_id_learning_resource_sections_id_fk",
           "tableFrom": "resource_embeddings",
           "tableTo": "learning_resource_sections",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["section_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -434,12 +420,8 @@
           "name": "skill_resources_skill_id_skills_id_fk",
           "tableFrom": "skill_resources",
           "tableTo": "skills",
-          "columnsFrom": [
-            "skill_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["skill_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -447,12 +429,8 @@
           "name": "skill_resources_resource_id_learning_resources_id_fk",
           "tableFrom": "skill_resources",
           "tableTo": "learning_resources",
-          "columnsFrom": [
-            "resource_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["resource_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -462,11 +440,7 @@
         "skill_resources_unique": {
           "name": "skill_resources_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "skill_id",
-            "resource_id",
-            "level"
-          ]
+          "columns": ["skill_id", "resource_id", "level"]
         }
       },
       "policies": {},
@@ -542,10 +516,7 @@
         "skills_name_career_unique": {
           "name": "skills_name_career_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name",
-            "career"
-          ]
+          "columns": ["name", "career"]
         }
       },
       "policies": {},

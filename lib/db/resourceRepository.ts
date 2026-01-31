@@ -1,26 +1,17 @@
 import { eq, and, inArray } from 'drizzle-orm';
 import { requireDb } from './index';
-import {
-  learningResources,
-  learningResourceSections,
-  skillResources,
-  type NewLearningResource,
-  type NewLearningResourceSection,
-  type LearningResource,
-  type LearningResourceSection,
-  type SkillResource
-} from './schema';
+import { learningResources, learningResourceSections, skillResources } from './schema';
+import type {
+  NewLearningResource,
+  NewLearningResourceSection,
+  LearningResource,
+  LearningResourceSection,
+  SkillResource,
+  LearningResourceWithSections
+} from '../types';
 
-// ============================================================================
-// Types
-// ============================================================================
-
-/**
- * Learning resource with sections included
- */
-export type LearningResourceWithSections = LearningResource & {
-  sections: LearningResourceSection[];
-};
+// Re-export type for backward compatibility
+export type { LearningResourceWithSections } from '../types';
 
 // ============================================================================
 // Learning Resources

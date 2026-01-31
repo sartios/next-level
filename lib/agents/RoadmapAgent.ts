@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { Goal, RoadmapStep } from '@/lib/mockDb';
-import { GoalSchema, ResourceSchema, RoadmapStepSchema } from '@/lib/schemas';
+import { GoalSchema, GoalResourceSchema, RoadmapStepSchema } from '@/lib/schemas';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
 import { fetchUserAvailabilityTool } from '@/lib/tools/fetchUserAvailabilityTool';
@@ -20,7 +20,7 @@ interface RoadmapResult {
 
 const RoadmapResultSchema = z.object({
   goal: GoalSchema.extend({
-    resources: z.array(ResourceSchema).describe('Learning resources for the goal')
+    resources: z.array(GoalResourceSchema).describe('Learning resources for the goal')
   }).omit({ roadmap: true, plan: true }),
   roadmap: z.array(RoadmapStepSchema)
 });

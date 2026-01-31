@@ -251,7 +251,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                       <ul className="text-sm font-medium text-muted-foreground space-y-1">
                         {step.resources.map((resource, rIdx) => (
                           <li key={rIdx}>
-                            <a href={resource.link} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
+                            <a href={resource.url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">
                               {resource.title}
                             </a>
                           </li>

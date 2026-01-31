@@ -89,14 +89,8 @@ export const skillResources = pgTable(
   ]
 );
 
-/**
- * Embedding content types for granular similarity search:
- * - 'resource': Full resource (title + description + objectives combined)
- * - 'description': Just the resource description
- * - 'learning_objective': Individual learning objective
- * - 'section': Individual section/chapter title
- */
-export type EmbeddingContentType = 'resource' | 'description' | 'learning_objective' | 'section';
+// Import EmbeddingContentType for use in the table definition
+import type { EmbeddingContentType } from '../types';
 
 /**
  * Resource embeddings table - Stores embeddings for different content types
@@ -126,15 +120,3 @@ export const resourceEmbeddings = pgTable(
     index('resource_embeddings_section_id_idx').on(table.sectionId)
   ]
 );
-
-// Type exports for learning resources
-export type Skill = typeof skills.$inferSelect;
-export type NewSkill = typeof skills.$inferInsert;
-export type LearningResource = typeof learningResources.$inferSelect;
-export type NewLearningResource = typeof learningResources.$inferInsert;
-export type LearningResourceSection = typeof learningResourceSections.$inferSelect;
-export type NewLearningResourceSection = typeof learningResourceSections.$inferInsert;
-export type SkillResource = typeof skillResources.$inferSelect;
-export type NewSkillResource = typeof skillResources.$inferInsert;
-export type ResourceEmbedding = typeof resourceEmbeddings.$inferSelect;
-export type NewResourceEmbedding = typeof resourceEmbeddings.$inferInsert;

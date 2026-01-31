@@ -8,14 +8,15 @@ import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
 import { searchCuratedResourcesTool } from '@/lib/tools/searchCuratedResourcesTool';
-import { Resource, SuggestedSkill } from '@/lib/mockDb';
-import { ResourceSchema } from '@/lib/schemas';
+import { SuggestedSkill } from '@/lib/mockDb';
+import { GoalResourceSchema } from '@/lib/schemas';
 import { getAgentPrompt } from '@/lib/prompts';
 import { updateGoalResources } from '../repository';
+import { GoalResource } from '../types';
 
 interface ResourceSuggestionResult {
   goal: Omit<SuggestedSkill, 'priority'>;
-  resources: Resource[];
+  resources: GoalResource[];
 }
 
 const ResourceSuggestionResultSchema = z.object({
@@ -23,7 +24,7 @@ const ResourceSuggestionResultSchema = z.object({
     name: z.string(),
     reasoning: z.string()
   }),
-  resources: z.array(ResourceSchema)
+  resources: z.array(GoalResourceSchema)
 });
 
 class SkillResourceAgent {
