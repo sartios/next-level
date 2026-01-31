@@ -4,12 +4,11 @@
  * CLI script to import learning resources from a JSON file
  *
  * Usage:
- *   npx tsx scripts/importResources.ts --file resources.json [--dry-run] [--skip-embeddings]
+ *   npx tsx scripts/importResources.ts --file resources.json [--dry-run]
  *
  * Options:
  *   --file, -f          Path to the JSON file containing resources (required)
  *   --dry-run, -d       Validate and show what would be imported without making changes
- *   --skip-embeddings   Skip generating embeddings (faster for testing)
  *   --validate-only     Only validate the JSON file structure
  *   --help, -h          Show this help message
  */
@@ -30,7 +29,6 @@ Usage:
 Options:
   --file, -f          Path to the JSON file containing resources (required)
   --dry-run, -d       Validate and show what would be imported without making changes
-  --skip-embeddings   Skip generating embeddings (faster for testing)
   --validate-only     Only validate the JSON file structure
   --help, -h          Show this help message
 
