@@ -1,9 +1,6 @@
 {
-  "career": "data-scientist",
   "resources": [
     {
-      "skill": "Python Programming",
-      "level": "beginner",
       "url": "https://www.udemy.com/course/the-python-bible/",
       "title": "The Python Bible | Everything You Need to Program in Python",
       "provider": "udemy",
@@ -20,6 +17,12 @@
         "Object-oriented programming with classes and objects",
         "Building complete Python projects and scripts",
         "Python fundamentals for data science, web development, and AI"
+      ],
+      "targetAudience": [
+        "Complete beginners with no programming experience",
+        "Professionals looking to transition into data science or software development",
+        "Students seeking a practical, project-based introduction to Python",
+        "Anyone wanting to automate tasks or build scripts"
       ],
       "totalHours": 9,
       "sections": [
@@ -62,8 +65,6 @@
       ]
     },
     {
-      "skill": "Machine Learning",
-      "level": "intermediate",
       "url": "https://www.coursera.org/learn/machine-learning",
       "title": "Machine Learning by Stanford University",
       "provider": "coursera",
@@ -74,6 +75,12 @@
         "Unsupervised learning (clustering, dimensionality reduction, recommender systems, deep learning)",
         "Best practices in machine learning (bias/variance theory, innovation process in ML and AI)",
         "Apply learning algorithms to building smart robots, text understanding, computer vision, medical informatics"
+      ],
+      "targetAudience": [
+        "Software engineers looking to transition into machine learning roles",
+        "Data analysts wanting to expand into predictive modeling",
+        "Graduate students in computer science or related fields",
+        "Professionals with basic programming and math background seeking ML foundations"
       ],
       "totalHours": 30,
       "sections": [
@@ -120,8 +127,6 @@
       ]
     },
     {
-      "skill": "Deep Learning",
-      "level": "expert",
       "url": "https://learning.oreilly.com/library/view/deep-learning/9781491924570/",
       "title": "Deep Learning",
       "provider": "oreilly",
@@ -132,6 +137,12 @@
         "Modern practical deep learning techniques",
         "Deep learning research",
         "Sequence modeling with recurrent and recursive nets"
+      ],
+      "targetAudience": [
+        "Machine learning practitioners seeking deep theoretical understanding",
+        "Researchers and PhD students in AI and machine learning",
+        "Senior data scientists looking to specialize in deep learning",
+        "Engineers with strong math background wanting to understand neural network internals"
       ],
       "totalHours": 14,
       "sections": [
