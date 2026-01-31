@@ -126,8 +126,7 @@ async function main(): Promise<void> {
     }
 
     const result = await importResourcesFromJson(values.file, {
-      dryRun: values['dry-run'],
-      skipEmbeddings: values['skip-embeddings']
+      dryRun: values['dry-run']
     });
 
     await closeConnection();

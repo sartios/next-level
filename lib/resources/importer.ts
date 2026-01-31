@@ -1,6 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { ImportFileSchema, type ImportFile, type ImportResource, type ImportResult, type ImportResourceResult, type ImportOptions } from './types';
+import {
+  ImportFileSchema,
+  type ImportFile,
+  type ImportResource,
+  type ImportResult,
+  type ImportResourceResult,
+  type ImportOptions
+} from './types';
 import { createEmbeddings } from '../embeddings';
 import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../types';
 import { insertResourceEmbeddings } from '../db/embeddingRepository';
@@ -381,7 +388,9 @@ export async function importAllResources(options: ImportOptions = {}): Promise<{
       totalSuccess += result.successCount;
       totalSkipped += result.results.filter((r) => r.error?.includes('skipped')).length;
       totalFailed += result.failureCount;
-      console.log(`\n${file}: ${result.successCount} imported, ${result.results.filter((r) => r.error?.includes('skipped')).length} skipped, ${result.failureCount} failed`);
+      console.log(
+        `\n${file}: ${result.successCount} imported, ${result.results.filter((r) => r.error?.includes('skipped')).length} skipped, ${result.failureCount} failed`
+      );
     }
   }
 

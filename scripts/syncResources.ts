@@ -73,9 +73,7 @@ async function main(): Promise<void> {
     await closeConnection();
 
     // Check if any failures occurred
-    const hasFailures = result.results.some(
-      (r) => 'error' in r.result || ('failureCount' in r.result && r.result.failureCount > 0)
-    );
+    const hasFailures = result.results.some((r) => 'error' in r.result || ('failureCount' in r.result && r.result.failureCount > 0));
 
     if (hasFailures) {
       process.exit(1);
