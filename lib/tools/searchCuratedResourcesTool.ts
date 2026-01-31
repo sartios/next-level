@@ -19,17 +19,21 @@ interface ToolFunctionProps {
   limit: number | null;
 }
 
+const DEFAULT_LIMIT = 10;
+
 const toolFunction = async ({ query, skillLevel, limit }: ToolFunctionProps): Promise<string> => {
   const searchQuery = skillLevel ? `${query} for ${skillLevel} level learners` : query;
   const queryEmbedding = await createEmbedding(searchQuery);
+  const requestedLimit = limit ?? DEFAULT_LIMIT;
 
+  // Fetch 2x the requested limit to account for deduplication
   const searchResults: EmbeddingSearchResult[] = await searchEmbeddings(queryEmbedding, {
-    limit: limit ?? 20,
+    limit: requestedLimit * 2,
     includeResource: true
   });
   const uniqueResources = getUniqueResourcesFromResults(searchResults);
 
-  const resources: ToolResponse[] = uniqueResources.slice(0, limit ?? 10).map((resource) => ({
+  const resources: ToolResponse[] = uniqueResources.slice(0, requestedLimit).map((resource) => ({
     ...resource,
     matchedContent: {
       type: resource.bestMatch.contentType,
