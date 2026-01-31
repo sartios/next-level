@@ -1,26 +1,9 @@
-import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, real, unique } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, real } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // ============================================================================
 // Learning Resources System
 // ============================================================================
-
-/**
- * Skills table - Career skills that can be learned
- */
-export const skills = pgTable(
-  'skills',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    name: text('name').notNull(),
-    career: text('career').notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull()
-  },
-  (table) => [
-    unique('skills_name_career_unique').on(table.name, table.career),
-    index('skills_name_idx').on(table.name),
-    index('skills_career_idx').on(table.career)
-  ]
-);
 
 /**
  * Learning resources table - Courses, books, tutorials, articles, etc.
@@ -67,29 +50,6 @@ export const learningResourceSections = pgTable(
   (table) => [index('learning_resource_sections_resource_id_idx').on(table.resourceId)]
 );
 
-/**
- * Skill resources - Links skills to resources with proficiency levels
- */
-export const skillResources = pgTable(
-  'skill_resources',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    skillId: uuid('skill_id')
-      .notNull()
-      .references(() => skills.id, { onDelete: 'cascade' }),
-    resourceId: uuid('resource_id')
-      .notNull()
-      .references(() => learningResources.id, { onDelete: 'cascade' }),
-    level: text('level').$type<'beginner' | 'intermediate' | 'expert'>().notNull()
-  },
-  (table) => [
-    unique('skill_resources_unique').on(table.skillId, table.resourceId, table.level),
-    index('skill_resources_skill_id_idx').on(table.skillId),
-    index('skill_resources_resource_id_idx').on(table.resourceId),
-    index('skill_resources_level_idx').on(table.level)
-  ]
-);
-
 // ============================================================================
 // Resource Embeddings
 // ============================================================================
@@ -121,3 +81,31 @@ export const resourceEmbeddings = pgTable(
     index('resource_embeddings_section_id_idx').on(table.sectionId)
   ]
 );
+
+// ============================================================================
+// Relations
+// ============================================================================
+
+export const learningResourcesRelations = relations(learningResources, ({ many }) => ({
+  sections: many(learningResourceSections),
+  embeddings: many(resourceEmbeddings)
+}));
+
+export const learningResourceSectionsRelations = relations(learningResourceSections, ({ one, many }) => ({
+  resource: one(learningResources, {
+    fields: [learningResourceSections.resourceId],
+    references: [learningResources.id]
+  }),
+  embeddings: many(resourceEmbeddings)
+}));
+
+export const resourceEmbeddingsRelations = relations(resourceEmbeddings, ({ one }) => ({
+  resource: one(learningResources, {
+    fields: [resourceEmbeddings.resourceId],
+    references: [learningResources.id]
+  }),
+  section: one(learningResourceSections, {
+    fields: [resourceEmbeddings.sectionId],
+    references: [learningResourceSections.id]
+  })
+}));

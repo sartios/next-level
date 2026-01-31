@@ -1,12 +1,11 @@
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { requireDb } from './index';
-import { learningResources, learningResourceSections, skillResources } from './schema';
+import { learningResources, learningResourceSections } from './schema';
 import type {
   NewLearningResource,
   NewLearningResourceSection,
   LearningResource,
   LearningResourceSection,
-  SkillResource,
   LearningResourceWithSections
 } from '../types';
 
@@ -139,32 +138,3 @@ export async function insertResourceSections(
   return db.insert(learningResourceSections).values(sectionsToInsert).returning();
 }
 
-// ============================================================================
-// Skill-Resource Links
-// ============================================================================
-
-/**
- * Link a skill to a resource with a proficiency level
- */
-export async function linkSkillToResource(
-  skillId: string,
-  resourceId: string,
-  level: 'beginner' | 'intermediate' | 'expert'
-): Promise<SkillResource> {
-  const db = requireDb();
-
-  // Check if link already exists
-  const existing = await db
-    .select()
-    .from(skillResources)
-    .where(and(eq(skillResources.skillId, skillId), eq(skillResources.resourceId, resourceId), eq(skillResources.level, level)))
-    .limit(1);
-
-  if (existing.length > 0) {
-    return existing[0];
-  }
-
-  const [inserted] = await db.insert(skillResources).values({ skillId, resourceId, level }).returning();
-
-  return inserted;
-}

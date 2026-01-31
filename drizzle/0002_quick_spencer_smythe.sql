@@ -1,1 +1,0 @@
-ALTER TABLE "learning_resources" ALTER COLUMN "total_hours" SET DATA TYPE real;

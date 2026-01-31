@@ -1,1 +1,0 @@
-ALTER TABLE "learning_resource_sections" ADD COLUMN "topics" jsonb DEFAULT '[]'::jsonb;

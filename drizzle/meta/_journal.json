@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1769852404238,
-      "tag": "0000_init-knowledge-base",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1769868761621,
-      "tag": "0001_resource-section-topics",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1769886691488,
-      "tag": "0002_quick_spencer_smythe",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1769886903023,
-      "tag": "0003_nebulous_alice",
+      "when": 1769896382167,
+      "tag": "0000_lazy_joystick",
       "breakpoints": true
     }
   ]

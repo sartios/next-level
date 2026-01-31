@@ -17,8 +17,6 @@ export const ResourceSectionSchema = z.object({
  * Schema for a single learning resource in the import file
  */
 export const ImportResourceSchema = z.object({
-  skill: z.string().min(1, 'Skill name is required'),
-  level: z.enum(['beginner', 'intermediate', 'expert']),
   url: z.string().url('Invalid URL format'),
   title: z.string().min(1, 'Title is required'),
   provider: z.string().min(1, 'Provider is required'),
@@ -34,7 +32,6 @@ export const ImportResourceSchema = z.object({
  * Schema for the complete import file
  */
 export const ImportFileSchema = z.object({
-  career: z.string().min(1, 'Career field is required'),
   resources: z.array(ImportResourceSchema).min(1, 'At least one resource is required')
 });
 
@@ -54,7 +51,6 @@ export interface ImportResourceResult {
   title: string;
   success: boolean;
   resourceId?: string;
-  skillId?: string;
   error?: string;
 }
 
@@ -62,7 +58,6 @@ export interface ImportResourceResult {
  * Result of the complete import operation
  */
 export interface ImportResult {
-  career: string;
   totalResources: number;
   successCount: number;
   failureCount: number;

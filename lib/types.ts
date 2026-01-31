@@ -11,11 +11,7 @@
 export type EmbeddingContentType = 'resource' | 'description' | 'learning_objective' | 'target_audience' | 'section';
 
 // Import the table definitions to infer types
-import { skills, learningResources, learningResourceSections, skillResources, resourceEmbeddings } from './db/schema';
-
-// Skill types
-export type Skill = typeof skills.$inferSelect;
-export type NewSkill = typeof skills.$inferInsert;
+import { learningResources, learningResourceSections, resourceEmbeddings } from './db/schema';
 
 // Learning Resource types
 export type LearningResource = typeof learningResources.$inferSelect;
@@ -24,10 +20,6 @@ export type NewLearningResource = typeof learningResources.$inferInsert;
 // Learning Resource Section types
 export type LearningResourceSection = typeof learningResourceSections.$inferSelect;
 export type NewLearningResourceSection = typeof learningResourceSections.$inferInsert;
-
-// Skill-Resource link types
-export type SkillResource = typeof skillResources.$inferSelect;
-export type NewSkillResource = typeof skillResources.$inferInsert;
 
 // Resource Embedding types
 export type ResourceEmbedding = typeof resourceEmbeddings.$inferSelect;

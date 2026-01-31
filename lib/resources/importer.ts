@@ -11,8 +11,7 @@ import {
 import { createEmbeddings } from '../embeddings';
 import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../types';
 import { insertResourceEmbeddings } from '../db/embeddingRepository';
-import { getLearningResourceByUrl, insertLearningResource, insertResourceSections, linkSkillToResource } from '../db/resourceRepository';
-import { upsertSkill } from '../db/skillRepository';
+import { getLearningResourceByUrl, insertLearningResource, insertResourceSections } from '../db/resourceRepository';
 
 /**
  * Prepare full resource text for embedding (combines all content)
@@ -162,7 +161,7 @@ async function generateAndStoreEmbeddings(resourceId: string, items: EmbeddingIt
 /**
  * Import a single resource
  */
-async function importSingleResource(resource: ImportResource, career: string, options: ImportOptions): Promise<ImportResourceResult> {
+async function importSingleResource(resource: ImportResource, options: ImportOptions): Promise<ImportResourceResult> {
   try {
     // Check if resource already exists
     const existing = await getLearningResourceByUrl(resource.url);
@@ -185,9 +184,6 @@ async function importSingleResource(resource: ImportResource, career: string, op
       };
     }
 
-    // Upsert the skill
-    const skill = await upsertSkill(resource.skill, career);
-
     // Prepare learning resource data
     const learningResourceData: NewLearningResource = {
       url: resource.url,
@@ -209,9 +205,6 @@ async function importSingleResource(resource: ImportResource, career: string, op
       insertedSections = await insertResourceSections(insertedResource.id, resource.sections);
     }
 
-    // Link skill to resource
-    await linkSkillToResource(skill.id, insertedResource.id, resource.level);
-
     // Generate and store embeddings for all content types
     const embeddingItems = prepareEmbeddingItems(resource, insertedSections);
     await generateAndStoreEmbeddings(insertedResource.id, embeddingItems);
@@ -220,8 +213,7 @@ async function importSingleResource(resource: ImportResource, career: string, op
       url: resource.url,
       title: resource.title,
       success: true,
-      resourceId: insertedResource.id,
-      skillId: skill.id
+      resourceId: insertedResource.id
     };
   } catch (error) {
     return {
@@ -278,7 +270,7 @@ export async function importResourcesFromJson(filePath: string, options: ImportO
   const importData = parseImportFile(filePath);
   const results: ImportResourceResult[] = [];
 
-  console.log(`\nImporting ${importData.resources.length} resources for career: ${importData.career}`);
+  console.log(`\nImporting ${importData.resources.length} resources from ${filePath}`);
   if (options.dryRun) {
     console.log('(Dry run mode - no changes will be made)\n');
   } else {
@@ -289,18 +281,18 @@ export async function importResourcesFromJson(filePath: string, options: ImportO
     const resource = importData.resources[i];
     console.log(`[${i + 1}/${importData.resources.length}] ${resource.title}...`);
 
-    const result = await importSingleResource(resource, importData.career, options);
+    const result = await importSingleResource(resource, options);
 
     results.push(result);
 
     if (result.success) {
       if (result.error) {
-        console.log(`  ⚠ ${result.error}`);
+        console.log(`  - ${result.error}`);
       } else {
-        console.log(`  ✓ Imported successfully`);
+        console.log(`  - Imported successfully`);
       }
     } else {
-      console.log(`  ✗ Failed: ${result.error}`);
+      console.log(`  x Failed: ${result.error}`);
     }
   }
 
@@ -309,14 +301,12 @@ export async function importResourcesFromJson(filePath: string, options: ImportO
   const failureCount = results.filter((r) => !r.success).length;
 
   console.log(`\n--- Import Summary ---`);
-  console.log(`Career: ${importData.career}`);
   console.log(`Total resources: ${importData.resources.length}`);
   console.log(`Successfully imported: ${successCount}`);
   console.log(`Skipped (already exist): ${skippedCount}`);
   console.log(`Failed: ${failureCount}`);
 
   return {
-    career: importData.career,
     totalResources: importData.resources.length,
     successCount,
     failureCount,
