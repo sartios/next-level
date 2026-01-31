@@ -34,17 +34,15 @@ Options:
 
 Example JSON format:
 {
-  "career": "data-scientist",
   "resources": [
     {
-      "skill": "Python",
-      "level": "beginner",
       "url": "https://www.udemy.com/course/python-course/",
       "title": "Complete Python Course",
       "provider": "udemy",
       "resourceType": "course",
       "description": "Learn Python from scratch...",
       "learningObjectives": ["Python basics", "Data structures"],
+      "targetAudience": ["Beginners", "Career changers"],
       "totalHours": 10,
       "sections": [
         { "title": "Introduction", "estimatedMinutes": 15 },
@@ -55,8 +53,6 @@ Example JSON format:
 }
 
 Required fields per resource:
-  - skill: The skill this resource teaches
-  - level: beginner | intermediate | expert
   - url: Full URL to the resource (must be unique)
   - title: Title of the resource
   - provider: Platform name (udemy, coursera, oreilly, etc.)
@@ -65,8 +61,9 @@ Required fields per resource:
 Optional fields:
   - description: Detailed description
   - learningObjectives: Array of learning outcomes
+  - targetAudience: Array of target audience descriptions
   - totalHours: Estimated completion time
-  - sections: Array of { title, estimatedMinutes }
+  - sections: Array of { title, estimatedMinutes, topics }
 `);
 }
 
@@ -99,25 +96,24 @@ async function main(): Promise<void> {
       const result = validateImportFile(values.file);
 
       if (result.valid) {
-        console.log('✓ File is valid');
-        console.log(`  Career: ${result.data!.career}`);
+        console.log('Valid file');
         console.log(`  Resources: ${result.data!.resources.length}`);
 
-        const skills = new Set(result.data!.resources.map((r) => r.skill));
-        console.log(`  Unique skills: ${skills.size}`);
+        const providers = new Set(result.data!.resources.map((r) => r.provider));
+        console.log(`  Providers: ${[...providers].join(', ')}`);
 
-        const levels = result.data!.resources.reduce(
+        const types = result.data!.resources.reduce(
           (acc, r) => {
-            acc[r.level] = (acc[r.level] || 0) + 1;
+            acc[r.resourceType] = (acc[r.resourceType] || 0) + 1;
             return acc;
           },
           {} as Record<string, number>
         );
-        console.log(`  By level:`, levels);
+        console.log(`  By type:`, types);
 
         process.exit(0);
       } else {
-        console.error('✗ Validation failed:');
+        console.error('Validation failed:');
         console.error(result.error);
         process.exit(1);
       }

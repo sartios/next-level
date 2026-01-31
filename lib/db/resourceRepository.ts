@@ -137,4 +137,3 @@ export async function insertResourceSections(
 
   return db.insert(learningResourceSections).values(sectionsToInsert).returning();
 }
-
