@@ -231,7 +231,7 @@ export function getUniqueResourcesFromResults(
  */
 export async function insertResourceSections(
   resourceId: string,
-  sections: Array<{ title: string; estimatedMinutes?: number }>
+  sections: Array<{ title: string; estimatedMinutes?: number; topics?: string[] }>
 ): Promise<LearningResourceSection[]> {
   if (sections.length === 0) return [];
 
@@ -240,7 +240,8 @@ export async function insertResourceSections(
     resourceId,
     title: section.title,
     estimatedMinutes: section.estimatedMinutes ?? null,
-    orderIndex: index
+    orderIndex: index,
+    topics: section.topics ?? []
   }));
 
   return db.insert(learningResourceSections).values(sectionsToInsert).returning();

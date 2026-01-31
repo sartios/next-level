@@ -44,6 +44,12 @@ function prepareFullResourceText(resource: ImportResource): string {
     resource.sections.forEach((section) => {
       const minutes = section.estimatedMinutes ? ` (${section.estimatedMinutes} minutes)` : '';
       parts.push(`- ${section.title}${minutes}`);
+      // Include topics under each section for richer embedding
+      if (section.topics && section.topics.length > 0) {
+        section.topics.forEach((topic) => {
+          parts.push(`  • ${topic}`);
+        });
+      }
     });
   }
 
@@ -96,14 +102,16 @@ function prepareEmbeddingItems(resource: ImportResource, insertedSections: Learn
     });
   }
 
-  // Section embeddings
+  // Section embeddings (include topics in the content text for better semantic search)
   if (insertedSections.length > 0) {
     insertedSections.forEach((section, index) => {
+      // Combine section title with topics for richer embedding
+      const topicsText = section.topics && section.topics.length > 0 ? `\nTopics: ${section.topics.join(', ')}` : '';
       items.push({
         contentType: 'section',
         contentIndex: index,
         sectionId: section.id,
-        contentText: section.title
+        contentText: `${section.title}${topicsText}`
       });
     });
   }

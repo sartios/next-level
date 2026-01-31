@@ -8,6 +8,13 @@
       "when": 1769852404238,
       "tag": "0000_init-knowledge-base",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1769868761621,
+      "tag": "0001_resource-section-topics",
+      "breakpoints": true
     }
   ]
 }
