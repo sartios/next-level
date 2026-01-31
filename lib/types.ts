@@ -7,6 +7,9 @@
 // Database Types (from Drizzle schema)
 // ============================================================================
 
+// Embedding content type enum (defined before schema import to avoid circular dependency)
+export type EmbeddingContentType = 'resource' | 'description' | 'learning_objective' | 'target_audience' | 'section';
+
 // Import the table definitions to infer types
 import { skills, learningResources, learningResourceSections, skillResources, resourceEmbeddings } from './db/schema';
 
@@ -29,9 +32,6 @@ export type NewSkillResource = typeof skillResources.$inferInsert;
 // Resource Embedding types
 export type ResourceEmbedding = typeof resourceEmbeddings.$inferSelect;
 export type NewResourceEmbedding = typeof resourceEmbeddings.$inferInsert;
-
-// Embedding content type enum
-export type EmbeddingContentType = 'resource' | 'description' | 'learning_objective' | 'section';
 
 // ============================================================================
 // Composite Types

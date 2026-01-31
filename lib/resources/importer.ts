@@ -34,6 +34,13 @@ function prepareFullResourceText(resource: ImportResource): string {
     });
   }
 
+  if (resource.targetAudience && resource.targetAudience.length > 0) {
+    parts.push(`\nTarget Audience:`);
+    resource.targetAudience.forEach((audience) => {
+      parts.push(`- ${audience}`);
+    });
+  }
+
   if (resource.sections && resource.sections.length > 0) {
     parts.push(`\nSections:`);
     resource.sections.forEach((section) => {
@@ -55,7 +62,7 @@ function prepareFullResourceText(resource: ImportResource): string {
  * Represents an item to be embedded
  */
 interface EmbeddingItem {
-  contentType: 'resource' | 'description' | 'learning_objective' | 'section';
+  contentType: 'resource' | 'description' | 'learning_objective' | 'target_audience' | 'section';
   contentIndex: number | null;
   sectionId: string | null;
   contentText: string;
@@ -93,6 +100,18 @@ function prepareEmbeddingItems(resource: ImportResource, insertedSections: Learn
         contentIndex: index,
         sectionId: null,
         contentText: objective
+      });
+    });
+  }
+
+  // Target audience embeddings
+  if (resource.targetAudience && resource.targetAudience.length > 0) {
+    resource.targetAudience.forEach((audience, index) => {
+      items.push({
+        contentType: 'target_audience',
+        contentIndex: index,
+        sectionId: null,
+        contentText: audience
       });
     });
   }
@@ -177,6 +196,7 @@ async function importSingleResource(resource: ImportResource, career: string, op
       provider: resource.provider,
       resourceType: resource.resourceType,
       learningObjectives: resource.learningObjectives ?? [],
+      targetAudience: resource.targetAudience ?? [],
       totalHours: resource.totalHours ?? null
     };
 

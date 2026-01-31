@@ -25,6 +25,7 @@ export const ImportResourceSchema = z.object({
   resourceType: z.enum(['course', 'book', 'tutorial', 'article']),
   description: z.string().optional(),
   learningObjectives: z.array(z.string()).optional().default([]),
+  targetAudience: z.array(z.string()).optional().default([]),
   totalHours: z.number().positive().optional(),
   sections: z.array(ResourceSectionSchema).optional().default([])
 });

@@ -46,7 +46,29 @@ export async function insertResourceEmbeddings(embeddings: NewResourceEmbedding[
 // ============================================================================
 
 /**
- * Search embeddings by similarity across all content types
+ * Helper to attach resources to search results
+ */
+async function attachResourcesToResults(results: EmbeddingSearchResult[]): Promise<EmbeddingSearchResult[]> {
+  if (results.length === 0) return results;
+
+  const db = requireDb();
+  const resourceIds = [...new Set(results.map((r) => r.resourceId))];
+  const resources = await db.select().from(learningResources).where(inArray(learningResources.id, resourceIds));
+  const sectionsMap = await getResourceSectionsBatch(resourceIds);
+
+  const resourceMap = new Map(
+    resources.map((r) => [r.id, { ...r, sections: sectionsMap.get(r.id) || [] } as LearningResourceWithSections])
+  );
+
+  for (const result of results) {
+    result.resource = resourceMap.get(result.resourceId);
+  }
+
+  return results;
+}
+
+/**
+ * Search embeddings by similarity across all or specific content types
  */
 export async function searchEmbeddings(
   queryEmbedding: number[],
@@ -58,44 +80,44 @@ export async function searchEmbeddings(
 ): Promise<EmbeddingSearchResult[]> {
   const { limit = 10, contentTypes, includeResource = true } = options;
   const db = requireDb();
-  const serializedEmbedding = toVectorString(queryEmbedding);
+  const vectorStr = toVectorString(queryEmbedding);
 
   let query = sql`
     SELECT
-      re.resource_id as "resourceId",
-      re.content_type as "contentType",
-      re.content_index as "contentIndex",
-      re.section_id as "sectionId",
-      re.content_text as "contentText",
-      1 - (re.embedding <=> ${serializedEmbedding}::vector) as similarity
-    FROM resource_embeddings re
+      resource_id as "resourceId",
+      content_type as "contentType",
+      content_index as "contentIndex",
+      section_id as "sectionId",
+      content_text as "contentText",
+      1 - (embedding <=> ${vectorStr}::vector) as similarity
+    FROM resource_embeddings
   `;
 
   if (contentTypes && contentTypes.length > 0) {
-    query = sql`${query} WHERE re.content_type = ANY(${contentTypes})`;
+    query = sql`${query} WHERE content_type = ANY(${contentTypes})`;
   }
 
-  query = sql`${query} ORDER BY re.embedding <=> ${serializedEmbedding}::vector LIMIT ${limit}`;
+  query = sql`${query} ORDER BY embedding <=> ${vectorStr}::vector LIMIT ${limit}`;
 
   const results = await db.execute(query);
   const searchResults = results.rows as unknown as EmbeddingSearchResult[];
 
-  if (includeResource && searchResults.length > 0) {
-    const resourceIds = [...new Set(searchResults.map((r) => r.resourceId))];
-    const resources = await db.select().from(learningResources).where(inArray(learningResources.id, resourceIds));
-
-    // Fetch sections for all resources
-    const sectionsMap = await getResourceSectionsBatch(resourceIds);
-
-    const resourceMap = new Map(
-      resources.map((r) => [r.id, { ...r, sections: sectionsMap.get(r.id) || [] } as LearningResourceWithSections])
-    );
-    for (const result of searchResults) {
-      result.resource = resourceMap.get(result.resourceId);
-    }
+  if (includeResource) {
+    return attachResourcesToResults(searchResults);
   }
 
   return searchResults;
+}
+
+/**
+ * Search for resources by full resource embedding similarity
+ */
+export async function searchByResource(queryEmbedding: number[], limit: number = 10): Promise<EmbeddingSearchResult[]> {
+  return searchEmbeddings(queryEmbedding, {
+    limit,
+    contentTypes: ['resource'],
+    includeResource: true
+  });
 }
 
 /**
@@ -121,23 +143,23 @@ export async function searchByLearningObjective(queryEmbedding: number[], limit:
 }
 
 /**
+ * Search for resources by target audience similarity
+ */
+export async function searchByTargetAudience(queryEmbedding: number[], limit: number = 10): Promise<EmbeddingSearchResult[]> {
+  return searchEmbeddings(queryEmbedding, {
+    limit,
+    contentTypes: ['target_audience'],
+    includeResource: true
+  });
+}
+
+/**
  * Search for resources by section similarity
  */
 export async function searchBySection(queryEmbedding: number[], limit: number = 10): Promise<EmbeddingSearchResult[]> {
   return searchEmbeddings(queryEmbedding, {
     limit,
     contentTypes: ['section'],
-    includeResource: true
-  });
-}
-
-/**
- * Search for resources by overall resource similarity (combined content)
- */
-export async function searchByResource(queryEmbedding: number[], limit: number = 10): Promise<EmbeddingSearchResult[]> {
-  return searchEmbeddings(queryEmbedding, {
-    limit,
-    contentTypes: ['resource'],
     includeResource: true
   });
 }

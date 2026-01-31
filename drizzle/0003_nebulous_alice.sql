@@ -1,0 +1,1 @@
+ALTER TABLE "learning_resources" ADD COLUMN "target_audience" jsonb DEFAULT '[]'::jsonb;

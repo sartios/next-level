@@ -37,6 +37,7 @@ export const learningResources = pgTable(
     provider: text('provider').notNull(),
     resourceType: text('resource_type').$type<'course' | 'book' | 'tutorial' | 'article'>().notNull(),
     learningObjectives: jsonb('learning_objectives').$type<string[]>().default([]),
+    targetAudience: jsonb('target_audience').$type<string[]>().default([]),
     totalHours: real('total_hours'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull()
@@ -89,12 +90,16 @@ export const skillResources = pgTable(
   ]
 );
 
+// ============================================================================
+// Resource Embeddings
+// ============================================================================
+
 // Import EmbeddingContentType for use in the table definition
 import type { EmbeddingContentType } from '../types';
 
 /**
  * Resource embeddings table - Stores embeddings for different content types
- * Enables similarity search at resource, description, objective, or section level
+ * Uses content_type column to distinguish: resource, description, learning_objective, target_audience, section
  */
 export const resourceEmbeddings = pgTable(
   'resource_embeddings',
@@ -104,13 +109,9 @@ export const resourceEmbeddings = pgTable(
       .notNull()
       .references(() => learningResources.id, { onDelete: 'cascade' }),
     contentType: text('content_type').$type<EmbeddingContentType>().notNull(),
-    // For learning_objectives and sections, which item (0-indexed)
     contentIndex: integer('content_index'),
-    // Optional reference to section (when contentType is 'section')
     sectionId: uuid('section_id').references(() => learningResourceSections.id, { onDelete: 'cascade' }),
-    // The actual text that was embedded (for display in search results)
     contentText: text('content_text').notNull(),
-    // The embedding vector
     embedding: vector('embedding', { dimensions: 1536 }).notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull()
   },
