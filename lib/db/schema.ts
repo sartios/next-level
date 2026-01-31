@@ -54,8 +54,10 @@ export const learningResourceSections = pgTable(
 // Resource Embeddings
 // ============================================================================
 
-// Import EmbeddingContentType for use in the table definition
-import type { EmbeddingContentType } from '../types';
+/**
+ * Embedding content type - defines what part of the resource the embedding represents
+ */
+export type EmbeddingContentType = 'resource' | 'description' | 'learning_objective' | 'target_audience' | 'section';
 
 /**
  * Resource embeddings table - Stores embeddings for different content types
