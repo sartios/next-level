@@ -1,0 +1,40 @@
+name: Database Migration
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'drizzle/**'
+      - 'lib/db/schema.ts'
+
+# Ensure only one migration runs at a time
+concurrency:
+  group: db-migration
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Run Database Migrations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run migrations
+        run: npm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Migration completed
+        run: echo "Database migrations applied successfully"
