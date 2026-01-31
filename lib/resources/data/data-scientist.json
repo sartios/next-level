@@ -1,0 +1,81 @@
+{
+  "career": "data-scientist",
+  "resources": [
+    {
+      "skill": "Python",
+      "level": "beginner",
+      "url": "https://www.udemy.com/course/the-python-bible/",
+      "title": "The Python Bible | Everything You Need to Program in Python",
+      "provider": "udemy",
+      "resourceType": "course",
+      "description": "Build 11 Projects and go from Beginner to Expert in Python with the World's Most Fun Project-Based Python Course!",
+      "learningObjectives": [
+        "Learn to use Python professionally, learning both Python 2 and Python 3!",
+        "Build 11 projects to solidify your Python skills",
+        "Learn about data structures, algorithms, and more",
+        "Understand object-oriented programming concepts"
+      ],
+      "totalHours": 9,
+      "sections": [
+        { "title": "Introduction to Python", "estimatedMinutes": 15 },
+        { "title": "Variables and Data Types", "estimatedMinutes": 45 },
+        { "title": "Control Flow", "estimatedMinutes": 60 },
+        { "title": "Functions", "estimatedMinutes": 50 },
+        { "title": "Data Structures", "estimatedMinutes": 90 },
+        { "title": "Object-Oriented Programming", "estimatedMinutes": 75 },
+        { "title": "File Handling", "estimatedMinutes": 40 },
+        { "title": "Error Handling", "estimatedMinutes": 30 },
+        { "title": "Final Projects", "estimatedMinutes": 135 }
+      ]
+    },
+    {
+      "skill": "Machine Learning",
+      "level": "intermediate",
+      "url": "https://www.coursera.org/learn/machine-learning",
+      "title": "Machine Learning by Stanford University",
+      "provider": "coursera",
+      "resourceType": "course",
+      "description": "This course provides a broad introduction to machine learning, datamining, and statistical pattern recognition.",
+      "learningObjectives": [
+        "Supervised learning (parametric/non-parametric algorithms, support vector machines, kernels, neural networks)",
+        "Unsupervised learning (clustering, dimensionality reduction, recommender systems, deep learning)",
+        "Best practices in machine learning (bias/variance theory, innovation process in ML and AI)",
+        "Apply learning algorithms to building smart robots, text understanding, computer vision, medical informatics"
+      ],
+      "totalHours": 60,
+      "sections": [
+        { "title": "Introduction", "estimatedMinutes": 60 },
+        { "title": "Linear Regression with One Variable", "estimatedMinutes": 120 },
+        { "title": "Linear Algebra Review", "estimatedMinutes": 90 },
+        { "title": "Linear Regression with Multiple Variables", "estimatedMinutes": 150 },
+        { "title": "Logistic Regression", "estimatedMinutes": 120 },
+        { "title": "Regularization", "estimatedMinutes": 90 },
+        { "title": "Neural Networks: Representation", "estimatedMinutes": 180 },
+        { "title": "Neural Networks: Learning", "estimatedMinutes": 180 },
+        { "title": "Advice for Applying Machine Learning", "estimatedMinutes": 120 },
+        { "title": "Machine Learning System Design", "estimatedMinutes": 90 }
+      ]
+    },
+    {
+      "skill": "Deep Learning",
+      "level": "expert",
+      "url": "https://learning.oreilly.com/library/view/deep-learning/9781491924570/",
+      "title": "Deep Learning",
+      "provider": "oreilly",
+      "resourceType": "book",
+      "description": "Deep learning is a form of machine learning that enables computers to learn from experience and understand the world in terms of a hierarchy of concepts.",
+      "learningObjectives": [
+        "Mathematical foundations of deep learning",
+        "Modern practical deep learning techniques",
+        "Deep learning research",
+        "Sequence modeling with recurrent and recursive nets"
+      ],
+      "totalHours": 40,
+      "sections": [
+        { "title": "Part I: Applied Math and Machine Learning Basics", "estimatedMinutes": 480 },
+        { "title": "Part II: Modern Practical Deep Networks", "estimatedMinutes": 720 },
+        { "title": "Part III: Deep Learning Research", "estimatedMinutes": 600 }
+      ]
+    }
+  ]
+}
