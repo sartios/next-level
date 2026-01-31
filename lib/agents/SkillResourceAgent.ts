@@ -77,8 +77,9 @@ class SkillResourceAgent {
       { callbacks: [handler], runName: this.agentName }
     );
 
-    // Check whether it returned resources and then save
-    await updateGoalResources(result.structuredResponse.resources);
+    if (result.structuredResponse.resources.length > 0) {
+      await updateGoalResources(result.structuredResponse.resources);
+    }
 
     return {
       goal: result.structuredResponse.goal,
