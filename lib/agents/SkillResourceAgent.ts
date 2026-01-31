@@ -7,10 +7,11 @@ import { z } from 'zod';
 import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { fetchUserGoalTool } from '@/lib/tools/fetchUserGoalTool';
-import { updateGoalResourcesTool } from '@/lib/tools/updateGoalResourcesTool';
+import { searchCuratedResourcesTool } from '@/lib/tools/searchCuratedResourcesTool';
 import { Resource, SuggestedSkill } from '@/lib/mockDb';
 import { ResourceSchema } from '@/lib/schemas';
 import { getAgentPrompt } from '@/lib/prompts';
+import { updateGoalResources } from '../repository';
 
 interface ResourceSuggestionResult {
   goal: Omit<SuggestedSkill, 'priority'>;
@@ -41,7 +42,7 @@ class SkillResourceAgent {
           const systemPrompt = await getAgentPrompt(this.agentName);
           this.agent = createAgent({
             model: new ChatOpenAI({ model: this.model }),
-            tools: [fetchUserTool, fetchUserGoalTool, updateGoalResourcesTool],
+            tools: [fetchUserTool, fetchUserGoalTool, searchCuratedResourcesTool],
             systemPrompt: new SystemMessage(systemPrompt),
             responseFormat: providerStrategy(ResourceSuggestionResultSchema)
           });
@@ -74,6 +75,9 @@ class SkillResourceAgent {
       { messages: [new HumanMessage(JSON.stringify({ userId, goalId }))] },
       { callbacks: [handler], runName: this.agentName }
     );
+
+    // Check whether it returned resources and then save
+    await updateGoalResources(result.structuredResponse.resources);
 
     return {
       goal: result.structuredResponse.goal,
