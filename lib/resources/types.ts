@@ -9,7 +9,8 @@ import { z } from 'zod';
  */
 export const ResourceSectionSchema = z.object({
   title: z.string().min(1, 'Section title is required'),
-  estimatedMinutes: z.number().int().positive().optional()
+  estimatedMinutes: z.number().int().positive().optional(),
+  topics: z.array(z.string()).optional().default([])
 });
 
 /**
