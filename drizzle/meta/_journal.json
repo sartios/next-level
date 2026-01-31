@@ -15,6 +15,13 @@
       "when": 1769868761621,
       "tag": "0001_resource-section-topics",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769886691488,
+      "tag": "0002_quick_spencer_smythe",
+      "breakpoints": true
     }
   ]
 }
