@@ -11,6 +11,7 @@ interface ToolFunctionProps {
 }
 
 const DEFAULT_LIMIT = 10;
+const DEFAULT_DUPLICATION_MULTIPLIER = 2;
 const DEFAULT_SIMILARITY_THRESHOLD = 0.5;
 
 /**
@@ -21,7 +22,7 @@ export async function searchCuratedResources(query: string, limit: number = DEFA
   const queryEmbedding = await createEmbedding(query);
 
   // Fetch 2x the requested limit to account for deduplication
-  const searchResults: EmbeddingSearchResult[] = await searchEmbeddings(queryEmbedding, { limit: limit * 2 });
+  const searchResults: EmbeddingSearchResult[] = await searchEmbeddings(queryEmbedding, { limit: limit * DEFAULT_DUPLICATION_MULTIPLIER });
 
   const uniqueResourceIds = Array.from(
     new Set(
