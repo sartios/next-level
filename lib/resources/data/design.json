@@ -1,0 +1,88 @@
+{
+  "resources": [
+    {
+      "url": "https://www.youtube.com/watch?v=Od7AfBvBwWo",
+      "title": "Free Figma Advanced Course: Become a Figma Pro",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "An advanced, project-based Figma course focused on building responsive, production-ready UI. Learn AI-assisted workflows, Auto Layout mastery, components, variants, animations, and visual effects while creating a complete, portfolio-ready app using professional UX/UI practices.",
+      "learningObjectives": [
+        "Use AI-powered features in Figma to accelerate layout creation, content generation, and interactions",
+        "Design complex, responsive layouts using Auto Layout, constraints, and grids",
+        "Build scalable components, variables, and multi-dimensional variants",
+        "Apply advanced visual effects, typography techniques, and layout polish",
+        "Create responsive navigation, cards, and grid-based UI through hands-on projects",
+        "Implement animations and interactions within components and variants",
+        "Manage styles, spacing systems, and assets using professional Figma workflows",
+        "Produce a complete, portfolio-ready app from brief to final design"
+      ],
+      "targetAudience": [
+        "UX and UI designers with basic Figma knowledge",
+        "Product designers seeking advanced responsive design skills",
+        "Designers transitioning from static layouts to scalable design systems",
+        "Freelance designers building portfolio-ready projects",
+        "Design teams wanting to improve Figma efficiency and consistency"
+      ],
+      "totalHours": 3.5,
+      "sections": [
+        {
+          "title": "Course Introduction & Project Setup",
+          "estimatedMinutes": 15,
+          "topics": ["Introduction to this Figma Advanced Course", "Getting started", "Your Brief for this Figma Project"]
+        },
+        {
+          "title": "AI-Assisted Design & Visual Effects",
+          "estimatedMinutes": 40,
+          "topics": [
+            "Using First Draft AI in Figma",
+            "Liquid Glass Effect in Figma",
+            "Texture, Noise & Order in Figma",
+            "Progressive Blur Effect in Figma",
+            "Saving Effect Styles & Clearing Unused Styles in Figma"
+          ]
+        },
+        {
+          "title": "Complex Layouts & First Project",
+          "estimatedMinutes": 35,
+          "topics": ["Working with complex layouts in Figma", "Class Project 1: Genre Listings"]
+        },
+        {
+          "title": "Workflow Efficiency & Productivity",
+          "estimatedMinutes": 30,
+          "topics": ["Workflow Tips & Tricks", "Advanced Copy & Paste, Selection tips in Figma", "Frame Tips & Tricks in Figma"]
+        },
+        {
+          "title": "Auto Layout Foundations & AI Enhancements",
+          "estimatedMinutes": 45,
+          "topics": [
+            "Auto Layouts in Figma",
+            "Suggest Auto Layout, Replace Content & Duplicate Layers in Figma",
+            "Class Project 2: Band Listings"
+          ]
+        },
+        {
+          "title": "Responsive Auto Layout & Grids",
+          "estimatedMinutes": 35,
+          "topics": ["Nested Responsive Auto Layouts in Figma", "Auto Layout Grids in Figma", "Class Project 3: Grids"]
+        },
+        {
+          "title": "Components, Spacing & Navigation Projects",
+          "estimatedMinutes": 30,
+          "topics": [
+            "Important information about Components in Figma",
+            "What spacing to use in Figma",
+            "More Spacing tips in Figma",
+            "Class Project 4: Responsive lower Navigation",
+            "Class Project 5: Event Card Constraints",
+            "Class Project 5: Completed"
+          ]
+        },
+        {
+          "title": "Variants & Advanced Component Design",
+          "estimatedMinutes": 15,
+          "topics": ["How to make a simple Variant in Figma", "How to make a multi-dimensional Variant in Figma"]
+        }
+      ]
+    }
+  ]
+}
