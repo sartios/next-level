@@ -407,6 +407,68 @@
           }
         ]
       ]
+    },
+    {
+      "url": "",
+      "title": "THE WAY IT IS: 10 Powerful UX Career Tips ",
+      "provider": "Give Good UX",
+      "resourceType": "book",
+      "description": "Navigate the challenges of UX and user research with practical strategies, from recruiting participants to analyzing feedback. This book offers holistic guidance, actionable insights, and proven truths to help beginners and experienced practitioners confidently design, communicate, and drive user-centered solutions in real-world contexts.",
+      "learningObjectives": [
+        "Understand the fundamentals of UX and user research processes.",
+        "Learn how to recruit and engage participants effectively.",
+        "Apply methods to gather, analyze, and interpret user feedback.",
+        "Develop practical strategies for communicating research insights.",
+        "Build confidence in leading UX activities and decision-making.",
+        "Navigate organizational challenges and influence stakeholders.",
+        "Integrate holistic approaches to problem-solving in UX projects.",
+        "Enhance the ability to design user-centered screens, flows, and experiences."
+      ],
+      "targetAudience": [
+        "Professionals tasked with leading UX activities or user research",
+        "Designers and product teams wanting to improve user-centered decision-making",
+        "Individuals struggling to analyze or apply user feedback effectively",
+        "Employees in organizations new to user research",
+        "UX practitioners looking for practical strategies to overcome real-world challenges"
+      ],
+      "totalHours": 2,
+      "sections": [
+        {
+          "title": "Real‑World UX Realities",
+          "estimatedMinutes": 30,
+          "topics": [
+            "You’ll never get everything you need — managing constraints and expectations",
+            "No one cares about UX — communicating in business terms",
+            "Push for at least one all‑hands meeting — stakeholder involvement"
+          ]
+        },
+        {
+          "title": "Asking Better Questions",
+          "estimatedMinutes": 20,
+          "topics": [
+            "Always ask “why?” more than once — uncovering true needs",
+            "You don’t have all the answers — embracing inquiry and iteration"
+          ]
+        },
+        {
+          "title": "Influencing Without Preaching",
+          "estimatedMinutes": 25,
+          "topics": [
+            "You can preach or help, but not both — shifting from advocacy to collaboration",
+            "If you expect people to read, keep it short — concise communication"
+          ]
+        },
+        {
+          "title": "Achieving Results Incrementally",
+          "estimatedMinutes": 20,
+          "topics": ["You need small victories, often — quick wins to build trust", "Expect to screw up — learning from failure"]
+        },
+        {
+          "title": "Personal Growth and Confidence",
+          "estimatedMinutes": 15,
+          "topics": ["Feel the fear, do it anyway — courage and resilience in UX practice"]
+        }
+      ]
     }
   ]
 }
