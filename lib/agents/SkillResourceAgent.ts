@@ -33,7 +33,7 @@ const EvaluateOperationOutputSchema = z.object({
     z.object({
       id: z.string().describe('Resource ID'),
       relevancePercentage: z.string().describe('Relevance percentage to the overall user profile and goal'),
-      reasoning: z.string().describe('The reason of why it is relevant')
+      reasoning: z.string().describe('The reason why it is relevant')
     })
   )
 });
