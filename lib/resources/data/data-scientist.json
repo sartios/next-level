@@ -159,6 +159,149 @@
           "estimatedMinutes": 600
         }
       ]
+    },
+    {
+      "url": "https://www.udacity.com/course/data-analysis-and-visualization-fluency--cd5224",
+      "title": "Data Analysis and Visualization Fluency",
+      "provider": "udacity",
+      "resourceType": "course",
+      "description": "Learn about the data analysis process, key steps in data wrangling, basic data types, summary statistics, how to design good data visualizations, common types of charts and plots, and how to tell a story with your visuals.",
+      "learningObjectives": [
+        "Understand the data analysis process from start to finish",
+        "Learn key steps in data wrangling to prepare data for analysis",
+        "Identify basic data types and compute summary statistics",
+        "Design effective data visualizations and choose appropriate chart types",
+        "Tell a compelling story with data through visual communication"
+      ],
+      "targetAudience": [
+        "Beginners with no prior technical experience interested in data analysis and visualization",
+        "Aspiring data enthusiasts wanting to learn basic data wrangling and statistics",
+        "Learners seeking to understand how to design effective data visualizations",
+        "Professionals aiming to tell stories with data visuals",
+        "Individuals exploring foundational data fluency skills"
+      ],
+      "totalHours": 5,
+      "sections": [
+        {
+          "title": "Foundations of Data Analysis",
+          "estimatedMinutes": 60,
+          "topics": ["What is Data Analysis"]
+        },
+        {
+          "title": "Preparing Data for Insight",
+          "estimatedMinutes": 60,
+          "topics": ["Data Wrangling"]
+        },
+        {
+          "title": "Exploring Data with Numbers",
+          "estimatedMinutes": 60,
+          "topics": ["Descriptive Statistics"]
+        },
+        {
+          "title": "Communicating Data Visually",
+          "estimatedMinutes": 120,
+          "topics": ["Data Visualization"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.udacity.com/course/advanced-data-analysis-with-power-bi--cd0014",
+      "title": "Advanced Data Analysis with Power BI",
+      "provider": "udacity",
+      "resourceType": "course",
+      "description": "Analyze, transform, and model data using Power BI, Power Query, DAX, and applied statistics. Deliver advanced visualizations and predictive insights that effectively communicate findings and support stakeholder understanding.",
+      "learningObjectives": [
+        "Explain what data analysis is and why it’s important",
+        "Investigate and analyze data to draw meaningful conclusions",
+        "Use Power Query to transform and clean data effectively",
+        "Write custom DAX formulas for advanced calculations",
+        "Create and customize advanced visualizations to communicate insights",
+        "Apply predictive analytics for forecasting and trend analysis"
+      ],
+      "targetAudience": [
+        "Experienced Power BI users who want to deepen their data analysis and visualization skills",
+        "Data professionals familiar with Power Query and DAX seeking advanced capabilities",
+        "Analysts aiming to craft insightful, high-impact reports and dashboards",
+        "Business intelligence practitioners improving predictive analytics with Power BI",
+        "Professionals comfortable with Power BI fundamentals looking to advance their workflow"
+      ],
+      "totalHours": 20,
+      "sections": [
+        {
+          "title": "Intro & Analytical Foundations",
+          "estimatedMinutes": 210,
+          "topics": ["Introduction to the Advanced Data Analytics Course", "Advanced Data Analytics"]
+        },
+        {
+          "title": "Data Transformation & Modeling",
+          "estimatedMinutes": 350,
+          "topics": ["Power Query Transformations", "DAX Functions"]
+        },
+        {
+          "title": "Visualization Techniques",
+          "estimatedMinutes": 260,
+          "topics": ["Advanced Visualizations"]
+        },
+        {
+          "title": "Applied Project",
+          "estimatedMinutes": 380,
+          "topics": ["Market Analysis Report for National Clothing Chain"]
+        }
+      ]
+    },
+    {
+      "url": "https://upskillcourses.com/courses/computer-science-data-structures-algorithms",
+      "title": "Computer Science: Data Structures and Algorithms",
+      "provider": "upskill",
+      "resourceType": "course",
+      "description": "Learn the fundamentals of data structures and algorithms—core computer science concepts employers value. This course explores arrays, linked lists, stacks, queues, trees, heaps, and time complexity, providing curated lessons to build strong problem-solving foundations before hands-on implementation.",
+      "learningObjectives": [
+        "Understand core data structures like arrays, linked lists, stacks, queues, trees, and heaps.",
+        "Explain common algorithms including sorting and searching techniques.",
+        "Analyze algorithm efficiency using time complexity concepts.",
+        "Recognize the importance of efficient data organization in programming.",
+        "Prepare for hands‑on implementation in future courses."
+      ],
+      "targetAudience": [
+        "Aspiring programmers and software developers",
+        "Computer science students at universities",
+        "Professionals looking to strengthen foundational CS knowledge",
+        "Anyone preparing for technical job interviews",
+        "Learners interested in understanding data structures and algorithms"
+      ],
+      "totalHours": 2,
+      "sections": [
+        {
+          "title": "Introduction & Basics",
+          "estimatedMinutes": 15,
+          "topics": ["Introduction", "Arrays"]
+        },
+        {
+          "title": "Linked Lists & Comparison",
+          "estimatedMinutes": 15,
+          "topics": ["Linked Lists", "Linked Lists vs. Arrays"]
+        },
+        {
+          "title": "Stacks and Queues",
+          "estimatedMinutes": 15,
+          "topics": ["Stacks", "Queues"]
+        },
+        {
+          "title": "Trees and Heaps",
+          "estimatedMinutes": 25,
+          "topics": ["Trees", "Min Heaps", "Max Heaps", "Binary Trees"]
+        },
+        {
+          "title": "Sorting & Searching Algorithms",
+          "estimatedMinutes": 20,
+          "topics": ["Merge Sort", "Bubble Sort", "Binary Search"]
+        },
+        {
+          "title": "Time Complexity & Efficiency",
+          "estimatedMinutes": 30,
+          "topics": ["Time Complexity", "Constant Time", "Linear Time", "Logarithmic Time", "Quasilinear and Exponential Time"]
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,1230 @@
+{
+  "resources": [
+    {
+      "url": "https://www.youtube.com/watch?v=Od7AfBvBwWo",
+      "title": "Free Figma Advanced Course: Become a Figma Pro",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "An advanced, project-based Figma course focused on building responsive, production-ready UI. Learn AI-assisted workflows, Auto Layout mastery, components, variants, animations, and visual effects while creating a complete, portfolio-ready app using professional UX/UI practices.",
+      "learningObjectives": [
+        "Use AI-powered features in Figma to accelerate layout creation, content generation, and interactions",
+        "Design complex, responsive layouts using Auto Layout, constraints, and grids",
+        "Build scalable components, variables, and multi-dimensional variants",
+        "Apply advanced visual effects, typography techniques, and layout polish",
+        "Create responsive navigation, cards, and grid-based UI through hands-on projects",
+        "Implement animations and interactions within components and variants",
+        "Manage styles, spacing systems, and assets using professional Figma workflows",
+        "Produce a complete, portfolio-ready app from brief to final design"
+      ],
+      "targetAudience": [
+        "UX and UI designers with basic Figma knowledge",
+        "Product designers seeking advanced responsive design skills",
+        "Designers transitioning from static layouts to scalable design systems",
+        "Freelance designers building portfolio-ready projects",
+        "Design teams wanting to improve Figma efficiency and consistency"
+      ],
+      "totalHours": 4,
+      "sections": [
+        {
+          "title": "Course Introduction & Project Setup",
+          "estimatedMinutes": 15,
+          "topics": ["Introduction to this Figma Advanced Course", "Getting started", "Your Brief for this Figma Project"]
+        },
+        {
+          "title": "AI-Assisted Design & Visual Effects",
+          "estimatedMinutes": 40,
+          "topics": [
+            "Using First Draft AI in Figma",
+            "Liquid Glass Effect in Figma",
+            "Texture, Noise & Order in Figma",
+            "Progressive Blur Effect in Figma",
+            "Saving Effect Styles & Clearing Unused Styles in Figma"
+          ]
+        },
+        {
+          "title": "Complex Layouts & First Project",
+          "estimatedMinutes": 35,
+          "topics": ["Working with complex layouts in Figma", "Class Project 1: Genre Listings"]
+        },
+        {
+          "title": "Workflow Efficiency & Productivity",
+          "estimatedMinutes": 30,
+          "topics": ["Workflow Tips & Tricks", "Advanced Copy & Paste, Selection tips in Figma", "Frame Tips & Tricks in Figma"]
+        },
+        {
+          "title": "Auto Layout Foundations & AI Enhancements",
+          "estimatedMinutes": 45,
+          "topics": [
+            "Auto Layouts in Figma",
+            "Suggest Auto Layout, Replace Content & Duplicate Layers in Figma",
+            "Class Project 2: Band Listings"
+          ]
+        },
+        {
+          "title": "Responsive Auto Layout & Grids",
+          "estimatedMinutes": 35,
+          "topics": ["Nested Responsive Auto Layouts in Figma", "Auto Layout Grids in Figma", "Class Project 3: Grids"]
+        },
+        {
+          "title": "Components, Spacing & Navigation Projects",
+          "estimatedMinutes": 30,
+          "topics": [
+            "Important information about Components in Figma",
+            "What spacing to use in Figma",
+            "More Spacing tips in Figma",
+            "Class Project 4: Responsive lower Navigation",
+            "Class Project 5: Event Card Constraints",
+            "Class Project 5: Completed"
+          ]
+        },
+        {
+          "title": "Variants & Advanced Component Design",
+          "estimatedMinutes": 15,
+          "topics": ["How to make a simple Variant in Figma", "How to make a multi-dimensional Variant in Figma"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=QJBP2uy8LcU",
+      "title": "Free Figma UX Design UI Essentials Course",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "Learn UX Design from scratch with Figma! In this beginner-friendly course led by Dan Scott, you'll master user interfaces, wireframes, UI components, prototypes, and real-world UX projects. Gain hands-on experience with Figma tools, style guides, animations, and collaboration techniques while building portfolio.",
+      "learningObjectives": [
+        "Creating user interfaces and prototypes",
+        "Understanding client expectations",
+        "Working with UX briefs and personas",
+        "Designing wireframes, choosing colors, images, and fonts",
+        "Building UI components like icons and buttons",
+        "Mastering key concepts (Components, Constraints, Variants)",
+        "Using UI kits and plugins to boost efficiency",
+        "Creating style guides and animations",
+        "Building interactive prototypes and preparing files for developers",
+        "Collaborating with team members",
+        "Gaining real-world UX project knowledge",
+        "Completing portfolio-building assignments",
+        "Running independent UX projects from Figma Zero to Figma Hero"
+      ],
+      "targetAudience": [
+        "Beginners interested in UI/UX design",
+        "Aspiring UI/UX designers looking to learn Figma",
+        "Graphic designers transitioning to UI/UX",
+        "Students building a UI/UX portfolio",
+        "Professionals seeking practical, project-based UI/UX experience",
+        "Team members collaborating on digital product design"
+      ],
+      "totalHours": 3,
+      "sections": [
+        {
+          "title": "Course Introduction & Overview",
+          "estimatedMinutes": 20,
+          "topics": [
+            "Introduction to Figma Essentials 2025 Course",
+            "Getting started with this Figma Essentials Course",
+            "What is Figma and does it do coding?",
+            "What's the difference between UI and UX in Figma",
+            "What we're making in this Figma Course",
+            "Class Project 1: Create your own Brief"
+          ]
+        },
+        {
+          "title": "Wireframing & Layout Basics",
+          "estimatedMinutes": 25,
+          "topics": ["What is LoFi vs HiFi wireframes?", "Introducing Frames in Figma", "Class Project 2: Wireframe"]
+        },
+        {
+          "title": "Design Fundamentals: Shapes, Colors & Typography",
+          "estimatedMinutes": 55,
+          "topics": [
+            "Basics of Font and Type in Figma",
+            "Rectangles, Circles, Rounded corners in Figma",
+            "How to use Color in Figma",
+            "Strokes and updating color defaults in Figma",
+            "Object editing and how to escape Figma",
+            "Scale vs Selection tool in Figma",
+            "Frames vs Groups in Figma"
+          ]
+        },
+        {
+          "title": "Icons & Plugins",
+          "estimatedMinutes": 30,
+          "topics": ["Where to get free icons for Figma", "How to use Plugins in Figma", "Class Project 3: Icons"]
+        },
+        {
+          "title": "Prototyping & Interactive Design",
+          "estimatedMinutes": 40,
+          "topics": [
+            "How to use Pages in Figma",
+            "How to Prototype in Figma",
+            "Prototype animation and easing in Figma",
+            "How to add the iOS status bar in Figma",
+            "Testing on your phone with Figma Mirror",
+            "Class Project 4: Testing on your phone with Figma",
+            "What is smart animation delays in Figma"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=1SNZRCVNizg",
+      "title": "Free Figma Crash Course for Beginners 2026 UI/UX Design",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "If you're looking to dive into UI/UX design, this course is the perfect starting point! You'll learn the fundamentals of Figma, from the basics to creating stunning user interfaces and seamless user experiences. Whether you're a complete beginner or just looking to sharpen your skills, this course will give you the hands-on knowledge you need to get started with confidence!",
+      "learningObjectives": [
+        "Understand the basics of Figma and its interface",
+        "Learn the difference between UI and UX design",
+        "Create wireframes and layouts using Figma",
+        "Design with fonts, colors, shapes, and other UI elements",
+        "Build and use components, frames, and groups",
+        "Use Figma plugins and resources like icons",
+        "Prototype interactive designs and animations",
+        "Test designs on devices using Figma Mirror",
+        "Complete practical projects to build a beginner UX portfolio"
+      ],
+      "targetAudience": [
+        "Beginners interested in UX and UI design",
+        "Aspiring designers learning Figma for the first time",
+        "Students and hobbyists exploring digital product design",
+        "Graphic designers transitioning to UX/UI",
+        "Professionals seeking a quick, hands-on Figma introduction"
+      ],
+      "totalHours": 1.5,
+      "sections": [
+        {
+          "title": "Getting Started with Figma",
+          "estimatedMinutes": 10,
+          "topics": ["Figma Dashboard & Setup", "Figma Editor Interface"]
+        },
+        {
+          "title": "Frames, Shapes & Basic Design Tools",
+          "estimatedMinutes": 25,
+          "topics": ["Frames", "Shape Tools", "Effects", "Export Settings"]
+        },
+        {
+          "title": "Advanced Vector and Text Tools",
+          "estimatedMinutes": 15,
+          "topics": ["Vector Editing", "Text Tool", "Layers Basics", "Boolean Operations"]
+        },
+        {
+          "title": "Layouts and Components",
+          "estimatedMinutes": 20,
+          "topics": ["Auto Layout", "Components", "Component Variants", "Plugins", "Layout Grids"]
+        },
+        {
+          "title": "Prototyping and Collaboration",
+          "estimatedMinutes": 15,
+          "topics": ["Prototyping", "Sharing & Collaboration", "Constraints"]
+        },
+        {
+          "title": "AI Tools and Developer Handoff",
+          "estimatedMinutes": 10,
+          "topics": ["AI Tools", "Dev Mode"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.skillshare.com/en/classes/figma-ui-ux-design-advanced-become-a-figma-pro/50973510",
+      "title": "Figma UI UX Design Advanced: Become a Figma Pro",
+      "provider": "skillshare",
+      "resourceType": "course",
+      "description": "Level up your Figma skills with Dan Scott. Build a complete, professional-grade app from concept to portfolio-ready finish while mastering AI-assisted design, responsive layouts, components, variants, animations, and interactive prototypes. Learn advanced workflows, accessibility, collaboration, and developer handoff techniques used by UX professionals. Hands-on projects, curated resources, and expert guidance ensure you gain practical experience and confidence in managing end-to-end UX/UI projects.",
+      "learningObjectives": [
+        "Build a complete, portfolio-ready app using Figma Advanced techniques",
+        "Leverage AI to accelerate design and prototyping workflows",
+        "Master Auto Layout, constraints, and responsive design",
+        "Create and manage robust components, variables, and multi-dimensional variants",
+        "Apply advanced visual effects, typography, and animations",
+        "Design interactive prototypes and micro-interactions",
+        "Implement accessibility best practices in UX/UI designs",
+        "Develop efficient workflow, collaboration, and developer handoff strategies",
+        "Manage grids, styles, and assets like a professional UX designer",
+        "Gain practical experience through hands-on projects and assignments"
+      ],
+      "targetAudience": [
+        "UX/UI designers with basic Figma knowledge",
+        "Self-taught Figma enthusiasts seeking structured guidance",
+        "Graduates of the Figma Essentials course looking to advance skills",
+        "Designers with their own Figma workflow wanting to explore advanced tools and techniques",
+        "Professionals aiming to build professional-grade design systems and portfolio projects"
+      ],
+      "totalHours": 9,
+      "sections": [
+        {
+          "title": "Introduction & Getting Started",
+          "estimatedMinutes": 10,
+          "topics": ["Intro to the Figma Advanced Course", "Getting Started", "Your brief for the Figma Advanced course"]
+        },
+        {
+          "title": "AI-Powered Design",
+          "estimatedMinutes": 60,
+          "topics": [
+            "First Draft using AI in Figma",
+            "Suggest Auto Layout, Replace Content, Duplicate & Rename Layers (Ai)",
+            "Ai Add Interactions Automatically in Figma",
+            "Finding Components using Ai"
+          ]
+        },
+        {
+          "title": "Layout & Auto Layout Mastery",
+          "estimatedMinutes": 60,
+          "topics": [
+            "Working with Complex Layouts in Figma",
+            "Auto Layout Refresher with Problem Solutions",
+            "Nested & Responsive Auto layouts",
+            "Auto Layout Grids in Figma",
+            "Grid v Constraints v Autolayout- Which one to use and when?",
+            "How to add rows and column grids to one layout in Figma",
+            "How to Create & Update Layout Guide Styles for Columns & Rows in Figma",
+            "How to overlap & stack things in a Figma Autolayout",
+            "How to ignore Autolayout to absolute space in Figma",
+            "How to ignore autolayout but is still responsive in Figma",
+            "How to create a minimum width height button in Figma",
+            "How to Wrap Auto Layout objects in Figma"
+          ]
+        },
+        {
+          "title": "Components, Variables & Variants",
+          "estimatedMinutes": 72,
+          "topics": [
+            "Important things to know about Components in Figma",
+            "How to make a simple Variant in Figma",
+            "How to make a Multi Dimensional Variant in Figma",
+            "Variable - Light and Dark Modes",
+            "How to create cart total using number variables in Figma",
+            "How to add add conditions to variables in Figma",
+            "Turning our boolean variable to false in Figma",
+            "Boolean Variable - Completed",
+            "Making a Overlay Popup in the Variable action panel in Figma",
+            "How to change spacing with number Variables in Figma",
+            "Instance Swap inside a Component",
+            "How to use Boolean Component Property in Figma",
+            "Making a Simple Field with Component Properties",
+            "How to organize Components into groups in Figma"
+          ]
+        },
+        {
+          "title": "Visual Design & Effects",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Liquid Glass Effect in Figma",
+            "Texture & Noise & Effect Order",
+            "Progressive Blur Effect",
+            "Saving Effect Styles & Clearing Unused Styles",
+            "Houdini Text: How to make a text mask animation Figma?",
+            "Spring Animation & Overlays in Figma",
+            "Masking Images using AI Remove Background",
+            "How to make a spillover mask outside of the frame in Figma",
+            "How to Mask Images with text in Figma",
+            "How to use colour layer blending modes in Figma",
+            "How to curve text with type on a path in Figma",
+            "How to Make Text Boxes Line up with the Edge using Vertical Trim",
+            "Truncation for Text in Figma",
+            "Advanced color tricks in figma",
+            "How to change replace colors in Figma",
+            "How to create Color Themes for light and dark in Figma"
+          ]
+        },
+        {
+          "title": "Animation & Interactions",
+          "estimatedMinutes": 73,
+          "topics": [
+            "Animation with custom easing in Figma",
+            "How to copy and paste Interactions in Figma",
+            "Animation inside Variants in Figma",
+            "Why is interaction on tap on click grayed out or missing in Figma?",
+            "How to make sticky scroll position search bar in Figma",
+            "How to make Horizontal Scrolling Swipe in Figma",
+            "Automatic scroll down the page to anchor point in Figma",
+            "How to make Interactive Components in Figma",
+            "How to make an expanding Search Bar in Figma"
+          ]
+        },
+        {
+          "title": "Video & Media",
+          "estimatedMinutes": 12,
+          "topics": [
+            "How to add Video in Figma",
+            "How to make a play pause button for video in Figma",
+            "How to get a video play when you hover in Figma"
+          ]
+        },
+        {
+          "title": "Workflow, Collaboration & Handoff",
+          "estimatedMinutes": 58,
+          "topics": [
+            "Workflow Tips & Tricks",
+            "How to use advanced Copy, Paste, and Selection Tricks in Figma?",
+            "Frame Tips and Tricks to work with Figma frames effectively",
+            "How to use Sections in Figma for organizing your content",
+            "Be careful what you create in Figma",
+            "Layer Zen in Figma",
+            "Advanced Search in Figma",
+            "How to Bulk Rename Layers manually with advanced tricks in Figma",
+            "How do you use Team Libraries in Figma",
+            "How to hide color font styles & components from team library in Figma",
+            "How to move relink refactoring components to another design file in Figma",
+            "How to use DEV Mode in Figma",
+            "How to document a component in a design system in Figma",
+            "How to view version history duplicate and restore in Figma",
+            "How to use the Slice Tool in Figma"
+          ]
+        },
+        {
+          "title": "Design Projects",
+          "estimatedMinutes": 70,
+          "topics": [
+            "Class project 01 - Genre Listings",
+            "Class project 02 - Band Listings",
+            "Class project 03 - Grids",
+            "Class Project 04 - Responsive Lower Navigation",
+            "Class Project 05 - Event Card Constraints",
+            "Class Project 05 - Completed",
+            "Class Project 06 - Multi Dimensional Variant",
+            "Class Project 07 - Color Variables",
+            "Class Project 08 - Number Variables",
+            "Class project 09 - Event Branding",
+            "Class Project 10 - Check Out Animation",
+            "Class Project 11 - Variant Animation",
+            "Class Project 12 - Houdini Text Animation",
+            "Class Project 13 - Horizontal Scroll",
+            "Class Project 14 - Interactive Component",
+            "Class Project 15 - Expanding Search Bar",
+            "Class Project 16 - It’s Your Birthday",
+            "Class Project 17 - Curved Text",
+            "Class Project 18 - Social Media Ad",
+            "Class Project 19 - Video Card",
+            "Class Project 20 - Review Card",
+            "Class Project 21 - Design Spec",
+            "Class Project 22 - Finish Your Design"
+          ]
+        },
+        {
+          "title": "Conclusion & Next Steps",
+          "estimatedMinutes": 5,
+          "topics": ["What Next After Figma Advanced"]
+        }
+      ]
+    },
+    {
+      "url": "https://givegoodux.com/download-joe-natolis-the-way-it-is-e-book/",
+      "title": "THE WAY IT IS: 10 Powerful UX Career Tips",
+      "provider": "Give Good UX",
+      "resourceType": "book",
+      "description": "Navigate the challenges of UX and user research with practical strategies, from recruiting participants to analyzing feedback. This book offers holistic guidance, actionable insights, and proven truths to help beginners and experienced practitioners confidently design, communicate, and drive user-centered solutions in real-world contexts.",
+      "learningObjectives": [
+        "Understand the fundamentals of UX and user research processes.",
+        "Learn how to recruit and engage participants effectively.",
+        "Apply methods to gather, analyze, and interpret user feedback.",
+        "Develop practical strategies for communicating research insights.",
+        "Build confidence in leading UX activities and decision-making.",
+        "Navigate organizational challenges and influence stakeholders.",
+        "Integrate holistic approaches to problem-solving in UX projects.",
+        "Enhance the ability to design user-centered screens, flows, and experiences."
+      ],
+      "targetAudience": [
+        "Professionals tasked with leading UX activities or user research",
+        "Designers and product teams wanting to improve user-centered decision-making",
+        "Individuals struggling to analyze or apply user feedback effectively",
+        "Employees in organizations new to user research",
+        "UX practitioners looking for practical strategies to overcome real-world challenges"
+      ],
+      "totalHours": 2,
+      "sections": [
+        {
+          "title": "Real‑World UX Realities",
+          "estimatedMinutes": 30,
+          "topics": [
+            "You’ll never get everything you need — managing constraints and expectations",
+            "No one cares about UX — communicating in business terms",
+            "Push for at least one all‑hands meeting — stakeholder involvement"
+          ]
+        },
+        {
+          "title": "Asking Better Questions",
+          "estimatedMinutes": 20,
+          "topics": [
+            "Always ask “why?” more than once — uncovering true needs",
+            "You don’t have all the answers — embracing inquiry and iteration"
+          ]
+        },
+        {
+          "title": "Influencing Without Preaching",
+          "estimatedMinutes": 25,
+          "topics": [
+            "You can preach or help, but not both — shifting from advocacy to collaboration",
+            "If you expect people to read, keep it short — concise communication"
+          ]
+        },
+        {
+          "title": "Achieving Results Incrementally",
+          "estimatedMinutes": 20,
+          "topics": ["You need small victories, often — quick wins to build trust", "Expect to screw up — learning from failure"]
+        },
+        {
+          "title": "Personal Growth and Confidence",
+          "estimatedMinutes": 15,
+          "topics": ["Feel the fear, do it anyway — courage and resilience in UX practice"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.udemy.com/course/ux-strategy-fundamentals/",
+      "title": "UX Strategy Fundamentals",
+      "provider": "udemy",
+      "resourceType": "course",
+      "description": "The course teaches practical principles and simple methods to define and apply UX strategy across products, helping learners connect user needs with business goals, prioritize features, engage stakeholders, control scope, and make better UX decisions at every stage of design and development.",
+      "learningObjectives": [
+        "Understand the core principles of UX strategy and its role in product design",
+        "Learn to align user needs with business goals effectively",
+        "Develop skills to prioritize features and manage project scope",
+        "Apply practical methods for engaging stakeholders in the UX process",
+        "Gain the ability to make informed UX decisions throughout design and development",
+        "Learn to evaluate and refine UX strategies for better product outcomes"
+      ],
+      "targetAudience": [
+        "Aspiring UX designers seeking foundational strategy knowledge",
+        "Product managers and team leads involved in UX decision-making",
+        "Designers wanting to align UX work with business goals",
+        "Professionals responsible for prioritizing features and project scope",
+        "Anyone interested in applying practical UX strategy methods to real projects"
+      ],
+      "totalHours": 2.5,
+      "sections": [
+        {
+          "title": "Foundations of UX Strategy",
+          "estimatedMinutes": 30,
+          "topics": [
+            "Develop a clear, solid strategy for UX that applies to any product",
+            "Use a simple method to determine which features and functions are truly important",
+            "Understand who your stakeholders really are and what you need to know from each"
+          ]
+        },
+        {
+          "title": "Aligning Value and Needs",
+          "estimatedMinutes": 25,
+          "topics": [
+            "Get all players to agree on what constitutes value for users and the business",
+            "Separate what people say they need from what they actually need",
+            "Uncover the things users don't know they need but really do"
+          ]
+        },
+        {
+          "title": "Connecting Strategy to Outcomes",
+          "estimatedMinutes": 25,
+          "topics": [
+            "Connect user needs with product strategy and requirements",
+            "Determine and control the scope of any project",
+            "Set proper expectations and avoid big, expensive surprises"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/5031-design-systems-for-websites-using-figma",
+      "title": "Design Systems for Websites using Figma",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "A beginner‑friendly course teaching how to create structured design systems for visually engaging websites in Figma, covering components, layouts, documentation, and workflow optimization to build reusable web UI assets and streamline design processes.",
+      "learningObjectives": [
+        "Understand the fundamentals of design systems and their benefits for web projects.",
+        "Learn to navigate Figma efficiently to create digital design systems.",
+        "Build reusable components and apply global styles to streamline web design.",
+        "Use auto layout and other Figma tools to optimize workflow.",
+        "Document and organize design systems for team collaboration and consistency."
+      ],
+      "targetAudience": [
+        "Beginners interested in learning design systems and web design.",
+        "Aspiring UX/UI designers wanting practical Figma workflow skills.",
+        "Designers seeking to streamline website design with reusable components.",
+        "Professionals aiming to improve team collaboration through structured systems.",
+        "Figma users with basic familiarity looking to expand their toolkit."
+      ],
+      "totalHours": 5,
+      "sections": [
+        {
+          "title": "Introduction",
+          "estimatedMinutes": 21,
+          "topics": [
+            "Introduction to Design Systems",
+            "How Design Systems Can Help You Speed Up Your Workflow",
+            "Introduction to the Project and Approach"
+          ]
+        },
+        {
+          "title": "Figma Setup & Initial Explorations",
+          "estimatedMinutes": 35,
+          "topics": [
+            "Setting up the Figma File and Beginning the First Explorations 1",
+            "Setting up the Figma File and Beginning the First Explorations 2"
+          ]
+        },
+        {
+          "title": "Expanding the Design System",
+          "estimatedMinutes": 39,
+          "topics": [
+            "Expanding the Explorations and Design System 1",
+            "Expanding the Explorations and Design System 2",
+            "Organizing the Design System Pages 1",
+            "Organizing the Design System Pages 2",
+            "Exploring Variants When Creating Components"
+          ]
+        },
+        {
+          "title": "Refining & Documenting the System",
+          "estimatedMinutes": 108,
+          "topics": [
+            "Refining the Design System with an Assembled Page 1",
+            "Refining the Design System with an Assembled Page 2",
+            "Refining the Design System with an Assembled Page 3",
+            "Setting up New Pages with the Complete Design System 1",
+            "Setting up New Pages with the Complete Design System 2",
+            "Setting up New Pages with the Complete Design System 3",
+            "How to Approach Creating Documentation for the Design System"
+          ]
+        },
+        {
+          "title": "Final Adjustments & Extensions",
+          "estimatedMinutes": 45,
+          "topics": ["Cleaning up and Using an Auto Layout", "Utilizing the Design on Further Brand Elements", "Final Thoughts"]
+        },
+        {
+          "title": "Final Project",
+          "estimatedMinutes": 50,
+          "topics": ["Design Systems for Websites using Figma (project)"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=opTANvl9G1g",
+      "title": "Build a Design System",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "Learn how to build a complete Figma design system from scratch in this full course. Whether you’re a beginner or an experienced designer, this step-by-step guide covers everything you need; from variables, tokens, and auto layout to advanced component structures, documentation, and scaling your system for enterprise teams.",
+      "learningObjectives": [
+        "Understand the fundamentals of building a complete design system in Figma from scratch.",
+        "Learn how to create and organize reusable UI components for scalable web design.",
+        "Apply best practices for structuring styles, components, and layouts to maintain consistency.",
+        "Gain practical skills in using Figma tools to assemble and refine a design system.",
+        "Develop the ability to implement the design system across real projects and workflows."
+      ],
+      "targetAudience": [
+        "UI/UX designers who want to learn how to build design systems in Figma.",
+        "Figma users seeking to improve consistency and reuse through components and grids.",
+        "Product designers aiming to scale design workflows and collaboration.",
+        "Teams or individuals looking to understand design system organization and documentation."
+      ],
+      "totalHours": 4,
+      "sections": [
+        {
+          "title": "Introduction & Design Token Setup",
+          "estimatedMinutes": 20,
+          "topics": [
+            "An Introduction",
+            "Design Token Setup - Intro",
+            "Brand Collection",
+            "Color Scales for our Design System",
+            "Building a Color Scale",
+            "Building the Brand Collection"
+          ]
+        },
+        {
+          "title": "Typography & Alias Setup",
+          "estimatedMinutes": 25,
+          "topics": [
+            "Font Variables",
+            "Building a Scale",
+            "Alias Collection Intro",
+            "Building the Alias Collection",
+            "Border With & Radius Variables",
+            "Multi-Brand Design System Setup",
+            "Adding White & Black"
+          ]
+        },
+        {
+          "title": "Advanced Variables & Dark Mode",
+          "estimatedMinutes": 15,
+          "topics": [
+            "Mapped Collection Intro",
+            "Text Variables",
+            "Icon Variables",
+            "Surface Variables",
+            "Border Variables",
+            "Building Dark Mode",
+            "Building a Type Scale",
+            "Responsive Collection",
+            "Building Text Styles",
+            "Material 3 Icon Library",
+            "Scoping Your Figma Variables"
+          ]
+        },
+        {
+          "title": "Core Component Creation",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Building a Button Component",
+            "Adding Button Variants",
+            "Building a Label Component",
+            "Building a Field Component",
+            "Adding Field Variants",
+            "Building an Input Component",
+            "Build a Menu Component",
+            "Build a Checkbox",
+            "Build a Radio Button",
+            "Build a Switch",
+            "Build a Text Area",
+            "Build a Tab Bar",
+            "Build a Button Group",
+            "Build a Link",
+            "Build a Breadcrumb",
+            "Build an Avatar",
+            "Build a Tag",
+            "Build a Loader",
+            "Build a Badge",
+            "Build a Progress Bar",
+            "Build a Progress Circle",
+            "Build a Snackbar",
+            "Build a Carousel",
+            "Build a Button Icon",
+            "Build a Table"
+          ]
+        },
+        {
+          "title": "Publishing & System Management",
+          "estimatedMinutes": 20,
+          "topics": ["Publishing & Subscribing to a Design System"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/2729-creative-coding-making-visuals-with-javascript",
+      "title": "Creative Coding: Making Visuals with JavaScript",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "Creative Coding: Making Visuals with JavaScript is a beginner‑friendly course teaching programming fundamentals and how to draw, animate, and design visual compositions using JavaScript code—perfect for creating engaging browser‑based visuals and experiments.",
+      "learningObjectives": [
+        "Understand the basics of JavaScript programming for creative projects",
+        "Learn to create shapes, animations, and visual effects with code",
+        "Explore generative design techniques for interactive visuals",
+        "Develop skills to combine art and technology in browser-based projects",
+        "Build small creative coding projects to apply learned concepts"
+      ],
+      "targetAudience": [
+        "Beginners interested in programming and visual arts",
+        "Designers looking to integrate code into their creative workflow",
+        "Artists wanting to experiment with generative visuals",
+        "Students exploring creative coding and interactive media",
+        "Hobbyists curious about JavaScript and digital art"
+      ],
+      "totalHours": 3,
+      "sections": [
+        {
+          "title": "Setting Up the Environment",
+          "estimatedMinutes": 13,
+          "topics": ["An Environment for Sketching"]
+        },
+        {
+          "title": "Basic Visual Structures",
+          "estimatedMinutes": 15,
+          "topics": ["Grid", "Noise"]
+        },
+        {
+          "title": "Interactive Elements",
+          "estimatedMinutes": 11,
+          "topics": ["GUI"]
+        },
+        {
+          "title": "Working with Text and Images",
+          "estimatedMinutes": 20,
+          "topics": ["Text", "Bitmap"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/3862-creative-coding-2-0-in-js-animation-sound-color",
+      "title": "Creative Coding 2.0 in JS: Animation, Sound, & Color",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "Animation, Sound & Color teaches you advanced JavaScript techniques to create immersive animated visuals, integrate sound, and apply vibrant color in browser‑based generative compositions, ideal for enhancing interactive creative coding skills.",
+      "learningObjectives": [
+        "Advance JavaScript skills for creative coding projects",
+        "Learn to animate visuals and create dynamic motion effects",
+        "Integrate sound to enhance interactive experiences",
+        "Explore color theory and apply it to generative compositions",
+        "Develop complex, multimedia creative coding projects in the browser"
+      ],
+      "targetAudience": [
+        "Intermediate coders and designers with basic JavaScript knowledge",
+        "Creative professionals interested in interactive and multimedia visuals",
+        "Students exploring advanced generative art techniques",
+        "Hobbyists looking to expand their creative coding skills"
+      ],
+      "totalHours": 3,
+      "sections": [
+        {
+          "title": "Getting Started",
+          "estimatedMinutes": 5,
+          "topics": ["The Online Setup"]
+        },
+        {
+          "title": "Visual Composition Techniques",
+          "estimatedMinutes": 19,
+          "topics": ["Distribution", "Adding Colors", "Clipping Mask", "Image Data"]
+        },
+        {
+          "title": "Animation and Interaction",
+          "estimatedMinutes": 28,
+          "topics": ["Animating visuals", "Cursor interaction"]
+        },
+        {
+          "title": "Integrating Sound",
+          "estimatedMinutes": 15,
+          "topics": ["Adding and manipulating sound in visuals"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.udemy.com/course/adobe-photoshop-cc-advanced-training-course-tutorial/",
+      "title": "Adobe Photoshop Advanced Training",
+      "provider": "udemy",
+      "resourceType": "course",
+      "description": "An advanced Adobe Photoshop CC course focused on professional workflows, real‑world projects, and expert techniques like advanced selections, masking, retouching, color grading, AI tools, video/GIF editing, and mockups—designed for users with Photoshop fundamentals looking to level up skills and earn a certificate.",
+      "learningObjectives": [
+        "Master advanced selection and masking techniques in Photoshop CC.",
+        "Fix challenging images and enhance color, tone, and skin adjustments.",
+        "Use generative AI tools to replace backgrounds and blend images.",
+        "Optimize workflow with professional preferences, layer tricks, and automation.",
+        "Retouch photos using advanced healing, cloning, and face adjustments.",
+        "Create social media assets: artboards, video edits, parallax effects, cinemagraphs.",
+        "Design visual styles like duotones, glitches, and color grading.",
+        "Use typography tools including font matching, Typekit, and advanced type workflows.",
+        "Build reusable mockups and export files for print, web, and social media.",
+        "Learn professional techniques to reshape, distort, and creatively manipulate images."
+      ],
+      "targetAudience": [
+        "Graphic designers with basic Photoshop knowledge",
+        "Photographers looking to enhance retouching and editing skills",
+        "Digital artists aiming to master advanced effects and techniques",
+        "Social media managers and content creators seeking professional visuals",
+        "Marketing professionals needing high-quality graphics for campaigns",
+        "Video editors interested in integrating Photoshop with multimedia projects",
+        "Students and professionals preparing for advanced Photoshop certification"
+      ],
+      "totalHours": 15.5,
+      "sections": [
+        {
+          "title": "Introduction & Workflow Setup",
+          "estimatedMinutes": 10,
+          "topics": ["Course introduction", "Advanced preferences & workflow tips", "Optimizing Photoshop for speed"]
+        },
+        {
+          "title": "Advanced Selections & Masking",
+          "estimatedMinutes": 90,
+          "topics": ["Best selection techniques", "Masking people & objects", "Channel masks & selection tricks"]
+        },
+        {
+          "title": "Image Correction & Enlargement",
+          "estimatedMinutes": 70,
+          "topics": ["Fixing hard to fix images", "Advanced Levels & Curves", "Enlarging images without distortion"]
+        },
+        {
+          "title": "Object Removal & Distortion",
+          "estimatedMinutes": 60,
+          "topics": ["Removing unwanted objects", "Reshaping, bending & distorting images", "Content‑aware tools"]
+        },
+        {
+          "title": "Color & Visual Effects",
+          "estimatedMinutes": 50,
+          "topics": ["Duotones and glitch effects", "Orange & teal grading", "Adding dust & splatter effects"]
+        },
+        {
+          "title": "Typography & CC Libraries",
+          "estimatedMinutes": 30,
+          "topics": ["Advanced CC Libraries tricks", "Font pairing & identifying fonts", "Typography effects and flourished text"]
+        },
+        {
+          "title": "Artboards & Social Media Graphics",
+          "estimatedMinutes": 45,
+          "topics": ["Using artboards", "Creating multi‑size banners", "Exporting artboards"]
+        },
+        {
+          "title": "Advanced Retouching",
+          "estimatedMinutes": 90,
+          "topics": ["Advanced healing & cloning", "Patch tool work", "Skin, eyes & teeth retouching"]
+        },
+        {
+          "title": "Video & Animation",
+          "estimatedMinutes": 50,
+          "topics": ["Editing video in Photoshop", "Parallax motion effects", "Creating cinemagraphs"]
+        },
+        {
+          "title": "3D & Mockups",
+          "estimatedMinutes": 60,
+          "topics": ["3D text and logo creation", "Real‑world mockups (posters, screens, billboards)", "Reusable smart object mockups"]
+        },
+        {
+          "title": "Exporting & Deliverables",
+          "estimatedMinutes": 30,
+          "topics": ["Exporting for web, print, social", "Packaging files", "Proofing colors"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.coursera.org/learn/image-editing",
+      "title": "Image editing",
+      "provider": "Coursera",
+      "resourceType": "course",
+      "description": "A practical course introducing essential image editing skills using Adobe Photoshop, covering workspace navigation, photo enhancement, compositing, and generative AI tools—designed to help learners create compelling visual content and build a creative portfolio.",
+      "learningObjectives": [
+        "Understand and apply basic image editing principles to create visually appealing designs.",
+        "Gain hands-on experience with Adobe Photoshop to produce professional-quality image projects.",
+        "Build a portfolio showcasing your image editing and creative skills.",
+        "Use generative AI tools within Photoshop to accelerate and enhance creative workflows."
+      ],
+      "targetAudience": [
+        "Beginners interested in image editing and digital design",
+        "Aspiring graphic designers and visual content creators",
+        "Photographers looking to enhance and retouch images",
+        "Marketing and social media professionals seeking visual skills",
+        "Students aiming to build a creative portfolio",
+        "Anyone interested in learning Photoshop and generative AI tools"
+      ],
+      "totalHours": 64,
+      "sections": [
+        {
+          "title": "Image Editing",
+          "estimatedMinutes": 1080,
+          "topics": [
+            "Understand and apply basic image editing principles to create visually appealing and practical designs that captivate your audience.",
+            "Gain hands-on experience with Adobe Photoshop to create professional-quality design projects with ease.",
+            "Build a stunning portfolio that showcases your image editing expertise, making you a standout candidate for any creative opportunity."
+          ]
+        },
+        {
+          "title": "Graphic Design",
+          "estimatedMinutes": 1500,
+          "topics": [
+            "Understand and apply basic graphic design principles to create visually appealing and practical designs that captivate your audience.",
+            "Gain hands-on experience with Adobe Illustrator, mastering the tools and techniques you need to produce professional-grade artwork.",
+            "Build a stunning portfolio that showcases your graphic design and illustration expertise, making you a standout candidate in the creative industry."
+          ]
+        },
+        {
+          "title": "Document Design",
+          "estimatedMinutes": 1260,
+          "topics": [
+            "Master the fundamentals of document design, learning how to create clear, visually appealing, and effective documents.",
+            "Explore various tools and software products used in document management, and understand how to leverage them for maximum efficiency.",
+            "Gain practical experience in organizing, formatting, and managing documents to ensure that they meet professional standards.",
+            "Develop a comprehensive portfolio of well-designed documents that demonstrate your proficiency and attention to detail."
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://www.scribd.com/document/91357203/Don-t-Make-Me-Think",
+      "title": "Don't make me think",
+      "provider": "scribd",
+      "resourceType": "book",
+      "description": "A concise, user‑focused guide to web usability, Don’t Make Me Think teaches designers how to build intuitive, easy‑to‑use websites and digital interfaces by minimizing cognitive effort, using clear navigation, familiar conventions, and frequent usability testing to reduce frustration and improve user experience.",
+      "learningObjectives": [
+        "Understand the principles of intuitive web and interface design.",
+        "Learn to minimize user cognitive load for improved usability.",
+        "Apply clear navigation and familiar conventions in digital design.",
+        "Conduct usability testing to identify and fix user experience issues.",
+        "Create websites and interfaces that are simple, efficient, and user-friendly."
+      ],
+      "targetAudience": [
+        "Web and UX designers seeking practical usability guidance",
+        "Product managers aiming to improve user experience",
+        "Front-end developers interested in intuitive interface design",
+        "Digital marketers creating user-friendly websites",
+        "Students and professionals learning web usability principles",
+        "Entrepreneurs and startup founders designing digital products"
+      ],
+      "totalHours": 5.5,
+      "sections": [
+        {
+          "title": "Introduction & Usability Principles",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Introduction & guiding principles",
+            "Don’t make me think! (Krug’s First Law)",
+            "How we really use the Web",
+            "Billboard Design 101",
+            "Animal, Vegetable, or Mineral?",
+            "Omit needless words"
+          ]
+        },
+        {
+          "title": "Navigation & Getting It Right",
+          "estimatedMinutes": 80,
+          "topics": ["Street signs and Breadcrumbs", "The Big Bang Theory of Web Design"]
+        },
+        {
+          "title": "Usability Testing & Team Alignment",
+          "estimatedMinutes": 40,
+          "topics": ["The Farmer and the Cowman Should Be Friends", "Usability testing on 10 cents a day"]
+        },
+        {
+          "title": "Broader UX Considerations",
+          "estimatedMinutes": 100,
+          "topics": [
+            "Mobile usability",
+            "Usability as common courtesy",
+            "Accessibility and you",
+            "Guide for the perplexed (making usability happen)"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://readings.design/PDF/thinkingwithtype_ellenlupton.pdf",
+      "title": "Thinking with type Ellen Lupton",
+      "provider": "readings design",
+      "resourceType": "book",
+      "description": "A foundational guide to typography and visual communication, Thinking with Type explains how letters, words, and layouts convey meaning, blending theory, history, and practical design principles with clear examples and exercises to improve readability, hierarchy, spacing, and typographic systems across print and digital media",
+      "learningObjectives": [
+        "Understand the fundamental principles of typography and type design.",
+        "Learn to use type effectively to communicate hierarchy, tone, and meaning.",
+        "Apply spacing, alignment, and layout techniques for improved readability.",
+        "Explore historical and contemporary typographic practices.",
+        "Develop practical skills in designing visually engaging text for print and digital media."
+      ],
+      "targetAudience": [
+        "Graphic designers and visual communicators",
+        "UX/UI designers seeking effective typographic skills",
+        "Students of design, advertising, and media",
+        "Marketing and branding professionals",
+        "Writers and content creators interested in visual presentation",
+        "Anyone learning to apply typography in print or digital projects"
+      ],
+      "totalHours": 4.5,
+      "sections": [
+        {
+          "title": "Introduction & Foundations",
+          "estimatedMinutes": 60,
+          "topics": [
+            "Introduction to typography and purpose",
+            "Role of letters in communication",
+            "Typographic thinking and basic principles"
+          ]
+        },
+        {
+          "title": "Letter: Anatomy & Type Forms",
+          "estimatedMinutes": 110,
+          "topics": [
+            "Humanism and the body",
+            "Enlightenment and abstraction",
+            "Monster fonts",
+            "Reform and revolution",
+            "Type as program",
+            "Type as narrative",
+            "Back to work",
+            "Anatomy",
+            "Size and Scale",
+            "Type classification and families",
+            "Capitals, small caps, mixing typefaces",
+            "Numerals, punctuation, ornaments, lettering",
+            "Typeface design, font formats and licensing"
+          ]
+        },
+        {
+          "title": "Text: Reading & Organization",
+          "estimatedMinutes": 100,
+          "topics": [
+            "Errors and ownership",
+            "Spacing",
+            "Linearity",
+            "Birth of the user",
+            "Kerning and tracking",
+            "Line spacing and alignment",
+            "Vertical text, enlarged capitals",
+            "Marking paragraphs and captions",
+            "Hierarchy and list exercises"
+          ]
+        },
+        {
+          "title": "Grid: Layout Systems & Structure",
+          "estimatedMinutes": 100,
+          "topics": [
+            "Grid as frame",
+            "Dividing space",
+            "Grid as program",
+            "Grid as table",
+            "Return to universals and Golden section",
+            "Single‑column, multicolumn, modular grid",
+            "Data tables and exercises"
+          ]
+        },
+        {
+          "title": "Appendix & Practical Guidance",
+          "estimatedMinutes": 40,
+          "topics": ["Spaces and punctuation", "Editing typography", "Proofreading", "Practical advice and checklists"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.amazon.co.uk/dp/0262525674",
+      "title": "The Design of Everyday Things: Revised and Expanded Edition",
+      "provider": "Amazon",
+      "resourceType": "book",
+      "description": "A concise exploration of human‑centered design principles, The Design of Everyday Things explains how intuitive, usable products are created by understanding people’s behavior, cognition, and needs—essential for designers aiming to build effective, accessible, and delightful experiences across physical and digital interfaces.",
+      "learningObjectives": [
+        "Understand core principles of human-centered design.",
+        "Learn how to create intuitive and usable products.",
+        "Analyze user behavior and cognitive patterns to inform design.",
+        "Apply design thinking to solve real-world product challenges.",
+        "Evaluate and improve product usability through testing and iteration."
+      ],
+      "targetAudience": [
+        "Product designers and UX/UI designers",
+        "Industrial and interaction design students",
+        "Product managers and developers",
+        "Entrepreneurs creating user-focused products",
+        "Design researchers and human factors specialists",
+        "Anyone interested in improving usability and user experience"
+      ],
+      "totalHours": 5,
+      "sections": [
+        {
+          "title": "Introduction & Design Foundations",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Products that are hard to use come from bad design",
+            "A well‑designed product shows its users how to use it",
+            "Design processes must take human psychology into account"
+          ]
+        },
+        {
+          "title": "Understanding Users & Problems",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Key to fixing flawed design is to locate root causes",
+            "Good design employs constraints to help users understand how a product works"
+          ]
+        },
+        {
+          "title": "Communication & Feedback in Design",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Well‑designed products communicate with users through clear feedback",
+            "Design must be truly human‑centered to bring people and technology closer together"
+          ]
+        },
+        {
+          "title": "Collaboration & Success Factors",
+          "estimatedMinutes": 60,
+          "topics": ["Successful products demand patience and collaboration between designers and marketers"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/3818-advanced-after-effects-coding-for-motion-design",
+      "title": "Advanced After Effects: Coding for Motion Design",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "Learn JavaScript expressions to build stylish, complex animation rigs. Motion designer Desmond Du guides you through techniques for abstract geometric animations, boosting efficiency and creative control. Ideal for motion designers seeking deeper rigging skills and expressive animation workflows.",
+      "learningObjectives": [
+        "Understand how JavaScript expressions work in Adobe After Effects",
+        "Write and apply expressions to automate and enhance animations",
+        "Build complex, reusable animation rigs efficiently",
+        "Create abstract geometric animations using code-driven techniques",
+        "Improve motion design workflows through procedural animation methods"
+      ],
+      "targetAudience": [
+        "Intermediate to advanced motion designers using Adobe After Effects",
+        "Designers looking to automate and optimize animation workflows",
+        "Motion artists interested in procedural and code-driven animation",
+        "After Effects users wanting to learn JavaScript expressions",
+        "Creative professionals building complex animation rigs"
+      ],
+      "totalHours": 4.5,
+      "sections": [
+        {
+          "title": "Introduction & Fundamentals",
+          "estimatedMinutes": 25,
+          "topics": ["About Me", "Influences", "Understanding the Assignment", "The Basics of Coding"]
+        },
+        {
+          "title": "Procedural Design Techniques",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Step Repetition: Transforming Properties",
+            "Step Repetition: Animating with valueAtTime",
+            "Step Repetition: Working with Effects and Layers",
+            "Randomization: Animating Multiple Layers",
+            "Randomization: Displacement",
+            "Generating Number Sequences with For-Loop",
+            "Generative Design: Algorithms",
+            "Generative Design: Procedural Cyber Lines"
+          ]
+        },
+        {
+          "title": "Sequence Animation & Compositing",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Compositing",
+            "Adding Type",
+            "Additional Design Assets",
+            "Stylization and Art Direction 1",
+            "Stylization and Art Direction 2",
+            "Faster Workflow with Animation Proxies"
+          ]
+        },
+        {
+          "title": "Growth & Next Steps",
+          "estimatedMinutes": 20,
+          "topics": ["Learning to Learn", "Improvement and Collaborations"]
+        },
+        {
+          "title": "Final Project",
+          "estimatedMinutes": 30,
+          "topics": ["Advanced After Effects: Coding for Motion Design"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.codecademy.com/learn/learn-digital-accessibility",
+      "title": "Learn Digital Accessibility",
+      "provider": "code academy",
+      "resourceType": "course",
+      "description": "In this web accessibility course, you’ll explore how people with disabilities interact with digital content and learn practical ways to make your websites more inclusive. You’ll master WCAG 2.2 standards across conformance levels A, AA, and AAA, then develop hands-on skills using accessibility testing tools like WAVE and manual evaluation techniques. By the end of this digital accessibility training, you’ll know how to audit sites for compliance, fix common barriers, and build sustainable processes that keep accessibility at the center of your work.",
+      "learningObjectives": [
+        "Design accessible web content for diverse users",
+        "Perform accessibility audits using WCAG 2.2",
+        "Test websites with assistive technologies",
+        "Fix barriers that block content access"
+      ],
+      "targetAudience": [
+        "Web developers seeking to build inclusive, accessible websites",
+        "Front‑end designers, design engineers and content creators learning accessibility standards",
+        "Designers and engineers with intermediate web skills (HTML, CSS, JS) wanting accessibility expertise",
+        "UX/UI professionals aiming to improve usability for diverse users",
+        "Anyone interested in understanding and testing for WCAG compliance"
+      ],
+      "totalHours": 4,
+      "sections": [
+        {
+          "title": "Accessible Design Principles",
+          "estimatedMinutes": 60,
+          "topics": ["Digital Accessibility Design", "Design inclusive digital experiences", "WCAG 2.2 basics and principles"]
+        },
+        {
+          "title": "Compliance & Implementation",
+          "estimatedMinutes": 70,
+          "topics": ["Digital Accessibility and Compliance", "Semantic HTML and ARIA use", "Ensuring WCAG 2.2 AA compliance"]
+        },
+        {
+          "title": "Testing & Evaluation",
+          "estimatedMinutes": 70,
+          "topics": [
+            "Digital Accessibility Testing",
+            "Automated and manual testing techniques",
+            "Using assistive technologies for evaluation"
+          ]
+        }
+      ]
+    }
+  ]
+}
