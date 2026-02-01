@@ -741,6 +741,189 @@
           "topics": ["Text", "Bitmap"]
         }
       ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/3862-creative-coding-2-0-in-js-animation-sound-color",
+      "title": "Creative Coding 2.0 in JS: Animation, Sound, & Color",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "Animation, Sound & Color teaches you advanced JavaScript techniques to create immersive animated visuals, integrate sound, and apply vibrant color in browser‑based generative compositions, ideal for enhancing interactive creative coding skills.",
+      "learningObjectives": [
+        "Advance JavaScript skills for creative coding projects",
+        "Learn to animate visuals and create dynamic motion effects",
+        "Integrate sound to enhance interactive experiences",
+        "Explore color theory and apply it to generative compositions",
+        "Develop complex, multimedia creative coding projects in the browser"
+      ],
+      "targetAudience": [
+        "Intermediate coders and designers with basic JavaScript knowledge",
+        "Creative professionals interested in interactive and multimedia visuals",
+        "Students exploring advanced generative art techniques",
+        "Hobbyists looking to expand their creative coding skills"
+      ],
+      "totalHours": 3,
+      "sections": [
+        {
+          "title": "Getting Started",
+          "estimatedMinutes": 5,
+          "topics": ["The Online Setup"]
+        },
+        {
+          "title": "Visual Composition Techniques",
+          "estimatedMinutes": 19,
+          "topics": ["Distribution", "Adding Colors", "Clipping Mask", "Image Data"]
+        },
+        {
+          "title": "Animation and Interaction",
+          "estimatedMinutes": 28,
+          "topics": ["Animating visuals", "Cursor interaction"]
+        },
+        {
+          "title": "Integrating Sound",
+          "estimatedMinutes": 15,
+          "topics": ["Adding and manipulating sound in visuals"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.udemy.com/course/adobe-photoshop-cc-advanced-training-course-tutorial/",
+      "title": "Adobe Photoshop Advanced Training",
+      "provider": "udemy",
+      "resourceType": "course",
+      "description": "An advanced Adobe Photoshop CC course focused on professional workflows, real‑world projects, and expert techniques like advanced selections, masking, retouching, color grading, AI tools, video/GIF editing, and mockups—designed for users with Photoshop fundamentals looking to level up skills and earn a certificate.",
+      "learningObjectives": [
+        "Master advanced selection and masking techniques in Photoshop CC.",
+        "Fix challenging images and enhance color, tone, and skin adjustments.",
+        "Use generative AI tools to replace backgrounds and blend images.",
+        "Optimize workflow with professional preferences, layer tricks, and automation.",
+        "Retouch photos using advanced healing, cloning, and face adjustments.",
+        "Create social media assets: artboards, video edits, parallax effects, cinemagraphs.",
+        "Design visual styles like duotones, glitches, and color grading.",
+        "Use typography tools including font matching, Typekit, and advanced type workflows.",
+        "Build reusable mockups and export files for print, web, and social media.",
+        "Learn professional techniques to reshape, distort, and creatively manipulate images."
+      ],
+      "targetAudience": [
+        "Graphic designers with basic Photoshop knowledge",
+        "Photographers looking to enhance retouching and editing skills",
+        "Digital artists aiming to master advanced effects and techniques",
+        "Social media managers and content creators seeking professional visuals",
+        "Marketing professionals needing high-quality graphics for campaigns",
+        "Video editors interested in integrating Photoshop with multimedia projects",
+        "Students and professionals preparing for advanced Photoshop certification"
+      ],
+      "totalHours": 15.5,
+      "sections": [
+        {
+          "title": "Introduction & Workflow Setup",
+          "estimatedMinutes": 10,
+          "topics": ["Course introduction", "Advanced preferences & workflow tips", "Optimizing Photoshop for speed"]
+        },
+        {
+          "title": "Advanced Selections & Masking",
+          "estimatedMinutes": 90,
+          "topics": ["Best selection techniques", "Masking people & objects", "Channel masks & selection tricks"]
+        },
+        {
+          "title": "Image Correction & Enlargement",
+          "estimatedMinutes": 70,
+          "topics": ["Fixing hard to fix images", "Advanced Levels & Curves", "Enlarging images without distortion"]
+        },
+        {
+          "title": "Object Removal & Distortion",
+          "estimatedMinutes": 60,
+          "topics": ["Removing unwanted objects", "Reshaping, bending & distorting images", "Content‑aware tools"]
+        },
+        {
+          "title": "Color & Visual Effects",
+          "estimatedMinutes": 50,
+          "topics": ["Duotones and glitch effects", "Orange & teal grading", "Adding dust & splatter effects"]
+        },
+        {
+          "title": "Typography & CC Libraries",
+          "estimatedMinutes": 30,
+          "topics": ["Advanced CC Libraries tricks", "Font pairing & identifying fonts", "Typography effects and flourished text"]
+        },
+        {
+          "title": "Artboards & Social Media Graphics",
+          "estimatedMinutes": 45,
+          "topics": ["Using artboards", "Creating multi‑size banners", "Exporting artboards"]
+        },
+        {
+          "title": "Advanced Retouching",
+          "estimatedMinutes": 90,
+          "topics": ["Advanced healing & cloning", "Patch tool work", "Skin, eyes & teeth retouching"]
+        },
+        {
+          "title": "Video & Animation",
+          "estimatedMinutes": 50,
+          "topics": ["Editing video in Photoshop", "Parallax motion effects", "Creating cinemagraphs"]
+        },
+        {
+          "title": "3D & Mockups",
+          "estimatedMinutes": 60,
+          "topics": ["3D text and logo creation", "Real‑world mockups (posters, screens, billboards)", "Reusable smart object mockups"]
+        },
+        {
+          "title": "Exporting & Deliverables",
+          "estimatedMinutes": 30,
+          "topics": ["Exporting for web, print, social", "Packaging files", "Proofing colors"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.coursera.org/learn/image-editing",
+      "title": "Image editing",
+      "provider": "Coursera",
+      "resourceType": "course",
+      "description": "A practical course introducing essential image editing skills using Adobe Photoshop, covering workspace navigation, photo enhancement, compositing, and generative AI tools—designed to help learners create compelling visual content and build a creative portfolio.",
+      "learningObjectives": [
+        "Understand and apply basic image editing principles to create visually appealing designs.",
+        "Gain hands-on experience with Adobe Photoshop to produce professional-quality image projects.",
+        "Build a portfolio showcasing your image editing and creative skills.",
+        "Use generative AI tools within Photoshop to accelerate and enhance creative workflows."
+      ],
+      "targetAudience": [
+        "Beginners interested in image editing and digital design",
+        "Aspiring graphic designers and visual content creators",
+        "Photographers looking to enhance and retouch images",
+        "Marketing and social media professionals seeking visual skills",
+        "Students aiming to build a creative portfolio",
+        "Anyone interested in learning Photoshop and generative AI tools"
+      ],
+      "totalHours": 64,
+      "sections": [
+        [
+          {
+            "title": "Image Editing",
+            "estimatedMinutes": 1080,
+            "topics": [
+              "Understand and apply basic image editing principles to create visually appealing and practical designs that captivate your audience.",
+              "Gain hands-on experience with Adobe Photoshop to create professional-quality design projects with ease.",
+              "Build a stunning portfolio that showcases your image editing expertise, making you a standout candidate for any creative opportunity."
+            ]
+          },
+          {
+            "title": "Graphic Design",
+            "estimatedMinutes": 1500,
+            "topics": [
+              "Understand and apply basic graphic design principles to create visually appealing and practical designs that captivate your audience.",
+              "Gain hands-on experience with Adobe Illustrator, mastering the tools and techniques you need to produce professional-grade artwork.",
+              "Build a stunning portfolio that showcases your graphic design and illustration expertise, making you a standout candidate in the creative industry."
+            ]
+          },
+          {
+            "title": "Document Design",
+            "estimatedMinutes": 1260,
+            "topics": [
+              "Master the fundamentals of document design, learning how to create clear, visually appealing, and effective documents.",
+              "Explore various tools and software products used in document management, and understand how to leverage them for maximum efficiency.",
+              "LGain practical experience in organizing, formatting, and managing documents to ensure that they meet professional standards.",
+              "Develop a comprehensive portfolio of well-designed documents that demonstrate your proficiency and attention to detail."
+            ]
+          }
+        ]
+      ]
     }
   ]
 }
