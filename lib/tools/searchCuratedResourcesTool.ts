@@ -25,12 +25,7 @@ export async function searchCuratedResources(query: string, limit: number = DEFA
   const searchResults: EmbeddingSearchResult[] = await searchEmbeddings(queryEmbedding, { limit: limit * DEFAULT_DUPLICATION_MULTIPLIER });
 
   const uniqueResourceIds = Array.from(
-    new Set(
-      searchResults
-        .slice(0, limit)
-        .filter((result) => result.similarity >= DEFAULT_SIMILARITY_THRESHOLD)
-        .map((result) => result.resourceId)
-    )
+    new Set(searchResults.filter((result) => result.similarity >= DEFAULT_SIMILARITY_THRESHOLD).map((result) => result.resourceId))
   );
 
   return uniqueResourceIds.slice(0, limit);
