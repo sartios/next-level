@@ -119,7 +119,7 @@ class SkillResourceAgent {
     });
 
     const retrieverUserPrompt = await getAgentPrompt('skill-resource-agent:retrieve:user-prompt', {
-      user_profile_json: JSON.stringify({ role: user.role, skills: user.skills, carrerGoals: user.careerGoals }),
+      user_profile_json: JSON.stringify({ role: user.role, skills: user.skills, careerGoals: user.careerGoals }),
       growth_goal_json: JSON.stringify({ name: goal.name, reasoning: goal.reasoning })
     });
     const result = await this.agentRetriever.invoke(
