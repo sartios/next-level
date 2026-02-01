@@ -83,6 +83,87 @@
           "topics": ["How to make a simple Variant in Figma", "How to make a multi-dimensional Variant in Figma"]
         }
       ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=QJBP2uy8LcU",
+      "title": "Free Figma UX Design UI Essentials Course",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "Learn UX Design from scratch with Figma! In this beginner-friendly course led by Dan Scott, you'll master user interfaces, wireframes, UI components, prototypes, and real-world UX projects. Gain hands-on experience with Figma tools, style guides, animations, and collaboration techniques while building portfolio.",
+      "learningObjectives": [
+        "Creating user interfaces and prototypes",
+        "Understanding client expectations",
+        "Working with UX briefs and personas",
+        "Designing wireframes, choosing colors, images, and fonts",
+        "Building UI components like icons and buttons",
+        "Mastering key concepts (Components, Constraints, Variants)",
+        "Using UI kits and plugins to boost efficiency",
+        "Creating style guides and animations",
+        "Building interactive prototypes and preparing files for developers",
+        "Collaborating with team members",
+        "Gaining real-world UX project knowledge",
+        "Completing portfolio-building assignments",
+        "Running independent UX projects from Figma Zero to Figma Hero"
+      ],
+      "targetAudience": [
+        "Beginners interested in UI/UX design",
+        "Aspiring UI/UX designers looking to learn Figma",
+        "Graphic designers transitioning to UI/UX",
+        "Students building a UI/UX portfolio",
+        "Professionals seeking practical, project-based UI/SUX experience",
+        "Team members collaborating on digital product design"
+      ],
+      "totalHours": 2.41,
+      "sections": [
+        {
+          "title": "Course Introduction & Overview",
+          "estimatedMinutes": 20,
+          "topics": [
+            "Introduction to Figma Essentials 2025 Course",
+            "Getting started with this Figma Essentials Course",
+            "What is Figma and does it do coding?",
+            "What's the difference between UI and UX in Figma",
+            "What we're making in this Figma Course",
+            "Class Project 1: Create your own Brief"
+          ]
+        },
+        {
+          "title": "Wireframing & Layout Basics",
+          "estimatedMinutes": 25,
+          "topics": ["What is LoFi vs HiFi wireframes?", "Introducing Frames in Figma", "Class Project 2: Wireframe"]
+        },
+        {
+          "title": "Design Fundamentals: Shapes, Colors & Typography",
+          "estimatedMinutes": 55,
+          "topics": [
+            "Basics of Font and Type in Figma",
+            "Rectangles, Circles, Rounded corners in Figma",
+            "How to use Color in Figma",
+            "Strokes and updating color defaults in Figma",
+            "Object editing and how to escape Figma",
+            "Scale vs Selection tool in Figma",
+            "Frames vs Groups in Figma"
+          ]
+        },
+        {
+          "title": "Icons & Plugins",
+          "estimatedMinutes": 30,
+          "topics": ["Where to get free icons for Figma", "How to use Plugins in Figma", "Class Project 3: Icons"]
+        },
+        {
+          "title": "Prototyping & Interactive Design",
+          "estimatedMinutes": 40,
+          "topics": [
+            "How to use Pages in Figma",
+            "How to Prototype in Figma",
+            "Prototype animation and easing in Figma",
+            "How to add the iOS status bar in Figma",
+            "Testing on your phone with Figma Mirror",
+            "Class Project 4: Testing on your phone with Figma",
+            "What is smart animation delays in Figma"
+          ]
+        }
+      ]
     }
   ]
 }
