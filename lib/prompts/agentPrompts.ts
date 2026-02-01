@@ -48,7 +48,7 @@ Finally, formulate a targeted search query that aligns with the user's professio
   'skill-resource-retriever-agent:user-prompt': {
     name: 'skill-resource-retriever-agent:user-prompt',
     description: 'User prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
-    prompt: "user:```json{{user}}``` goal:```json{{goal}}```",
+    prompt: 'user:```json{{user}}``` goal:```json{{goal}}```',
     metadata: {
       agent: 'skill-resource-retriever-agent',
       type: 'user-prompt',

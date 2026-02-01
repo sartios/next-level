@@ -157,9 +157,7 @@
       "minResourceCount": 1,
       "expectedProviders": ["code academy"],
       "expectedResourceTypes": ["course"],
-      "expectedResourceUrls": [
-        "https://www.codecademy.com/learn/learn-next-js"
-      ]
+      "expectedResourceUrls": ["https://www.codecademy.com/learn/learn-next-js"]
     }
   },
   {
@@ -241,9 +239,7 @@
       "minResourceCount": 1,
       "expectedProviders": ["code academy"],
       "expectedResourceTypes": ["course"],
-      "expectedResourceUrls": [
-        "https://www.codecademy.com/learn/learn-digital-accessibility"
-      ]
+      "expectedResourceUrls": ["https://www.codecademy.com/learn/learn-digital-accessibility"]
     }
   },
   {
@@ -267,10 +263,7 @@
       "minResourceCount": 2,
       "expectedProviders": ["alchemy"],
       "expectedResourceTypes": ["course"],
-      "expectedResourceUrls": [
-        "https://www.alchemy.com/university/courses/ethereum",
-        "https://www.alchemy.com/university/courses/solidity"
-      ]
+      "expectedResourceUrls": ["https://www.alchemy.com/university/courses/ethereum", "https://www.alchemy.com/university/courses/solidity"]
     }
   },
   {
