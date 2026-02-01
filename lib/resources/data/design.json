@@ -164,6 +164,64 @@
           ]
         }
       ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=1SNZRCVNizg",
+      "title": "Free Figma Crash Course for Beginners 2026 UI/UX Design",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "If you're looking to dive into UI/UX design, this course is the perfect starting point! You'll learn the fundamentals of Figma, from the basics to creating stunning user interfaces and seamless user experiences. Whether you're a complete beginner or just looking to sharpen your skills, this course will give you the hands-on knowledge you need to get started with confidence!",
+      "learningObjectives": [
+        "Understand the basics of Figma and its interface",
+        "Learn the difference between UI and UX design",
+        "Create wireframes and layouts using Figma",
+        "Design with fonts, colors, shapes, and other UI elements",
+        "Build and use components, frames, and groups",
+        "Use Figma plugins and resources like icons",
+        "Prototype interactive designs and animations",
+        "Test designs on devices using Figma Mirror",
+        "Complete practical projects to build a beginner UX portfolio"
+      ],
+      "targetAudience": [
+        "Beginners interested in UX and UI design",
+        "Aspiring designers learning Figma for the first time",
+        "Students and hobbyists exploring digital product design",
+        "Graphic designers transitioning to UX/UI",
+        "Professionals seeking a quick, hands-on Figma introduction"
+      ],
+      "totalHours": 1.5,
+      "sections": [
+        {
+          "title": "Getting Started with Figma",
+          "estimatedMinutes": 10,
+          "topics": ["Figma Dashboard & Setup", "Figma Editor Interface"]
+        },
+        {
+          "title": "Frames, Shapes & Basic Design Tools",
+          "estimatedMinutes": 25,
+          "topics": ["Frames", "Shape Tools", "Effects", "Export Settings"]
+        },
+        {
+          "title": "Advanced Vector and Text Tools",
+          "estimatedMinutes": 15,
+          "topics": ["Vector Editing", "Text Tool", "Layers Basics", "Boolean Operations"]
+        },
+        {
+          "title": "Layouts and Components",
+          "estimatedMinutes": 20,
+          "topics": ["Auto Layout", "Components", "Component Variants", "Plugins", "Layout Grids"]
+        },
+        {
+          "title": "Prototyping and Collaboration",
+          "estimatedMinutes": 15,
+          "topics": ["Prototyping", "Sharing & Collaboration", "Constraints"]
+        },
+        {
+          "title": "AI Tools and Developer Handoff",
+          "estimatedMinutes": 10,
+          "topics": ["AI Tools", "Dev Mode"]
+        }
+      ]
     }
   ]
 }
