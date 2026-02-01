@@ -1,0 +1,94 @@
+[
+  {
+    "id": "skr-001",
+    "name": "Python Resources for Beginner Engineer",
+    "input": {
+      "user": {
+        "id": "eval-001",
+        "role": "Software Engineer",
+        "skills": ["JavaScript", "React", "Node.js"],
+        "careerGoals": ["Learn Python for data science", "Expand programming languages"]
+      },
+      "goal": {
+        "id": "goal-001",
+        "userId": "eval-001",
+        "name": "Python Programming",
+        "reasoning": "Foundation for data science and backend development"
+      }
+    },
+    "expected": {
+      "minResourceCount": 4,
+      "expectedProviders": ["udemy"],
+      "expectedResourceTypes": ["course"]
+    }
+  },
+  {
+    "id": "skr-002",
+    "name": "Machine Learning Resources for Intermediate",
+    "input": {
+      "user": {
+        "id": "eval-002",
+        "role": "Data Analyst",
+        "skills": ["SQL", "Python", "Data Visualization"],
+        "careerGoals": ["Transition to ML Engineer", "Build ML models"]
+      },
+      "goal": {
+        "id": "goal-002",
+        "userId": "eval-002",
+        "name": "Machine Learning",
+        "reasoning": "Foundation needed for ML engineering career"
+      }
+    },
+    "expected": {
+      "minResourceCount": 3,
+      "expectedProviders": ["coursera", "oreilly", "udemy"],
+      "expectedResourceTypes": ["course", "book"]
+    }
+  },
+  {
+    "id": "skr-003",
+    "name": "Deep Learning Resources for Expert",
+    "input": {
+      "user": {
+        "id": "eval-003",
+        "role": "ML Engineer",
+        "skills": ["Python", "Machine Learning", "TensorFlow"],
+        "careerGoals": ["Specialize in deep learning", "Research applications"]
+      },
+      "goal": {
+        "id": "goal-003",
+        "userId": "eval-003",
+        "name": "Deep Learning",
+        "reasoning": "Advanced specialization for research and complex models"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["oreilly", "coursera"],
+      "expectedResourceTypes": ["book", "course"]
+    }
+  },
+  {
+    "id": "skr-004",
+    "name": "Data Science Resources for Beginner",
+    "input": {
+      "user": {
+        "id": "eval-004",
+        "role": "Business Analyst",
+        "skills": ["Excel", "SQL", "Business Intelligence"],
+        "careerGoals": ["Transition to Data Scientist", "Learn statistical analysis"]
+      },
+      "goal": {
+        "id": "goal-004",
+        "userId": "eval-004",
+        "name": "Data Science Fundamentals",
+        "reasoning": "Entry point for data science career transition"
+      }
+    },
+    "expected": {
+      "minResourceCount": 3,
+      "expectedProviders": ["udemy"],
+      "expectedResourceTypes": ["course"]
+    }
+  }
+]

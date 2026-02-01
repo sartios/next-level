@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import skillResourceAgentInstance from '@/lib/agents/SkillResourceAgent';
+import { getUserById, getUserGoalById } from '@/lib/repository';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -10,7 +11,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!userId) {
       return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
     }
-    const result = await skillResourceAgentInstance.suggestResources(userId, goalId, {
+
+    const user = getUserById(userId);
+    const goal = getUserGoalById(user.id, goalId);
+
+    const result = await skillResourceAgentInstance.suggestResources(user, goal, {
       metadata: { invokedBy: 'GET /api/goals/{id}/resources' }
     });
 

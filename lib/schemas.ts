@@ -30,7 +30,7 @@ const LearningResourceSchema = z.object({
   updatedAt: z.string()
 });
 
-const LearningResourceWithSectionsSchema = LearningResourceSchema.extend({
+export const LearningResourceWithSectionsSchema = LearningResourceSchema.extend({
   sections: z.array(LearningResourceSectionSchema)
 });
 
