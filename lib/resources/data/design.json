@@ -697,6 +697,50 @@
           "topics": ["Publishing & Subscribing to a Design System"]
         }
       ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/2729-creative-coding-making-visuals-with-javascript",
+      "title": "Creative Coding: Making Visuals with JavaScript",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "Creative Coding: Making Visuals with JavaScript is a beginner‑friendly course teaching programming fundamentals and how to draw, animate, and design visual compositions using JavaScript code—perfect for creating engaging browser‑based visuals and experiments.",
+      "learningObjectives": [
+        "Understand the basics of JavaScript programming for creative projects",
+        "Learn to create shapes, animations, and visual effects with code",
+        "Explore generative design techniques for interactive visuals",
+        "Develop skills to combine art and technology in browser-based projects",
+        "Build small creative coding projects to apply learned concepts"
+      ],
+      "targetAudience": [
+        "Beginners interested in programming and visual arts",
+        "Designers looking to integrate code into their creative workflow",
+        "Artists wanting to experiment with generative visuals",
+        "Students exploring creative coding and interactive media",
+        "Hobbyists curious about JavaScript and digital art"
+      ],
+      "totalHours": 2.42,
+      "sections": [
+        {
+          "title": "Setting Up the Environment",
+          "estimatedMinutes": 13,
+          "topics": ["An Environment for Sketching"]
+        },
+        {
+          "title": "Basic Visual Structures",
+          "estimatedMinutes": 15,
+          "topics": ["Grid", "Noise"]
+        },
+        {
+          "title": "Interactive Elements",
+          "estimatedMinutes": 11,
+          "topics": ["GUI"]
+        },
+        {
+          "title": "Working with Text and Images",
+          "estimatedMinutes": 20,
+          "topics": ["Text", "Bitmap"]
+        }
+      ]
     }
   ]
 }
