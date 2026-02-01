@@ -1,71 +1,74 @@
+import assert from 'node:assert';
 import { createAgent, providerStrategy } from 'langchain';
 import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { createOpikHandler } from '@/lib/opik';
+import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
 import { fetchUserTool } from '@/lib/tools/fetchUserTool';
 import { saveSuggestedSkillsTool } from '@/lib/tools/saveSuggestedSkillsTool';
+import { getAgentPrompt } from '@/lib/prompts';
+import { SuggestedSkill } from '@/lib/mockDb';
+import { SuggestedSkillSchema } from '@/lib/schemas';
 
-export interface SuggestedSkill {
-  name: string;
-  priority: number;
-  reasoning: string;
-}
-
-interface SkillSuggestionResult {
+interface SkillSuggestionResponse {
   userId: string;
   skills: SuggestedSkill[];
 }
 
-const SuggestedSkillSchema = z.object({
-  skills: z.array(
-    z.object({
-      name: z.string(),
-      priority: z.number(),
-      reasoning: z.string()
-    })
-  )
+const SkillSuggestionResponseSchema = z.object({
+  userId: z.string(),
+  skills: z.array(SuggestedSkillSchema)
 });
 
 class UserSkillAgent {
-  private agent;
+  private readonly agentName = 'user-skill-agent';
+  private readonly model = 'gpt-4o-mini';
 
-  constructor() {
-    this.agent = createAgent({
-      model: new ChatOpenAI({ model: 'gpt-4.1-mini' }),
-      tools: [fetchUserTool, saveSuggestedSkillsTool],
-      systemPrompt: new SystemMessage(
-        `
-You are a career development assistant.
+  private agent: ReturnType<typeof createAgent> | null = null;
+  private initPromise: Promise<void> | null = null;
 
-Your goal is to:
-1. Fetch the user profile using the fetchUser tool
-2. Suggest a list of 10 skills that will help them achieve their career goals
-3. IMPORTANT: Save the suggested skills to the database using the saveSuggestedSkills tool
+  private async initialize(): Promise<void> {
+    if (this.agent) return;
 
-**Do NOT include skills the user already has** (from the "skills" array in their profile).
+    if (!this.initPromise) {
+      this.initPromise = (async () => {
+        try {
+          const systemPrompt = await getAgentPrompt(this.agentName);
+          this.agent = createAgent({
+            model: new ChatOpenAI({ model: this.model }),
+            tools: [fetchUserTool, saveSuggestedSkillsTool],
+            systemPrompt: new SystemMessage(systemPrompt),
+            responseFormat: providerStrategy(SkillSuggestionResponseSchema)
+          });
+        } catch (error) {
+          this.initPromise = null;
+          throw error;
+        }
+      })();
+    }
 
-For each suggested skill, provide a short reasoning explaining why it is important and how it helps the individual.
-
-Prioritize skills from most important to least important (priority: 1 is highest, 10 is lowest).
-
-You have access to the following tools:
-- fetchUser: fetch the user's profile including their current skills and career goals
-- saveSuggestedSkills: save the generated skill suggestions to the database (MUST be called after generating skills)
-    `.trim()
-      ),
-      responseFormat: providerStrategy(SuggestedSkillSchema)
-    });
+    await this.initPromise;
   }
 
-  public async suggestSkills(
-    userId: string,
-    opikOptions?: { tags?: string[]; metadata?: Record<string, unknown> }
-  ): Promise<SkillSuggestionResult> {
-    const handler = createOpikHandler(opikOptions);
+  public async suggestSkills(userId: string, opikOptions?: OpikHandlerOptions): Promise<SkillSuggestionResponse> {
+    await this.initialize();
+    assert(this.agent, `${this.agentName} not ready`);
 
-    const result = await this.agent.invoke({ messages: [new HumanMessage(JSON.stringify({ userId }))] }, { callbacks: [handler] });
+    const handler = createOpikHandler({
+      tags: [this.agentName, 'operation:suggest', ...(opikOptions?.tags || [])],
+      metadata: {
+        agentName: this.agentName,
+        userId,
+        ...opikOptions?.metadata
+      },
+      threadId: opikOptions?.threadId
+    });
+
+    const result = await this.agent.invoke(
+      { messages: [new HumanMessage(JSON.stringify({ userId }))] },
+      { callbacks: [handler], runName: this.agentName }
+    );
 
     return {
       userId,

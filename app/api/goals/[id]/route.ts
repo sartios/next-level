@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import * as repository from '@/lib/repository';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const goal = await repository.getCurrentUserGoal('123');
 

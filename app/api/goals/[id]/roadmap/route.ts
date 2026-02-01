@@ -10,8 +10,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
     }
     const result = await roadmapAgent.createRoadmap(userId, goalId, {
-      tags: ['roadmap-creation'],
-      metadata: { invokedBy: 'api/post-goal-roadmap' }
+      metadata: { invokedBy: 'POST /api/goals/{id}/roadmap' }
     });
 
     return NextResponse.json({ roadmap: result.roadmap });

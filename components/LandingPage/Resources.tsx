@@ -25,19 +25,21 @@ export default function Resources({ goal }: ResourcesProps) {
                 <h2 className="text-2xl font-black mb-6">
                   <a
                     className="inline-block text-foreground hover:text-accent transition-colors duration-200"
-                    href={resource.link}
+                    href={resource.url}
                     target="_blank"
                   >
                     {resource.title}
                   </a>
                 </h2>
 
-                <div className="flex gap-8 mb-8">
-                  <div className="flex items-center gap-2">
-                    <Timer className="h-5 w-5 text-accent" />
-                    <span className="font-bold text-foreground">{resource.approximateHours} Hours</span>
+                {resource.totalHours && (
+                  <div className="flex gap-8 mb-8">
+                    <div className="flex items-center gap-2">
+                      <Timer className="h-5 w-5 text-accent" />
+                      <span className="font-bold text-foreground">{resource.totalHours} Hours</span>
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="text-base leading-normal text-foreground pb-4">{resource.reasoning}</div>
                 <Accordion type="single" collapsible defaultValue={index === 0 ? 'sections' : undefined} className="w-full">
                   <AccordionItem value="sections" className="border-none">
@@ -50,11 +52,15 @@ export default function Resources({ goal }: ResourcesProps) {
                     <AccordionContent>
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 pb-4">
                         {resource.sections.map((s) => (
-                          <li key={s.skill} className="flex items-start gap-2 bg-background p-3 rounded-md border border-muted">
+                          <li key={s.id} className="flex items-start gap-2 bg-background p-3 rounded-md border border-muted">
                             <CheckCircle2 className="h-4 w-4 text-accent mt-1 shrink-0" />
                             <div className="flex flex-col">
-                              <span className="text-foreground font-bold">{s.skill}</span>
-                              <span className="text-muted-foreground text-sm font-medium">{s.location}</span>
+                              <span className="text-foreground font-bold">{s.title}</span>
+                              {s.topics?.map((t) => (
+                                <span className="text-muted-foreground text-sm font-medium" key={t}>
+                                  {t}
+                                </span>
+                              ))}
                             </div>
                           </li>
                         ))}

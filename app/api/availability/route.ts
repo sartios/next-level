@@ -39,8 +39,7 @@ export async function POST(req: NextRequest) {
 
     const goalId = '123';
     await RoadmapAgent.createRoadmap(userId, goalId, {
-      tags: ['roadmap-creation'],
-      metadata: { invokedBy: 'api/goals', goalId }
+      metadata: { invokedBy: 'POST /api/availability' }
     });
 
     return NextResponse.json({ success: true, availability }, { status: 201 });

@@ -2,16 +2,9 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import * as repository from '@/lib/repository';
 import { RoadmapStepSchema } from '@/lib/schemas';
+import { RoadmapStep } from '../mockDb';
 
-const toolFunction = async ({
-  userId,
-  goalId,
-  roadmap
-}: {
-  userId: string;
-  goalId: string;
-  roadmap: z.infer<typeof RoadmapStepSchema>[];
-}) => {
+const toolFunction = async ({ userId, goalId, roadmap }: { userId: string; goalId: string; roadmap: RoadmapStep[] }) => {
   const updatedGoal = repository.saveRoadmap(userId, goalId, roadmap);
   return { success: true, message: `Successfully saved ${roadmap.length} roadmap steps to the goal`, goal: updatedGoal };
 };

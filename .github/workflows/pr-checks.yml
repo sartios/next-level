@@ -9,6 +9,25 @@ jobs:
   pre-merge:
     name: Run PR Checks
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: nextlevel
+          POSTGRES_PASSWORD: nextlevel
+          POSTGRES_DB: nextlevel
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://nextlevel:nextlevel@localhost:5432/nextlevel
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,11 +38,22 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Enable pgvector extension
+        run: psql $DATABASE_URL -c "CREATE EXTENSION IF NOT EXISTS vector;"
+        env:
+          PGPASSWORD: nextlevel
+
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
       - name: Run ESLint
         run: npm run lint
+
+      - name: Run database migrations
+        run: npm run db:migrate
+
+      - name: Validate Resources
+        run: npm run resources:sync -- --dry-run
 
       - name: Run Tests
         run: npm run test

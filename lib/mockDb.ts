@@ -1,3 +1,5 @@
+import { GoalResource } from './types';
+
 export interface User {
   id: string;
   role: string;
@@ -24,24 +26,9 @@ export interface Goal {
   userId: string;
   name: string;
   reasoning: string;
-  resources?: Resource[];
+  resources?: GoalResource[];
   roadmap?: RoadmapStep[];
   plan?: Plan;
-}
-
-export interface Resource {
-  title: string;
-  link: string;
-  reasoning: string;
-  provider: string;
-  approximateHours: number;
-  relevancePercentage: number;
-  sections: ResourceSection[];
-}
-
-interface ResourceSection {
-  skill: string;
-  location: string;
 }
 
 export type RoadmapStepStatus = 'pending' | 'started' | 'completed';
@@ -56,7 +43,7 @@ export interface Timeline {
 export interface RoadmapStep {
   step: string;
   description: string;
-  resources: Resource[];
+  resources: GoalResource[];
   status: RoadmapStepStatus;
   timeline: Timeline[];
 }
@@ -190,55 +177,7 @@ const createInitialDb = (): MockDb => ({
         'Understanding Agile methodologies supports effective team collaboration and iterative product development, which are crucial for leadership in software teams.'
     }
   ] as SuggestedSkill[],
-  goal: {
-    id: '123',
-    userId: '123',
-    name: 'Leadership',
-    reasoning:
-      'As Alice aims for a team lead role, leadership skills are crucial for effectively managing and motivating the team, facilitating communication, and driving project success.',
-    resources: [
-      {
-        title: 'Developing Leadership Skills for Engineers',
-        link: 'https://www.coursera.org/learn/leadership-engineers',
-        reasoning:
-          'This course is designed specifically for engineers like Alice to build foundational leadership skills, focusing on managing technical teams, decision-making, and communication strategies important for a team lead role.',
-        provider: 'Coursera',
-        approximateHours: 8,
-        relevancePercentage: 95,
-        sections: [{ skill: 'Team Management', location: 'Module 1-3' }]
-      },
-      {
-        title: 'Harvard Business Review Leadership Articles',
-        link: 'https://hbr.org/topic/leadership',
-        reasoning:
-          'A collection of insightful articles from HBR offering practical leadership advice and strategies that Alice can apply to lead and motivate her team effectively.',
-        provider: 'Harvard Business Review',
-        approximateHours: 4,
-        relevancePercentage: 85,
-        sections: [{ skill: 'Leadership Strategy', location: 'Featured Articles' }]
-      },
-      {
-        title: 'TED Talk: How Great Leaders Inspire Action',
-        link: 'https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action',
-        reasoning:
-          'This talk provides inspiring perspectives on leadership and motivation, helping Alice understand how to inspire her team with a clear vision and purpose.',
-        provider: 'TED',
-        approximateHours: 0.5,
-        relevancePercentage: 80,
-        sections: [{ skill: 'Inspiration', location: 'Full Talk' }]
-      },
-      {
-        title: 'Book: The Five Dysfunctions of a Team',
-        link: 'https://www.tablegroup.com/books/dysfunctions',
-        reasoning:
-          'This book helps leaders understand common team challenges and how to overcome them, which is valuable for Alice as she prepares to lead and cultivate a high-performing team.',
-        provider: 'Table Group',
-        approximateHours: 6,
-        relevancePercentage: 90,
-        sections: [{ skill: 'Team Dynamics', location: 'Chapters 1-5' }]
-      }
-    ]
-  },
+  goal: {} as Goal,
   engagement: { missed: 0, inactiveDays: 0 },
   reflections: []
 });
