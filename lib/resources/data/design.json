@@ -23,7 +23,7 @@
         "Freelance designers building portfolio-ready projects",
         "Design teams wanting to improve Figma efficiency and consistency"
       ],
-      "totalHours": 3.5,
+      "totalHours": 4,
       "sections": [
         {
           "title": "Course Introduction & Project Setup",
@@ -110,10 +110,10 @@
         "Aspiring UI/UX designers looking to learn Figma",
         "Graphic designers transitioning to UI/UX",
         "Students building a UI/UX portfolio",
-        "Professionals seeking practical, project-based UI/SUX experience",
+        "Professionals seeking practical, project-based UI/UX experience",
         "Team members collaborating on digital product design"
       ],
-      "totalHours": 2.41,
+      "totalHours": 3,
       "sections": [
         {
           "title": "Course Introduction & Overview",
@@ -248,16 +248,16 @@
         "Designers with their own Figma workflow wanting to explore advanced tools and techniques",
         "Professionals aiming to build professional-grade design systems and portfolio projects"
       ],
-      "totalHours": 8.48,
+      "totalHours": 9,
       "sections": [
         {
           "title": "Introduction & Getting Started",
-          "estimatedMinutes": 7,
+          "estimatedMinutes": 10,
           "topics": ["Intro to the Figma Advanced Course", "Getting Started", "Your brief for the Figma Advanced course"]
         },
         {
           "title": "AI-Powered Design",
-          "estimatedMinutes": 16,
+          "estimatedMinutes": 60,
           "topics": [
             "First Draft using AI in Figma",
             "Suggest Auto Layout, Replace Content, Duplicate & Rename Layers (Ai)",
@@ -305,7 +305,7 @@
         },
         {
           "title": "Visual Design & Effects",
-          "estimatedMinutes": 40,
+          "estimatedMinutes": 120,
           "topics": [
             "Liquid Glass Effect in Figma",
             "Texture & Noise & Effect Order",
@@ -327,7 +327,7 @@
         },
         {
           "title": "Animation & Interactions",
-          "estimatedMinutes": 72,
+          "estimatedMinutes": 73,
           "topics": [
             "Animation with custom easing in Figma",
             "How to copy and paste Interactions in Figma",
@@ -470,7 +470,7 @@
     },
     {
       "url": "https://www.udemy.com/course/ux-strategy-fundamentals/",
-      "title": "UX Strategy FundamentalsS",
+      "title": "UX Strategy Fundamentals",
       "provider": "udemy",
       "resourceType": "course",
       "description": "The course teaches practical principles and simple methods to define and apply UX strategy across products, helping learners connect user needs with business goals, prioritize features, engage stakeholders, control scope, and make better UX decisions at every stage of design and development.",
@@ -614,7 +614,7 @@
         "Product designers aiming to scale design workflows and collaboration.",
         "Teams or individuals looking to understand design system organization and documentation."
       ],
-      "totalHours": 3.5,
+      "totalHours": 4,
       "sections": [
         {
           "title": "Introduction & Design Token Setup",
@@ -716,7 +716,7 @@
         "Students exploring creative coding and interactive media",
         "Hobbyists curious about JavaScript and digital art"
       ],
-      "totalHours": 2.45,
+      "totalHours": 3,
       "sections": [
         {
           "title": "Setting Up the Environment",
@@ -915,7 +915,7 @@
           "topics": [
             "Master the fundamentals of document design, learning how to create clear, visually appealing, and effective documents.",
             "Explore various tools and software products used in document management, and understand how to leverage them for maximum efficiency.",
-            "LGain practical experience in organizing, formatting, and managing documents to ensure that they meet professional standards.",
+            "Gain practical experience in organizing, formatting, and managing documents to ensure that they meet professional standards.",
             "Develop a comprehensive portfolio of well-designed documents that demonstrate your proficiency and attention to detail."
           ]
         }
