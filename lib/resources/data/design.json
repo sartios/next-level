@@ -1187,6 +1187,48 @@
           "topics": ["Advanced After Effects: Coding for Motion Design"]
         }
       ]
+    },
+    {
+      "url": "https://www.codecademy.com/learn/learn-digital-accessibility",
+      "title": "Learn Digital Accessibility",
+      "provider": "code academy",
+      "resourceType": "course",
+      "description": "In this web accessibility course, you’ll explore how people with disabilities interact with digital content and learn practical ways to make your websites more inclusive. You’ll master WCAG 2.2 standards across conformance levels A, AA, and AAA, then develop hands-on skills using accessibility testing tools like WAVE and manual evaluation techniques. By the end of this digital accessibility training, you’ll know how to audit sites for compliance, fix common barriers, and build sustainable processes that keep accessibility at the center of your work.",
+      "learningObjectives": [
+        "Design accessible web content for diverse users",
+        "Perform accessibility audits using WCAG 2.2",
+        "Test websites with assistive technologies",
+        "Fix barriers that block content access"
+      ],
+      "targetAudience": [
+        "Web developers seeking to build inclusive, accessible websites",
+        "Front‑end designers, design engineers and content creators learning accessibility standards",
+        "Designers and engineers with intermediate web skills (HTML, CSS, JS) wanting accessibility expertise",
+        "UX/UI professionals aiming to improve usability for diverse users",
+        "Anyone interested in understanding and testing for WCAG compliance"
+      ],
+      "totalHours": 4,
+      "sections": [
+        {
+          "title": "Accessible Design Principles",
+          "estimatedMinutes": 60,
+          "topics": ["Digital Accessibility Design", "Design inclusive digital experiences", "WCAG 2.2 basics and principles"]
+        },
+        {
+          "title": "Compliance & Implementation",
+          "estimatedMinutes": 70,
+          "topics": ["Digital Accessibility and Compliance", "Semantic HTML and ARIA use", "Ensuring WCAG 2.2 AA compliance"]
+        },
+        {
+          "title": "Testing & Evaluation",
+          "estimatedMinutes": 70,
+          "topics": [
+            "Digital Accessibility Testing",
+            "Automated and manual testing techniques",
+            "Using assistive technologies for evaluation"
+          ]
+        }
+      ]
     }
   ]
 }
