@@ -521,6 +521,182 @@
           ]
         }
       ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/5031-design-systems-for-websites-using-figma",
+      "title": "Design Systems for Websites using Figma",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "A beginner‑friendly course teaching how to create structured design systems for visually engaging websites in Figma, covering components, layouts, documentation, and workflow optimization to build reusable web UI assets and streamline design processes.",
+      "learningObjectives": [
+        "Understand the fundamentals of design systems and their benefits for web projects.",
+        "Learn to navigate Figma efficiently to create digital design systems.",
+        "Build reusable components and apply global styles to streamline web design.",
+        "Use auto layout and other Figma tools to optimize workflow.",
+        "Document and organize design systems for team collaboration and consistency."
+      ],
+      "targetAudience": [
+        "Beginners interested in learning design systems and web design.",
+        "Aspiring UX/UI designers wanting practical Figma workflow skills.",
+        "Designers seeking to streamline website design with reusable components.",
+        "Professionals aiming to improve team collaboration through structured systems.",
+        "Figma users with basic familiarity looking to expand their toolkit."
+      ],
+      "totalHours": 5,
+      "sections": [
+        {
+          "title": "Introduction",
+          "estimatedMinutes": 21,
+          "topics": [
+            "Introduction to Design Systems",
+            "How Design Systems Can Help You Speed Up Your Workflow",
+            "Introduction to the Project and Approach"
+          ]
+        },
+        {
+          "title": "Figma Setup & Initial Explorations",
+          "estimatedMinutes": 35,
+          "topics": [
+            "Setting up the Figma File and Beginning the First Explorations 1",
+            "Setting up the Figma File and Beginning the First Explorations 2"
+          ]
+        },
+        {
+          "title": "Expanding the Design System",
+          "estimatedMinutes": 39,
+          "topics": [
+            "Expanding the Explorations and Design System 1",
+            "Expanding the Explorations and Design System 2",
+            "Organizing the Design System Pages 1",
+            "Organizing the Design System Pages 2",
+            "Exploring Variants When Creating Components"
+          ]
+        },
+        {
+          "title": "Refining & Documenting the System",
+          "estimatedMinutes": 108,
+          "topics": [
+            "Refining the Design System with an Assembled Page 1",
+            "Refining the Design System with an Assembled Page 2",
+            "Refining the Design System with an Assembled Page 3",
+            "Setting up New Pages with the Complete Design System 1",
+            "Setting up New Pages with the Complete Design System 2",
+            "Setting up New Pages with the Complete Design System 3",
+            "How to Approach Creating Documentation for the Design System"
+          ]
+        },
+        {
+          "title": "Final Adjustments & Extensions",
+          "estimatedMinutes": 45,
+          "topics": ["Cleaning up and Using an Auto Layout", "Utilizing the Design on Further Brand Elements", "Final Thoughts"]
+        },
+        {
+          "title": "Final Project",
+          "estimatedMinutes": 0,
+          "topics": ["Design Systems for Websites using Figma (project)"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=opTANvl9G1g",
+      "title": "Build a Design System",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "Learn how to build a complete Figma design system from scratch in this full course. Whether you’re a beginner or an experienced designer, this step-by-step guide covers everything you need; from variables, tokens, and auto layout to advanced component structures, documentation, and scaling your system for enterprise teams.",
+      "learningObjectives": [
+        "Understand the fundamentals of building a complete design system in Figma from scratch.",
+        "Learn how to create and organize reusable UI components for scalable web design.",
+        "Apply best practices for structuring styles, components, and layouts to maintain consistency.",
+        "Gain practical skills in using Figma tools to assemble and refine a design system.",
+        "Develop the ability to implement the design system across real projects and workflows."
+      ],
+      "targetAudience": [
+        "UI/UX designers who want to learn how to build design systems in Figma.",
+        "Figma users seeking to improve consistency and reuse through components and grids.",
+        "Product designers aiming to scale design workflows and collaboration.",
+        "Teams or individuals looking to understand design system organization and documentation."
+      ],
+      "totalHours": 3.5,
+      "sections": [
+        {
+          "title": "Introduction & Design Token Setup",
+          "estimatedMinutes": 20,
+          "topics": [
+            "An Introduction",
+            "Design Token Setup - Intro",
+            "Brand Collection",
+            "Color Scales for our Design System",
+            "Building a Color Scale",
+            "Building the Brand Collection"
+          ]
+        },
+        {
+          "title": "Typography & Alias Setup",
+          "estimatedMinutes": 25,
+          "topics": [
+            "Font Variables",
+            "Building a Scale",
+            "Alias Collection Intro",
+            "Building the Alias Collection",
+            "Border With & Radius Variables",
+            "Multi-Brand Design System Setup",
+            "Adding White & Black"
+          ]
+        },
+        {
+          "title": "Advanced Variables & Dark Mode",
+          "estimatedMinutes": 15,
+          "topics": [
+            "Mapped Collection Intro",
+            "Text Variables",
+            "Icon Variables",
+            "Surface Variables",
+            "Border Variables",
+            "Building Dark Mode",
+            "Building a Type Scale",
+            "Responsive Collection",
+            "Building Text Styles",
+            "Material 3 Icon Library",
+            "Scoping Your Figma Variables"
+          ]
+        },
+        {
+          "title": "Core Component Creation",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Building a Button Component",
+            "Adding Button Variants",
+            "Building a Label Component",
+            "Building a Field Component",
+            "Adding Field Variants",
+            "Building an Input Component",
+            "Build a Menu Component",
+            "Build a Checkbox",
+            "Build a Radio Button",
+            "Build a Switch",
+            "Build a Text Area",
+            "Build a Tab Bar",
+            "Build a Button Group",
+            "Build a Link",
+            "Build a Breadcrumb",
+            "Build an Avatar",
+            "Build a Tag",
+            "Build a Loader",
+            "Build a Badge",
+            "Build a Progress Bar",
+            "Build a Progress Circle",
+            "Build a Snackbar",
+            "Build a Carousel",
+            "Build a Button Icon",
+            "Build a Table"
+          ]
+        },
+        {
+          "title": "Publishing & System Management",
+          "estimatedMinutes": 20,
+          "topics": ["Publishing & Subscribing to a Design System"]
+        }
+      ]
     }
   ]
 }
