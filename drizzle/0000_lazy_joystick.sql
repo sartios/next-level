@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+
 CREATE TABLE "learning_resource_sections" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"resource_id" uuid NOT NULL,
