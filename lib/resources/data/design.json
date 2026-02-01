@@ -469,6 +469,58 @@
           "topics": ["Feel the fear, do it anyway — courage and resilience in UX practice"]
         }
       ]
+    },
+    {
+      "url": "https://www.udemy.com/course/ux-strategy-fundamentals/",
+      "title": "https://www.udemy.com/course/ux-strategy-fundamentals/",
+      "provider": "udemy",
+      "resourceType": "course",
+      "description": "The course teaches practical principles and simple methods to define and apply UX strategy across products, helping learners connect user needs with business goals, prioritize features, engage stakeholders, control scope, and make better UX decisions at every stage of design and development.",
+      "learningObjectives": [
+        "Understand the core principles of UX strategy and its role in product design",
+        "Learn to align user needs with business goals effectively",
+        "Develop skills to prioritize features and manage project scope",
+        "Apply practical methods for engaging stakeholders in the UX process",
+        "Gain the ability to make informed UX decisions throughout design and development",
+        "Learn to evaluate and refine UX strategies for better product outcomes"
+      ],
+      "targetAudience": [
+        "Aspiring UX designers seeking foundational strategy knowledge",
+        "Product managers and team leads involved in UX decision-making",
+        "Designers wanting to align UX work with business goals",
+        "Professionals responsible for prioritizing features and project scope",
+        "Anyone interested in applying practical UX strategy methods to real projects"
+      ],
+      "totalHours": 2.5,
+      "sections": [
+        {
+          "title": "Foundations of UX Strategy",
+          "estimatedMinutes": 30,
+          "topics": [
+            "Develop a clear, solid strategy for UX that applies to any product",
+            "Use a simple method to determine which features and functions are truly important",
+            "Understand who your stakeholders really are and what you need to know from each"
+          ]
+        },
+        {
+          "title": "Aligning Value and Needs",
+          "estimatedMinutes": 25,
+          "topics": [
+            "Get all players to agree on what constitutes value for users and the business",
+            "Separate what people say they need from what they actually need",
+            "Uncover the things users don't know they need but really do"
+          ]
+        },
+        {
+          "title": "Connecting Strategy to Outcomes",
+          "estimatedMinutes": 25,
+          "topics": [
+            "Connect user needs with product strategy and requirements",
+            "Determine and control the scope of any project",
+            "Set proper expectations and avoid big, expensive surprises"
+          ]
+        }
+      ]
     }
   ]
 }
