@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { config } from 'dotenv';
 import {
   ImportFileSchema,
   type ImportFile,
@@ -12,6 +13,8 @@ import { createEmbeddings } from '../embeddings';
 import type { NewLearningResource, NewResourceEmbedding, LearningResourceSection } from '../types';
 import { insertResourceEmbeddings } from '../db/embeddingRepository';
 import { getLearningResourceByUrl, insertLearningResource, insertResourceSections } from '../db/resourceRepository';
+
+config({ path: '.env' });
 
 /**
  * Prepare full resource text for embedding (combines all content)
