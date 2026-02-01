@@ -23,7 +23,7 @@ export async function searchCuratedResources(query: string, limit: number = DEFA
   // Fetch 2x the requested limit to account for deduplication
   const searchResults: EmbeddingSearchResult[] = await searchEmbeddings(queryEmbedding, { limit: limit * 2 });
 
-  return Array.from(
+  const uniqueResourceIds = Array.from(
     new Set(
       searchResults
         .slice(0, limit)
@@ -31,6 +31,8 @@ export async function searchCuratedResources(query: string, limit: number = DEFA
         .map((result) => result.resourceId)
     )
   );
+
+  return uniqueResourceIds.slice(0, limit);
 }
 
 const toolFunction = async ({ query, limit }: ToolFunctionProps): Promise<string> => {
