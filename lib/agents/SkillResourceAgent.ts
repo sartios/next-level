@@ -119,7 +119,7 @@ class SkillResourceAgent {
     });
 
     const retrieverUserPrompt = await getAgentPrompt('skill-resource-agent:retrieve:user-prompt', {
-      user_profile_json: JSON.stringify({ role: user.role, skills: user.skills, careerGoals: user.careerGoals }),
+      user_profile_json: JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') }),
       growth_goal_json: JSON.stringify({ name: goal.name, reasoning: goal.reasoning })
     });
     const result = await this.agentRetriever.invoke(
@@ -139,9 +139,11 @@ class SkillResourceAgent {
   public async evaluate(
     user: User,
     goal: Goal,
-    retrievedResources: LearningResourceWithSections[],
+    providedResources: LearningResourceWithSections[],
     opikOptions?: OpikHandlerOptions
   ): Promise<EvaluatorOutput> {
+    if (providedResources.length === 0) return { resources: [] };
+
     await this.initializeEvaluator();
     assert(this.agentEvaluator, `${this.agentName} evaluator not ready`);
 
@@ -157,9 +159,17 @@ class SkillResourceAgent {
     });
 
     const evaluatorUserPrompt = await getAgentPrompt('skill-resource-agent:evaluate:user-prompt', {
-      user_profile_json: JSON.stringify(user),
-      growth_goal_json: JSON.stringify(goal),
-      retrieved_candidates_json: JSON.stringify(retrievedResources)
+      user_profile_json: JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') }),
+      growth_goal_json: JSON.stringify({ name: goal.name, reasoning: goal.reasoning }),
+      retrieved_candidates_json: JSON.stringify(
+        providedResources.map((r) => ({
+          id: r.id,
+          title: r.title,
+          description: r.description,
+          learningObjectives: r.learningObjectives?.join(','),
+          sections: r.sections.map((s) => s.title).join(',')
+        }))
+      )
     });
     const result = await this.agentEvaluator.invoke(
       { messages: [new HumanMessage(evaluatorUserPrompt)] },
