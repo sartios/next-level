@@ -222,6 +222,191 @@
           "topics": ["AI Tools", "Dev Mode"]
         }
       ]
+    },
+    {
+      "url": "https://www.skillshare.com/en/classes/figma-ui-ux-design-advanced-become-a-figma-pro/50973510",
+      "title": "Figma UI UX Design Advanced: Become a Figma Pro",
+      "provider": "skillshare",
+      "resourceType": "course",
+      "description": "Level up your Figma skills with Dan Scott. Build a complete, professional-grade app from concept to portfolio-ready finish while mastering AI-assisted design, responsive layouts, components, variants, animations, and interactive prototypes. Learn advanced workflows, accessibility, collaboration, and developer handoff techniques used by UX professionals. Hands-on projects, curated resources, and expert guidance ensure you gain practical experience and confidence in managing end-to-end UX/UI projects.",
+      "learningObjectives": [
+        "Build a complete, portfolio-ready app using Figma Advanced techniques",
+        "Leverage AI to accelerate design and prototyping workflows",
+        "Master Auto Layout, constraints, and responsive design",
+        "Create and manage robust components, variables, and multi-dimensional variants",
+        "Apply advanced visual effects, typography, and animations",
+        "Design interactive prototypes and micro-interactions",
+        "Implement accessibility best practices in UX/UI designs",
+        "Develop efficient workflow, collaboration, and developer handoff strategies",
+        "Manage grids, styles, and assets like a professional UX designer",
+        "Gain practical experience through hands-on projects and assignments"
+      ],
+      "targetAudience": [
+        "UX/UI designers with basic Figma knowledge",
+        "Self-taught Figma enthusiasts seeking structured guidance",
+        "Graduates of the Figma Essentials course looking to advance skills",
+        "Designers with their own Figma workflow wanting to explore advanced tools and techniques",
+        "Professionals aiming to build professional-grade design systems and portfolio projects"
+      ],
+      "totalHours": 8.48,
+      "sections": [
+        [
+          {
+            "title": "Introduction & Getting Started",
+            "estimatedMinutes": 7,
+            "topics": ["Intro to the Figma Advanced Course", "Getting Started", "Your brief for the Figma Advanced course"]
+          },
+          {
+            "title": "AI-Powered Design",
+            "estimatedMinutes": 16,
+            "topics": [
+              "First Draft using AI in Figma",
+              "Suggest Auto Layout, Replace Content, Duplicate & Rename Layers (Ai)",
+              "Ai Add Interactions Automatically in Figma",
+              "Finding Components using Ai"
+            ]
+          },
+          {
+            "title": "Layout & Auto Layout Mastery",
+            "estimatedMinutes": 60,
+            "topics": [
+              "Working with Complex Layouts in Figma",
+              "Auto Layout Refresher with Problem Solutions",
+              "Nested & Responsive Auto layouts",
+              "Auto Layout Grids in Figma",
+              "Grid v Constraints v Autolayout- Which one to use and when?",
+              "How to add rows and column grids to one layout in Figma",
+              "How to Create & Update Layout Guide Styles for Columns & Rows in Figma",
+              "How to overlap & stack things in a Figma Autolayout",
+              "How to ignore Autolayout to absolute space in Figma",
+              "How to ignore autolayout but is still responsive in Figma",
+              "How to create a minimum width height button in Figma",
+              "How to Wrap Auto Layout objects in Figma"
+            ]
+          },
+          {
+            "title": "Components, Variables & Variants",
+            "estimatedMinutes": 72,
+            "topics": [
+              "Important things to know about Components in Figma",
+              "How to make a simple Variant in Figma",
+              "How to make a Multi Dimensional Variant in Figma",
+              "Variable - Light and Dark Modes",
+              "How to create cart total using number variables in Figma",
+              "How to add add conditions to variables in Figma",
+              "Turning our boolean variable to false in Figma",
+              "Boolean Variable - Completed",
+              "Making a Overlay Popup in the Variable action panel in Figma",
+              "How to change spacing with number Variables in Figma",
+              "Instance Swap inside a Component",
+              "How to use Boolean Component Property in Figma",
+              "Making a Simple Field with Component Properties",
+              "How to organize Components into groups in Figma"
+            ]
+          },
+          {
+            "title": "Visual Design & Effects",
+            "estimatedMinutes": 40,
+            "topics": [
+              "Liquid Glass Effect in Figma",
+              "Texture & Noise & Effect Order",
+              "Progressive Blur Effect",
+              "Saving Effect Styles & Clearing Unused Styles",
+              "Houdini Text: How to make a text mask animation Figma?",
+              "Spring Animation & Overlays in Figma",
+              "Masking Images using AI Remove Background",
+              "How to make a spillover mask outside of the frame in Figma",
+              "How to Mask Images with text in Figma",
+              "How to use colour layer blending modes in Figma",
+              "How to curve text with type on a path in Figma",
+              "How to Make Text Boxes Line up with the Edge using Vertical Trim",
+              "Truncation for Text in Figma",
+              "Advanced color tricks in figma",
+              "How to change replace colors in Figma",
+              "How to create Color Themes for light and dark in Figma"
+            ]
+          },
+          {
+            "title": "Animation & Interactions",
+            "estimatedMinutes": 72,
+            "topics": [
+              "Animation with custom easing in Figma",
+              "How to copy and paste Interactions in Figma",
+              "Animation inside Variants in Figma",
+              "Why is interaction on tap on click grayed out or missing in Figma?",
+              "How to make sticky scroll position search bar in Figma",
+              "How to make Horizontal Scrolling Swipe in Figma",
+              "Automatic scroll down the page to anchor point in Figma",
+              "How to make Interactive Components in Figma",
+              "How to make an expanding Search Bar in Figma"
+            ]
+          },
+          {
+            "title": "Video & Media",
+            "estimatedMinutes": 12,
+            "topics": [
+              "How to add Video in Figma",
+              "How to make a play pause button for video in Figma",
+              "How to get a video play when you hover in Figma"
+            ]
+          },
+          {
+            "title": "Workflow, Collaboration & Handoff",
+            "estimatedMinutes": 58,
+            "topics": [
+              "Workflow Tips & Tricks",
+              "How to use advanced Copy, Paste, and Selection Tricks in Figma?",
+              "Frame Tips and Tricks to work with Figma frames effectively",
+              "How to use Sections in Figma for organizing your content",
+              "Be careful what you create in Figma",
+              "Layer Zen in Figma",
+              "Advanced Search in Figma",
+              "How to Bulk Rename Layers manually with advanced tricks in Figma",
+              "How do you use Team Libraries in Figma",
+              "How to hide color font styles & components from team library in Figma",
+              "How to move relink refactoring components to another design file in Figma",
+              "How to use DEV Mode in Figma",
+              "How to document a component in a design system in Figma",
+              "How to view version history duplicate and restore in Figma",
+              "How to use the Slice Tool in Figma"
+            ]
+          },
+          {
+            "title": "Design Projects",
+            "estimatedMinutes": 70,
+            "topics": [
+              "Class project 01 - Genre Listings",
+              "Class project 02 - Band Listings",
+              "Class project 03 - Grids",
+              "Class Project 04 - Responsive Lower Navigation",
+              "Class Project 05 - Event Card Constraints",
+              "Class Project 05 - Completed",
+              "Class Project 06 - Multi Dimensional Variant",
+              "Class Project 07 - Color Variables",
+              "Class Project 08 - Number Variables",
+              "Class project 09 - Event Branding",
+              "Class Project 10 - Check Out Animation",
+              "Class Project 11 - Variant Animation",
+              "Class Project 12 - Houdini Text Animation",
+              "Class Project 13 - Horizontal Scroll",
+              "Class Project 14 - Interactive Component",
+              "Class Project 15 - Expanding Search Bar",
+              "Class Project 16 - It’s Your Birthday",
+              "Class Project 17 - Curved Text",
+              "Class Project 18 - Social Media Ad",
+              "Class Project 19 - Video Card",
+              "Class Project 20 - Review Card",
+              "Class Project 21 - Design Spec",
+              "Class Project 22 - Finish Your Design"
+            ]
+          },
+          {
+            "title": "Conclusion & Next Steps",
+            "estimatedMinutes": 5,
+            "topics": ["What Next After Figma Advanced"]
+          }
+        ]
+      ]
     }
   ]
 }
