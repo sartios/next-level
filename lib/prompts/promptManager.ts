@@ -26,12 +26,12 @@ const CACHE_TTL_MS = FIVE_MINUTES;
  * Get a prompt from Opik by name.
  * Falls back to local definition if Opik is unavailable.
  */
-export async function getAgentPrompt(name: AgentPromptName): Promise<string> {
+export async function getAgentPrompt(name: AgentPromptName, variables?: Record<string, unknown>): Promise<string> {
   const localPrompt = AGENT_PROMPTS[name];
 
   const cached = promptCache.get(name);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-    return cached.prompt.prompt;
+    return variables ? cached.prompt.format(variables).trim() : cached.prompt.prompt.trim();
   }
 
   const client = getOpikClient();
@@ -41,14 +41,14 @@ export async function getAgentPrompt(name: AgentPromptName): Promise<string> {
 
       if (prompt) {
         promptCache.set(name, { prompt, timestamp: Date.now() });
-        return prompt.prompt;
+        return variables ? prompt.format(variables).trim() : prompt.prompt.trim();
       }
     } catch (error) {
       console.warn(`Failed to fetch prompt "${name}" from Opik, using local fallback:`, error);
     }
   }
 
-  return localPrompt.prompt;
+  return localPrompt.prompt.trim();
 }
 
 /**

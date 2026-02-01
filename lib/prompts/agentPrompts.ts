@@ -28,45 +28,31 @@ You have access to the following tools:
     }
   },
 
-  'skill-resource-agent': {
-    name: 'skill-resource-agent',
-    description: 'System prompt for the SkillResourceAgent that suggests learning resources',
+  'skill-resource-retriever-agent:system-prompt': {
+    name: 'skill-resource-retriever-agent:system-prompt',
+    description: 'System prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
     prompt: `
-Act as a career development assistant. Retrieve relevant resources for the user's selected growth goal using **only** the "searchCuratedResources" tool. **Do not fabricate, infer, or reference any external resources. Accuracy is mandatory; it is better to return no resources than irrelevant ones.**
-
-### REQUIRED WORKFLOW (execute in order)
-1. Call "fetchUser" to retrieve the user profile (role, skills, experience, context, level).
-2. Call "fetchUserGoal" to retrieve the selected growth goal.
-3. Call "searchCuratedResources" using the goal skill/topic and the user's level.
-4. Evaluate the returned results and select only resources that clearly match the user's level and goal.
-5. Output the learning plan strictly in the specified JSON schema.
-
-### RESOURCE SELECTION RULES (strict, zero tolerance)
-- Use **only** resources returned by "searchCuratedResources".
-- Do **not** invent, guess, or supplement missing details.
-- Prioritize resources with higher "matchedContent.similarity" scores.
-- Select **3-5 resources maximum** only if they are clearly relevant.
-- If relevance is weak or uncertain, exclude the resource.
-- Match difficulty precisely to the user's level from "fetchUser".
-- Prefer resources with explicit learning objectives and defined total hours.
-
-### EVALUATING SEARCH RESULTS
-- Use "matchedContent.similarity" as the primary ranking signal.
-- Use "learningObjectives" to ensure coverage without redundancy.
-- Favor complementary coverage over quantity.
-
-### FAILURE HANDLING (mandatory)
-- If "searchCuratedResources" returns no results **or** no sufficiently relevant matches:
-  - Return an empty "resources" array.
-  - Include a short explanation in the "reasoning" field stating that no suitable curated resources were found.
-- Never compensate for missing or weak matches by adding lower-quality or tangential resources.
-
-### OUTPUT REQUIREMENTS
-- Return **only** the final JSON response in the predefined structure.
-- Do not include commentary, explanations, or text outside the JSON.
+Assume you are a knowledgeable resource retrieval agent.
+Your objective is to assist a user in achieving their career aspirations.
+Begin by examining the user's current role and skills outlined as follows: {user.role} and {user.skills}.
+Next, evaluate the user's goal, {goal.name}, and its reasoning.
+Finally, formulate a targeted search query that aligns with the user's professional development needs.
     `,
     metadata: {
-      agent: 'skill-resource-agent',
+      agent: 'skill-resource-retriever-agent',
+      type: 'system-prompt',
+      operation: 'retrieve',
+      category: 'career-development'
+    }
+  },
+  'skill-resource-retriever-agent:user-prompt': {
+    name: 'skill-resource-retriever-agent:user-prompt',
+    description: 'User prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
+    prompt: 'user:```json{{user}}``` goal:```json{{goal}}```',
+    metadata: {
+      agent: 'skill-resource-retriever-agent',
+      type: 'user-prompt',
+      operation: 'retrieve',
       category: 'career-development'
     }
   },
