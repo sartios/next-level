@@ -1067,6 +1067,126 @@
           "topics": ["Spaces and punctuation", "Editing typography", "Proofreading", "Practical advice and checklists"]
         }
       ]
+    },
+    {
+      "url": "https://www.amazon.co.uk/dp/0262525674",
+      "title": "The Design of Everyday Things: Revised and Expanded Edition",
+      "provider": "Amazon",
+      "resourceType": "book",
+      "description": "A concise exploration of human‑centered design principles, The Design of Everyday Things explains how intuitive, usable products are created by understanding people’s behavior, cognition, and needs—essential for designers aiming to build effective, accessible, and delightful experiences across physical and digital interfaces.",
+      "learningObjectives": [
+        "Understand core principles of human-centered design.",
+        "Learn how to create intuitive and usable products.",
+        "Analyze user behavior and cognitive patterns to inform design.",
+        "Apply design thinking to solve real-world product challenges.",
+        "Evaluate and improve product usability through testing and iteration."
+      ],
+      "targetAudience": [
+        "Product designers and UX/UI designers",
+        "Industrial and interaction design students",
+        "Product managers and developers",
+        "Entrepreneurs creating user-focused products",
+        "Design researchers and human factors specialists",
+        "Anyone interested in improving usability and user experience"
+      ],
+      "totalHours": 5,
+      "sections": [
+        {
+          "title": "Introduction & Design Foundations",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Products that are hard to use come from bad design",
+            "A well‑designed product shows its users how to use it",
+            "Design processes must take human psychology into account"
+          ]
+        },
+        {
+          "title": "Understanding Users & Problems",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Key to fixing flawed design is to locate root causes",
+            "Good design employs constraints to help users understand how a product works"
+          ]
+        },
+        {
+          "title": "Communication & Feedback in Design",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Well‑designed products communicate with users through clear feedback",
+            "Design must be truly human‑centered to bring people and technology closer together"
+          ]
+        },
+        {
+          "title": "Collaboration & Success Factors",
+          "estimatedMinutes": 60,
+          "topics": ["Successful products demand patience and collaboration between designers and marketers"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.domestika.org/en/courses/3818-advanced-after-effects-coding-for-motion-design",
+      "title": "Advanced After Effects: Coding for Motion Design",
+      "provider": "domestika",
+      "resourceType": "course",
+      "description": "Learn JavaScript expressions to build stylish, complex animation rigs. Motion designer Desmond Du guides you through techniques for abstract geometric animations, boosting efficiency and creative control. Ideal for motion designers seeking deeper rigging skills and expressive animation workflows.",
+      "learningObjectives": [
+        "Understand how JavaScript expressions work in Adobe After Effects",
+        "Write and apply expressions to automate and enhance animations",
+        "Build complex, reusable animation rigs efficiently",
+        "Create abstract geometric animations using code-driven techniques",
+        "Improve motion design workflows through procedural animation methods"
+      ],
+      "targetAudience": [
+        "Intermediate to advanced motion designers using Adobe After Effects",
+        "Designers looking to automate and optimize animation workflows",
+        "Motion artists interested in procedural and code-driven animation",
+        "After Effects users wanting to learn JavaScript expressions",
+        "Creative professionals building complex animation rigs"
+      ],
+      "totalHours": 4.5,
+      "sections": [
+        {
+          "title": "Introduction & Fundamentals",
+          "estimatedMinutes": 25,
+          "topics": ["About Me", "Influences", "Understanding the Assignment", "The Basics of Coding"]
+        },
+        {
+          "title": "Procedural Design Techniques",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Step Repetition: Transforming Properties",
+            "Step Repetition: Animating with valueAtTime",
+            "Step Repetition: Working with Effects and Layers",
+            "Randomization: Animating Multiple Layers",
+            "Randomization: Displacement",
+            "Generating Number Sequences with For-Loop",
+            "Generative Design: Algorithms",
+            "Generative Design: Procedural Cyber Lines"
+          ]
+        },
+        {
+          "title": "Sequence Animation & Compositing",
+          "estimatedMinutes": 90,
+          "topics": [
+            "Compositing",
+            "Adding Type",
+            "Additional Design Assets",
+            "Stylization and Art Direction 1",
+            "Stylization and Art Direction 2",
+            "Faster Workflow with Animation Proxies"
+          ]
+        },
+        {
+          "title": "Growth & Next Steps",
+          "estimatedMinutes": 20,
+          "topics": ["Learning to Learn", "Improvement and Collaborations"]
+        },
+        {
+          "title": "Final Project",
+          "estimatedMinutes": 30,
+          "topics": ["Advanced After Effects: Coding for Motion Design"]
+        }
+      ]
     }
   ]
 }
