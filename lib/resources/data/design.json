@@ -409,8 +409,8 @@
       ]
     },
     {
-      "url": "",
-      "title": "THE WAY IT IS: 10 Powerful UX Career Tips ",
+      "url": "https://givegoodux.com/download-joe-natolis-the-way-it-is-e-book/",
+      "title": "THE WAY IT IS: 10 Powerful UX Career Tips",
       "provider": "Give Good UX",
       "resourceType": "book",
       "description": "Navigate the challenges of UX and user research with practical strategies, from recruiting participants to analyzing feedback. This book offers holistic guidance, actionable insights, and proven truths to help beginners and experienced practitioners confidently design, communicate, and drive user-centered solutions in real-world contexts.",
@@ -472,7 +472,7 @@
     },
     {
       "url": "https://www.udemy.com/course/ux-strategy-fundamentals/",
-      "title": "https://www.udemy.com/course/ux-strategy-fundamentals/",
+      "title": "UX Strategy FundamentalsS",
       "provider": "udemy",
       "resourceType": "course",
       "description": "The course teaches practical principles and simple methods to define and apply UX strategy across products, helping learners connect user needs with business goals, prioritize features, engage stakeholders, control scope, and make better UX decisions at every stage of design and development.",
@@ -718,7 +718,7 @@
         "Students exploring creative coding and interactive media",
         "Hobbyists curious about JavaScript and digital art"
       ],
-      "totalHours": 2.42,
+      "totalHours": 2.45,
       "sections": [
         {
           "title": "Setting Up the Environment",
@@ -921,65 +921,151 @@
               "LGain practical experience in organizing, formatting, and managing documents to ensure that they meet professional standards.",
               "Develop a comprehensive portfolio of well-designed documents that demonstrate your proficiency and attention to detail."
             ]
-          },
-          {
-            "url": "https://www.scribd.com/document/91357203/Don-t-Make-Me-Think",
-            "title": "Don't make me think",
-            "provider": "scribd",
-            "resourceType": "book",
-            "description": "A concise, user‑focused guide to web usability, Don’t Make Me Think teaches designers how to build intuitive, easy‑to‑use websites and digital interfaces by minimizing cognitive effort, using clear navigation, familiar conventions, and frequent usability testing to reduce frustration and improve user experience.",
-            "learningObjectives": [
-              "Understand the principles of intuitive web and interface design.",
-              "Learn to minimize user cognitive load for improved usability.",
-              "Apply clear navigation and familiar conventions in digital design.",
-              "Conduct usability testing to identify and fix user experience issues.",
-              "Create websites and interfaces that are simple, efficient, and user-friendly."
-            ],
-            "targetAudience": [
-              "Web and UX designers seeking practical usability guidance",
-              "Product managers aiming to improve user experience",
-              "Front-end developers interested in intuitive interface design",
-              "Digital marketers creating user-friendly websites",
-              "Students and professionals learning web usability principles",
-              "Entrepreneurs and startup founders designing digital products"
-            ],
-            "totalHours": 5.5,
-            "sections": [
-              {
-                "title": "Introduction & Usability Principles",
-                "estimatedMinutes": 120,
-                "topics": [
-                  "Introduction & guiding principles",
-                  "Don’t make me think! (Krug’s First Law)",
-                  "How we really use the Web",
-                  "Billboard Design 101",
-                  "Animal, Vegetable, or Mineral?",
-                  "Omit needless words"
-                ]
-              },
-              {
-                "title": "Navigation & Getting It Right",
-                "estimatedMinutes": 80,
-                "topics": ["Street signs and Breadcrumbs", "The Big Bang Theory of Web Design"]
-              },
-              {
-                "title": "Usability Testing & Team Alignment",
-                "estimatedMinutes": 40,
-                "topics": ["The Farmer and the Cowman Should Be Friends", "Usability testing on 10 cents a day"]
-              },
-              {
-                "title": "Broader UX Considerations",
-                "estimatedMinutes": 100,
-                "topics": [
-                  "Mobile usability",
-                  "Usability as common courtesy",
-                  "Accessibility and you",
-                  "Guide for the perplexed (making usability happen)"
-                ]
-              }
-            ]
           }
         ]
+      ]
+    },
+    {
+      "url": "https://www.scribd.com/document/91357203/Don-t-Make-Me-Think",
+      "title": "Don't make me think",
+      "provider": "scribd",
+      "resourceType": "book",
+      "description": "A concise, user‑focused guide to web usability, Don’t Make Me Think teaches designers how to build intuitive, easy‑to‑use websites and digital interfaces by minimizing cognitive effort, using clear navigation, familiar conventions, and frequent usability testing to reduce frustration and improve user experience.",
+      "learningObjectives": [
+        "Understand the principles of intuitive web and interface design.",
+        "Learn to minimize user cognitive load for improved usability.",
+        "Apply clear navigation and familiar conventions in digital design.",
+        "Conduct usability testing to identify and fix user experience issues.",
+        "Create websites and interfaces that are simple, efficient, and user-friendly."
+      ],
+      "targetAudience": [
+        "Web and UX designers seeking practical usability guidance",
+        "Product managers aiming to improve user experience",
+        "Front-end developers interested in intuitive interface design",
+        "Digital marketers creating user-friendly websites",
+        "Students and professionals learning web usability principles",
+        "Entrepreneurs and startup founders designing digital products"
+      ],
+      "totalHours": 5.5,
+      "sections": [
+        {
+          "title": "Introduction & Usability Principles",
+          "estimatedMinutes": 120,
+          "topics": [
+            "Introduction & guiding principles",
+            "Don’t make me think! (Krug’s First Law)",
+            "How we really use the Web",
+            "Billboard Design 101",
+            "Animal, Vegetable, or Mineral?",
+            "Omit needless words"
+          ]
+        },
+        {
+          "title": "Navigation & Getting It Right",
+          "estimatedMinutes": 80,
+          "topics": ["Street signs and Breadcrumbs", "The Big Bang Theory of Web Design"]
+        },
+        {
+          "title": "Usability Testing & Team Alignment",
+          "estimatedMinutes": 40,
+          "topics": ["The Farmer and the Cowman Should Be Friends", "Usability testing on 10 cents a day"]
+        },
+        {
+          "title": "Broader UX Considerations",
+          "estimatedMinutes": 100,
+          "topics": [
+            "Mobile usability",
+            "Usability as common courtesy",
+            "Accessibility and you",
+            "Guide for the perplexed (making usability happen)"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://readings.design/PDF/thinkingwithtype_ellenlupton.pdf",
+      "title": "Thinking with type Ellen Lupton",
+      "provider": "readings design",
+      "resourceType": "book",
+      "description": "A foundational guide to typography and visual communication, Thinking with Type explains how letters, words, and layouts convey meaning, blending theory, history, and practical design principles with clear examples and exercises to improve readability, hierarchy, spacing, and typographic systems across print and digital media",
+      "learningObjectives": [
+        "Understand the fundamental principles of typography and type design.",
+        "Learn to use type effectively to communicate hierarchy, tone, and meaning.",
+        "Apply spacing, alignment, and layout techniques for improved readability.",
+        "Explore historical and contemporary typographic practices.",
+        "Develop practical skills in designing visually engaging text for print and digital media."
+      ],
+      "targetAudience": [
+        "Graphic designers and visual communicators",
+        "UX/UI designers seeking effective typographic skills",
+        "Students of design, advertising, and media",
+        "Marketing and branding professionals",
+        "Writers and content creators interested in visual presentation",
+        "Anyone learning to apply typography in print or digital projects"
+      ],
+      "totalHours": 4.5,
+      "sections": [
+        {
+          "title": "Introduction & Foundations",
+          "estimatedMinutes": 60,
+          "topics": [
+            "Introduction to typography and purpose",
+            "Role of letters in communication",
+            "Typographic thinking and basic principles"
+          ]
+        },
+        {
+          "title": "Letter: Anatomy & Type Forms",
+          "estimatedMinutes": 110,
+          "topics": [
+            "Humanism and the body",
+            "Enlightenment and abstraction",
+            "Monster fonts",
+            "Reform and revolution",
+            "Type as program",
+            "Type as narrative",
+            "Back to work",
+            "Anatomy",
+            "Size and Scale",
+            "Type classification and families",
+            "Capitals, small caps, mixing typefaces",
+            "Numerals, punctuation, ornaments, lettering",
+            "Typeface design, font formats and licensing"
+          ]
+        },
+        {
+          "title": "Text: Reading & Organization",
+          "estimatedMinutes": 100,
+          "topics": [
+            "Errors and ownership",
+            "Spacing",
+            "Linearity",
+            "Birth of the user",
+            "Kerning and tracking",
+            "Line spacing and alignment",
+            "Vertical text, enlarged capitals",
+            "Marking paragraphs and captions",
+            "Hierarchy and list exercises"
+          ]
+        },
+        {
+          "title": "Grid: Layout Systems & Structure",
+          "estimatedMinutes": 100,
+          "topics": [
+            "Grid as frame",
+            "Dividing space",
+            "Grid as program",
+            "Grid as table",
+            "Return to universals and Golden section",
+            "Single‑column, multicolumn, modular grid",
+            "Data tables and exercises"
+          ]
+        },
+        {
+          "title": "Appendix & Practical Guidance",
+          "estimatedMinutes": 40,
+          "topics": ["Spaces and punctuation", "Editing typography", "Proofreading", "Practical advice and checklists"]
+        }
       ]
     }
   ]
