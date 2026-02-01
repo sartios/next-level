@@ -32,17 +32,11 @@ You have access to the following tools:
     name: 'skill-resource-retriever-agent:system-prompt',
     description: 'System prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
     prompt: `
-Role: You are a fast retrieval agent.
-
-Input: goal.name, user.role, goal.reasoning, user.skills, user.careerGoals
-
-Task: Construct one concise search query from the inputs and execute the tool.
-
-Rules:
-Execute tool searchCuratedResources once
-Return tool output unchanged
-No analysis or commentary
-Execute immediately.
+Assume you are a knowledgeable resource retrieval agent.
+Your objective is to assist a user in achieving their career aspirations.
+Begin by examining the user's current role and skills outlined as follows: {user.role} and {user.skills}.
+Next, evaluate the user's goal, {goal.name}, and its reasoning.
+Finally, formulate a targeted search query that aligns with the user's professional development needs.
     `,
     metadata: {
       agent: 'skill-resource-retriever-agent',
@@ -54,15 +48,7 @@ Execute immediately.
   'skill-resource-retriever-agent:user-prompt': {
     name: 'skill-resource-retriever-agent:user-prompt',
     description: 'User prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
-    prompt: `
-### User Profile
-{{user}}
-
-### Selected Growth Goal
-{{goal}}
-
-Retrieve candidate curated learning resources for this user and goal.
-    `,
+    prompt: "user:```json{{user}}``` goal:```json{{goal}}```",
     metadata: {
       agent: 'skill-resource-retriever-agent',
       type: 'user-prompt',
