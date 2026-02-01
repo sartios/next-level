@@ -1,4 +1,4 @@
-import skillResourceAgent, { RetrieverOutputSchema } from '@/lib/agents/SkillResourceAgent';
+import skillResourceAgent, { RetrieverOutputSchema } from '@/lib/agents/SkillResourceRetrieverAgent';
 import { SkillResourceDatasetItem, EvaluationTaskResult } from '../types';
 import { getAgentPrompt } from '@/lib/prompts';
 import { Goal } from '@/lib/mockDb';
@@ -32,7 +32,7 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   ];
 
   // Get input prompt for LLM-as-judge metrics
-  const input = await getAgentPrompt('skill-resource-agent:retrieve:system-prompt');
+  const input = await getAgentPrompt('skill-resource-retriever-agent:system-prompt');
 
   // Map resources to evaluation format
   const resources = result.resources.map((r) => ({

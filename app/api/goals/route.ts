@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createGoal, getUserById, updateGoalResources } from '@/lib/repository';
-import SkillResourceAgent from '@/lib/agents/SkillResourceAgent';
+import SkillResourceRetrieverAgent from '@/lib/agents/SkillResourceRetrieverAgent';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
     const user = getUserById(userId);
     const goal = createGoal({ userId: user.id, name, reasoning });
 
-    // Invoke SkillResourceAgent to fetch resources for the new goal
-    const resourceResult = await SkillResourceAgent.suggestResources(user, goal, {
+    // Invoke SkillResourceRetrieverAgent to fetch resources for the new goal
+    const resourceResult = await SkillResourceRetrieverAgent.retrieve(user, goal, {
       metadata: { invokedBy: 'POST /api/goals' }
     });
 

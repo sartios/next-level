@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Timer, CheckCircle2, BookOpen } from 'lucide-react';
@@ -18,7 +17,6 @@ export default function Resources({ goal }: ResourcesProps) {
             <div className="flex flex-col md:flex-row">
               <div className="flex-1 p-6 md:p-8">
                 <div className="flex items-center gap-4 mb-4">
-                  <Badge className="bg-accent/10 text-accent border-0 font-bold">{resource.relevancePercentage}% Match</Badge>
                   <span className="text-border font-bold text-sm uppercase tracking-tight">{resource.provider}</span>
                 </div>
 
@@ -40,7 +38,7 @@ export default function Resources({ goal }: ResourcesProps) {
                     </div>
                   </div>
                 )}
-                <div className="text-base leading-normal text-foreground pb-4">{resource.reasoning}</div>
+                <div className="text-base leading-normal text-foreground pb-4">BUTTON_REASONING</div>
                 <Accordion type="single" collapsible defaultValue={index === 0 ? 'sections' : undefined} className="w-full">
                   <AccordionItem value="sections" className="border-none">
                     <AccordionTrigger className="lg:text-xl text-accent font-medium hover:text-accent/80 hover:no-underline hover:bg-accent/5 focus-visible:bg-accent/10 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 py-4 px-3 -mx-3 rounded-lg min-h-[44px] transition-colors group">

@@ -4,7 +4,6 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 import { skillResourceRetrieverTask } from './tasks/skillResourceRetrieverTask.js';
-import { skillResourceEvaluatorTask } from './tasks/skillResourceEvaluatorTask.js';
 
 import { StructuredOutputMetric, RAGRetrievalMetric, ResponseTimeMetric } from './metrics/index.js';
 
@@ -49,18 +48,14 @@ Usage:
 
 Options:
   --agent <name>   Run evaluation for a specific agent
-                   Valid names: user-skill, skill-resource, skill-resource-retriever,
-                                skill-resource-evaluator, roadmap, multi-week-planning
-                   Note: skill-resource runs both retriever and evaluator
   --all            Run all evaluations
   --samples <n>    Limit the number of samples to evaluate
   --verbose        Show detailed output
   --help, -h       Show this help message
 
 Examples:
-  npx tsx evals/run.ts --agent skill-resource          # runs retriever + evaluator
   npx tsx evals/run.ts --agent skill-resource-retriever
-  npx tsx evals/run.ts --agent skill-resource-evaluator --verbose
+  npx tsx evals/run.ts --agent skill-resource-retriever --verbose
   npx tsx evals/run.ts --all --samples 2
       `);
       process.exit(0);
@@ -71,6 +66,8 @@ Examples:
 }
 
 // Load dataset from JSON file
+// NOTE: These datasets are shared with optimize/run_optimization.py
+// See evals/datasets/README.md for schema documentation
 function loadDatasetItems(filename: string): DatasetItem[] {
   const filePath = path.join(__dirname, 'datasets', filename);
   const content = fs.readFileSync(filePath, 'utf-8');
@@ -98,20 +95,6 @@ const agentConfigs: Record<string, AgentConfig> = {
     datasetFile: 'skill-resource-retriever-agent.json',
     datasetName: 'skill-resource-retriever-evaluation',
     task: skillResourceRetrieverTask as unknown as EvaluationTask<DatasetItem>,
-    metrics: [
-      hallucinationMetric,
-      answerRelevanceMetric,
-      usefulnessMetric,
-      new RAGRetrievalMetric(),
-      new StructuredOutputMetric(),
-      new ResponseTimeMetric()
-    ]
-  },
-  'skill-resource-evaluator': {
-    name: 'skill-resource-agent-evaluator',
-    datasetFile: 'skill-resource-evaluator-agent.json',
-    datasetName: 'skill-resource-evaluator-evaluation',
-    task: skillResourceEvaluatorTask as unknown as EvaluationTask<DatasetItem>,
     metrics: [
       hallucinationMetric,
       answerRelevanceMetric,

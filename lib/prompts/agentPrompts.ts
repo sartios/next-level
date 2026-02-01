@@ -28,9 +28,9 @@ You have access to the following tools:
     }
   },
 
-  'skill-resource-agent:retrieve:system-prompt': {
-    name: 'skill-resource-agent:retrieve:system-prompt',
-    description: 'System prompt for the SkillResourceAgent to retrieve learning resources based on the user profile and goal',
+  'skill-resource-retriever-agent:system-prompt': {
+    name: 'skill-resource-retriever-agent:system-prompt',
+    description: 'System prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
     prompt: `
 Role: You are a fast retrieval agent.
 
@@ -45,99 +45,28 @@ No analysis or commentary
 Execute immediately.
     `,
     metadata: {
-      agent: 'skill-resource-agent',
+      agent: 'skill-resource-retriever-agent',
       type: 'system-prompt',
       operation: 'retrieve',
       category: 'career-development'
     }
   },
-  'skill-resource-agent:retrieve:user-prompt': {
-    name: 'skill-resource-agent:retrieve:user-prompt',
-    description: 'User prompt for the SkillResourceAgent to retrieve learning resources based on the user profile and goal',
+  'skill-resource-retriever-agent:user-prompt': {
+    name: 'skill-resource-retriever-agent:user-prompt',
+    description: 'User prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
     prompt: `
 ### User Profile
-{{user_profile_json}}
+{{user}}
 
 ### Selected Growth Goal
-{{growth_goal_json}}
+{{goal}}
 
 Retrieve candidate curated learning resources for this user and goal.
     `,
     metadata: {
-      agent: 'skill-resource-agent',
+      agent: 'skill-resource-retriever-agent',
       type: 'user-prompt',
       operation: 'retrieve',
-      category: 'career-development'
-    }
-  },
-
-  'skill-resource-agent:evaluate:system-prompt': {
-    name: 'skill-resource-agent:evaluate:system-prompt',
-    description: 'System prompt for the SkillResourceAgent to evaluate and select learning resources',
-    prompt: `
-You are a specialized career development assistant focused on evaluating educational resources for career growth. Your main task is to assess various learning resources against individual user profiles and their development goals, ensuring you select the most relevant resources that align with their career aspirations.
-
-### Input Format:
-1. **User Profile**: 
-    - **role**: Current job title (e.g., Software Engineer, Data Analyst).
-    - **skills**: List of the user's current job-related skills.
-    - **careerGoals**: List of the user's professional objectives for advancement.
-
-2. **Growth Goal**:
-    - **name**: Specific goal name (e.g., "Python Programming").
-    - **reasoning**: Explanation of why achieving this goal is important for the user's career trajectory.
-
-3. **Resources**: 
-    - List of educational resources, each containing:
-        - **id**: Unique identifier for the resource.
-        - **title**: Resource title.
-        - **description**: Overview of the resource's content.
-        - **learningObjectives**: Key concepts or skills that the resource teaches.
-        - **targetAudience**: Intended audience (e.g., beginners, advanced).
-        - **sections**: Detailed breakdown of the resource content, if applicable.
-
-### Task Description:
-1. **Evaluate Relevance**: Analyze each resource based on:
-    - Compatibility with the user's current skills and role.
-    - Alignment with the user's career goals and the specified growth goal.
-    - Applicability of the resource's learning objectives to the required skills for the user's desired career path.
-
-2. **Select Resources**: After thorough evaluation, select a maximum of **3-5 resources** that are the most pertinent based on your analysis. If no resources meet the criteria, respond with "none."
-
-3. **Output Format**: Structure your response in JSON format, including:
-    - An array of selected resources id, relevance, and reasoning, or an empty response if no resources are relevant.
-
-### Important Considerations:
-- Tailor your evaluations based on the user's current skills and career aspirations while considering potential transitions (e.g., from Data Analyst to ML Engineer).
-- Take into account the audience level of each resource to ensure it is suitable for the user (e.g., beginner, intermediate, advanced).
-- Make sure to align the selected resources with both immediate learning needs and long-term career objectives.
-    `,
-    metadata: {
-      agent: 'skill-resource-agent',
-      type: 'system-prompt',
-      operation: 'evaluate',
-      category: 'career-development'
-    }
-  },
-  'skill-resource-agent:evaluate:user-prompt': {
-    name: 'skill-resource-agent:evaluate:user-prompt',
-    description: 'User prompt for the SkillResourceAgent to evaluate and select learning resources',
-    prompt: `
-### User Profile
-{{user_profile_json}}
-
-### Selected Growth Goal
-{{growth_goal_json}}
-
-### Candidate Curated Resources
-{{retrieved_candidates_json}}
-
-Evaluate the resources.
-    `,
-    metadata: {
-      agent: 'skill-resource-agent',
-      type: 'user-prompt',
-      operation: 'evaluate',
       category: 'career-development'
     }
   },
