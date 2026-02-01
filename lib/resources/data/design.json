@@ -921,6 +921,63 @@
               "LGain practical experience in organizing, formatting, and managing documents to ensure that they meet professional standards.",
               "Develop a comprehensive portfolio of well-designed documents that demonstrate your proficiency and attention to detail."
             ]
+          },
+          {
+            "url": "https://www.scribd.com/document/91357203/Don-t-Make-Me-Think",
+            "title": "Don't make me think",
+            "provider": "scribd",
+            "resourceType": "book",
+            "description": "A concise, user‑focused guide to web usability, Don’t Make Me Think teaches designers how to build intuitive, easy‑to‑use websites and digital interfaces by minimizing cognitive effort, using clear navigation, familiar conventions, and frequent usability testing to reduce frustration and improve user experience.",
+            "learningObjectives": [
+              "Understand the principles of intuitive web and interface design.",
+              "Learn to minimize user cognitive load for improved usability.",
+              "Apply clear navigation and familiar conventions in digital design.",
+              "Conduct usability testing to identify and fix user experience issues.",
+              "Create websites and interfaces that are simple, efficient, and user-friendly."
+            ],
+            "targetAudience": [
+              "Web and UX designers seeking practical usability guidance",
+              "Product managers aiming to improve user experience",
+              "Front-end developers interested in intuitive interface design",
+              "Digital marketers creating user-friendly websites",
+              "Students and professionals learning web usability principles",
+              "Entrepreneurs and startup founders designing digital products"
+            ],
+            "totalHours": 5.5,
+            "sections": [
+              {
+                "title": "Introduction & Usability Principles",
+                "estimatedMinutes": 120,
+                "topics": [
+                  "Introduction & guiding principles",
+                  "Don’t make me think! (Krug’s First Law)",
+                  "How we really use the Web",
+                  "Billboard Design 101",
+                  "Animal, Vegetable, or Mineral?",
+                  "Omit needless words"
+                ]
+              },
+              {
+                "title": "Navigation & Getting It Right",
+                "estimatedMinutes": 80,
+                "topics": ["Street signs and Breadcrumbs", "The Big Bang Theory of Web Design"]
+              },
+              {
+                "title": "Usability Testing & Team Alignment",
+                "estimatedMinutes": 40,
+                "topics": ["The Farmer and the Cowman Should Be Friends", "Usability testing on 10 cents a day"]
+              },
+              {
+                "title": "Broader UX Considerations",
+                "estimatedMinutes": 100,
+                "topics": [
+                  "Mobile usability",
+                  "Usability as common courtesy",
+                  "Accessibility and you",
+                  "Guide for the perplexed (making usability happen)"
+                ]
+              }
+            ]
           }
         ]
       ]
