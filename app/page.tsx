@@ -59,7 +59,7 @@ export default function Home() {
     setSelectedResourceId(resourceId);
   }, []);
 
-  const handleContinueToAvailability = useCallback(async () => {
+  const handleResourceCommitment = useCallback(async () => {
     if (!userId || !goalId || !selectedResourceId) return;
 
     setIsSaving(true);
@@ -74,7 +74,7 @@ export default function Home() {
         throw new Error('Failed to save selected resource');
       }
 
-      router.push('/schedule');
+      router.push(`/schedule?userId=${userId}&goalId=${goalId}`);
     } catch (error) {
       console.error('Error saving resource:', error);
     } finally {
@@ -120,7 +120,7 @@ export default function Home() {
         <Button
           className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
           disabled={!selectedResourceId || isSaving}
-          onClick={handleContinueToAvailability}
+          onClick={handleResourceCommitment}
         >
           {isSaving ? 'Saving...' : 'Set your weekly availability'}
         </Button>

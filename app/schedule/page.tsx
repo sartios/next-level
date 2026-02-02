@@ -1,25 +1,49 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import ControlsSidebar from '@/components/SchedulePage/ControlsSidebar';
 import Calendar from '@/components/SchedulePage/Calendar';
+
+interface GoalWithResource {
+  id: string;
+  name: string;
+  selectedResource: {
+    id: string;
+    title: string;
+    totalHours: number | null;
+  } | null;
+}
 
 export default function SchedulePage() {
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [goal, setGoal] = useState<GoalWithResource | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const userId = searchParams.get('userId');
+  const goalId = searchParams.get('goalId');
 
   useEffect(() => {
-    const fetchAvailability = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/availability?userId=123');
-        if (response.ok) {
-          const data = await response.json();
+        // Fetch goal with selected resource
+        if (userId && goalId) {
+          const goalResponse = await fetch(`/api/users/${userId}/goals/${goalId}`);
+          if (goalResponse.ok) {
+            const goalData = await goalResponse.json();
+            setGoal(goalData.goal);
+          }
+        }
+
+        // Fetch existing availability
+        const availabilityResponse = await fetch(`/api/availability?userId=${userId || '123'}`);
+        if (availabilityResponse.ok) {
+          const data = await availabilityResponse.json();
           if (data.availability?.availableSlots) {
-            // Convert API format to selectedSlots format: "Monday-08:30"
             const slots = data.availability.availableSlots.map(
               (slot: { day: string; startTime: string }) => `${slot.day}-${slot.startTime}`
             );
@@ -27,16 +51,16 @@ export default function SchedulePage() {
           }
         }
       } catch (error) {
-        console.error('Error fetching availability:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAvailability();
-  }, []);
+    fetchData();
+  }, [userId, goalId]);
 
-  const totalCourseHours = 24; // Mock data - you can pass this as a prop if needed
+  const totalCourseHours = goal?.selectedResource?.totalHours || 24;
   const hoursPerSlot = 0.5; // Each block is 30 minutes (0.5 hours)
   const weeklyHours = selectedSlots.length * hoursPerSlot;
   const weeksToComplete = weeklyHours > 0 ? Math.ceil(totalCourseHours / weeklyHours) : 0;
@@ -47,6 +71,7 @@ export default function SchedulePage() {
 
   const handleSave = async () => {
     if (selectedSlots.length === 0) return;
+    if (!userId) return;
 
     setIsSaving(true);
     try {
@@ -70,7 +95,8 @@ export default function SchedulePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: '123', // Hardcoded user ID as per project convention
+          userId,
+          goalId,
           startDate: new Date().toISOString().split('T')[0],
           totalHours: weeklyHours,
           availableSlots
