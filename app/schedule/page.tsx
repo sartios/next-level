@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import ControlsSidebar from '@/components/SchedulePage/ControlsSidebar';
@@ -16,7 +16,7 @@ interface GoalWithResource {
   } | null;
 }
 
-export default function SchedulePage() {
+function ScheduleContent() {
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +30,8 @@ export default function SchedulePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!userId || !goalId) return;
+
         // Fetch goal with selected resource
         if (userId && goalId) {
           const goalResponse = await fetch(`/api/users/${userId}/goals/${goalId}`);
@@ -40,7 +42,7 @@ export default function SchedulePage() {
         }
 
         // Fetch existing availability
-        const availabilityResponse = await fetch(`/api/availability?userId=${userId || '123'}`);
+        const availabilityResponse = await fetch(`/api/users/${userId}/goals/${goalId}/availability`);
         if (availabilityResponse.ok) {
           const data = await availabilityResponse.json();
           if (data.availability?.availableSlots) {
@@ -91,7 +93,7 @@ export default function SchedulePage() {
         };
       });
 
-      const response = await fetch('/api/availability', {
+      const response = await fetch(`/api/users/${userId}/goals/${goalId}/availability`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,7 +108,7 @@ export default function SchedulePage() {
       if (!response.ok) {
         throw new Error('Failed to save availability');
       }
-      router.push('/goal');
+      router.push(`/goal?goalId=${goalId}`);
     } catch (error) {
       console.error('Error saving schedule:', error);
     } finally {
@@ -138,6 +140,27 @@ export default function SchedulePage() {
         <Calendar isLoading={isLoading} selectedSlots={selectedSlots} toggleSlot={toggleSlot} />
         <ControlsSidebar weeksToComplete={weeksToComplete} onClick={handleSave} disabled={isSaving || selectedSlots.length === 0} />
       </div>
+    </div>
+  );
+}
+
+export default function SchedulePage() {
+  return (
+    <Suspense fallback={<ScheduleLoading />}>
+      <ScheduleContent />
+    </Suspense>
+  );
+}
+
+function ScheduleLoading() {
+  return (
+    <div className="max-w-6xl mx-auto px-6 py-12">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+        <div className="space-y-2">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight">Architect your week</h1>
+          <p className="text-xl text-muted-foreground font-medium leading-relaxed">Loading...</p>
+        </div>
+      </header>
     </div>
   );
 }
