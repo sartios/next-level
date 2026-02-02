@@ -22,6 +22,28 @@ export const users = pgTable(
 );
 
 // ============================================================================
+// Goals
+// ============================================================================
+
+/**
+ * Goals table - Stores user learning goals
+ */
+export const goals = pgTable(
+  'goals',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    reasoning: text('reasoning').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [index('goals_user_id_idx').on(table.userId)]
+);
+
+// ============================================================================
 // Learning Resources System
 // ============================================================================
 
@@ -129,5 +151,16 @@ export const resourceEmbeddingsRelations = relations(resourceEmbeddings, ({ one 
   section: one(learningResourceSections, {
     fields: [resourceEmbeddings.sectionId],
     references: [learningResourceSections.id]
+  })
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  goals: many(goals)
+}));
+
+export const goalsRelations = relations(goals, ({ one }) => ({
+  user: one(users, {
+    fields: [goals.userId],
+    references: [users.id]
   })
 }));

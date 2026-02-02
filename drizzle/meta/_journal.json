@@ -15,6 +15,13 @@
       "when": 1770064569200,
       "tag": "0001_peaceful_brother_voodoo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770067193101,
+      "tag": "0002_breezy_tana_nile",
+      "breakpoints": true
     }
   ]
 }
