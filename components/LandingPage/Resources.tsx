@@ -1,24 +1,52 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Timer, CheckCircle2, BookOpen, Loader2 } from 'lucide-react';
+import { Timer, CheckCircle2, BookOpen, Loader2, Check } from 'lucide-react';
 
 import { useResourceStream, StreamedResource } from '@/hooks/useResourceStream';
 
 interface ResourcesProps {
   userId: string;
   goalId: string;
+  onResourceSelected?: (resourceId: string) => void;
 }
 
-function ResourceCard({ resource, index }: { resource: StreamedResource; index: number }) {
+interface ResourceCardProps {
+  resource: StreamedResource;
+  index: number;
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+function ResourceCard({ resource, index, isSelected, onSelect }: ResourceCardProps) {
   return (
-    <Card className="border-2 border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <Card
+      className={`border-2 overflow-hidden shadow-sm hover:shadow-md transition-all animate-in fade-in slide-in-from-bottom-2 duration-300 ${
+        isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border'
+      }`}
+    >
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 p-6 md:p-8">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center justify-between gap-4 mb-4">
             <span className="text-border font-bold text-sm uppercase tracking-tight">{resource.provider}</span>
+            <Button
+              variant={isSelected ? 'default' : 'outline'}
+              size="sm"
+              onClick={onSelect}
+              className={isSelected ? 'bg-accent hover:bg-accent/90' : ''}
+            >
+              {isSelected ? (
+                <>
+                  <Check className="h-4 w-4 mr-1" />
+                  Selected
+                </>
+              ) : (
+                'Select'
+              )}
+            </Button>
           </div>
 
           <h2 className="text-2xl font-black mb-6">
@@ -75,14 +103,20 @@ function ResourceCard({ resource, index }: { resource: StreamedResource; index: 
   );
 }
 
-export default function Resources({ userId, goalId }: ResourcesProps) {
+export default function Resources({ userId, goalId, onResourceSelected }: ResourcesProps) {
   const { resources, isLoading, status, startStream } = useResourceStream();
+  const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
 
   useEffect(() => {
     if (userId && goalId) {
       startStream(userId, goalId);
     }
   }, [userId, goalId, startStream]);
+
+  const handleSelect = (resourceId: string) => {
+    setSelectedResourceId(resourceId);
+    onResourceSelected?.(resourceId);
+  };
 
   return (
     <div className="space-y-6">
@@ -95,7 +129,13 @@ export default function Resources({ userId, goalId }: ResourcesProps) {
 
       <div className="space-y-10">
         {resources.map((resource, index) => (
-          <ResourceCard key={resource.id} resource={resource} index={index} />
+          <ResourceCard
+            key={resource.id}
+            resource={resource}
+            index={index}
+            isSelected={selectedResourceId === resource.id}
+            onSelect={() => handleSelect(resource.id)}
+          />
         ))}
       </div>
 

@@ -37,6 +37,7 @@ export const goals = pgTable(
       .references(() => users.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     reasoning: text('reasoning').notNull(),
+    selectedResourceId: uuid('selected_resource_id').references(() => learningResources.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull()
   },
