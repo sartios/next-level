@@ -8,6 +8,13 @@
       "when": 1769896382167,
       "tag": "0000_lazy_joystick",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770064569200,
+      "tag": "0001_peaceful_brother_voodoo",
+      "breakpoints": true
     }
   ]
 }
