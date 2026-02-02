@@ -7,6 +7,7 @@ export interface Goal {
   userId: string;
   name: string;
   reasoning: string;
+  selectedResourceId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,6 +53,19 @@ export async function updateGoal(id: string, goalData: Partial<Omit<NewGoal, 'us
     .update(goals)
     .set({ ...goalData, updatedAt: new Date() })
     .where(eq(goals.id, id))
+    .returning();
+  return updated;
+}
+
+/**
+ * Update the selected resource for a goal
+ */
+export async function updateGoalSelectedResource(goalId: string, resourceId: string): Promise<Goal | undefined> {
+  const db = requireDb();
+  const [updated] = await db
+    .update(goals)
+    .set({ selectedResourceId: resourceId, updatedAt: new Date() })
+    .where(eq(goals.id, goalId))
     .returning();
   return updated;
 }

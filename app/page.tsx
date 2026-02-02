@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
 import HeroSection from '@/components/LandingPage/HeroSection';
@@ -10,9 +11,9 @@ import UserCreationForm from '@/components/LandingPage/UserCreationForm';
 import TopSkillsList from '@/components/LandingPage/TopSkillsList';
 import BackButton from '@/components/shared/BackButton';
 import Resources from '@/components/LandingPage/Resources';
-import Link from 'next/link';
 
 export default function Home() {
+  const router = useRouter();
   const [showUserCreationForm, setShowUserCreationForm] = useState(false);
   const [showTopSkills, setShowTopSkills] = useState(false);
   const [showResources, setShowResources] = useState(false);
@@ -20,6 +21,8 @@ export default function Home() {
   const [goalId, setGoalId] = useState<string>();
   const [occupation, setOccupation] = useState<string>('');
   const [goalName, setGoalName] = useState<string>('');
+  const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleUserCreated = useCallback((newUserId: string, userOccupation: string) => {
     setUserId(newUserId);
@@ -49,7 +52,35 @@ export default function Home() {
     setShowUserCreationForm(false);
     setShowResources(false);
     setShowTopSkills(true);
+    setSelectedResourceId(null);
   }, []);
+
+  const handleResourceSelected = useCallback((resourceId: string) => {
+    setSelectedResourceId(resourceId);
+  }, []);
+
+  const handleContinueToAvailability = useCallback(async () => {
+    if (!userId || !goalId || !selectedResourceId) return;
+
+    setIsSaving(true);
+    try {
+      const response = await fetch(`/api/users/${userId}/goals/${goalId}/resources`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resourceId: selectedResourceId })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save selected resource');
+      }
+
+      router.push('/schedule');
+    } catch (error) {
+      console.error('Error saving resource:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [userId, goalId, selectedResourceId, router]);
 
   if (showUserCreationForm) {
     return (
@@ -81,16 +112,17 @@ export default function Home() {
           <div className="space-y-2">
             <h1 className="text-4xl md:text-6xl font-black tracking-tight pb-2">Learning Resources</h1>
             <p className="text-xl text-muted-foreground font-medium leading-relaxed">
-              Curated paths for your <b>{goalName}</b> 2026 mastery.
+              Select a resource for your <b>{goalName}</b> learning journey.
             </p>
           </div>
         </div>
-        <Resources userId={userId!} goalId={goalId!} />
+        <Resources userId={userId!} goalId={goalId!} onResourceSelected={handleResourceSelected} />
         <Button
-          className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2"
-          asChild
+          className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+          disabled={!selectedResourceId || isSaving}
+          onClick={handleContinueToAvailability}
         >
-          <Link href="/schedule">Create your schedule</Link>
+          {isSaving ? 'Saving...' : 'Set your weekly availability'}
         </Button>
       </div>
     );
