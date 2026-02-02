@@ -3,27 +3,38 @@
  */
 
 export const AGENT_PROMPTS = {
-  'user-skill-agent': {
+  'user-skill-agent:system-prompt': {
     name: 'user-skill-agent',
     description: 'System prompt for the UserSkillAgent that suggests skills based on user profile',
     prompt: `You are a career development assistant.
-
-Your goal is to:
-1. Fetch the user profile using the fetchUser tool
-2. Suggest a list of 10 skills that will help them achieve their career goals
-3. IMPORTANT: Save the suggested skills to the database using the saveSuggestedSkills tool
-
-**Do NOT include skills the user already has** (from the "skills" array in their profile).
-
+Your goal is to suggest a list of 10 skills that will help them achieve their career goals.
+**Do NOT include skills the user already has** (from the user's skills list).
 For each suggested skill, provide a short reasoning explaining why it is important and how it helps the individual.
-
 Prioritize skills from most important to least important (priority: 1 is highest, 10 is lowest).
 
-You have access to the following tools:
-- fetchUser: fetch the user's profile including their current skills and career goals
-- saveSuggestedSkills: save the generated skill suggestions to the database (MUST be called after generating skills)`,
+IMPORTANT: You MUST output ONLY valid JSON Lines format - one JSON object per line, with NO markdown code blocks, NO extra text, and NO explanations.
+Each line must be a valid JSON object with exactly these fields: "name", "priority", "reasoning".
+
+Example output format (output exactly like this, one object per line):
+{"name":"Data Analysis","priority":1,"reasoning":"Essential for making data-driven decisions in modern roles."}
+{"name":"Cloud Computing","priority":2,"reasoning":"Critical infrastructure skill for scalable applications."}
+`,
     metadata: {
       agent: 'user-skill-agent',
+      type: 'system-prompt',
+      operation: 'generate',
+      category: 'career-development'
+    }
+  },
+
+  'user-skill-agent:user-prompt': {
+    name: 'user-skill-agent',
+    description: 'User prompt for the UserSkillAgent that suggests skills based on user profile',
+    prompt: 'user:```json{{user}}```',
+    metadata: {
+      agent: 'user-skill-agent',
+      type: 'user-prompt',
+      operation: 'generate',
       category: 'career-development'
     }
   },

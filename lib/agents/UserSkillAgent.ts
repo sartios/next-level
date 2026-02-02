@@ -1,80 +1,84 @@
-import assert from 'node:assert';
-import { createAgent, providerStrategy } from 'langchain';
-import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
-import { z } from 'zod';
 
-import { createOpikHandler, OpikHandlerOptions } from '@/lib/opik';
-import { fetchUserTool } from '@/lib/tools/fetchUserTool';
-import { saveSuggestedSkillsTool } from '@/lib/tools/saveSuggestedSkillsTool';
+import { OpikHandlerOptions } from '@/lib/opik';
 import { getAgentPrompt } from '@/lib/prompts';
-import { SuggestedSkill } from '@/lib/mockDb';
+import { SuggestedSkill, User } from '@/lib/mockDb';
 import { SuggestedSkillSchema } from '@/lib/schemas';
+import { getUserById } from '@/lib/repository';
+import { createStreamingLLM } from '@/lib/utils/llm';
+import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
+import { parseJsonLinesStream } from '@/lib/utils/streamJsonLines';
 
 interface SkillSuggestionResponse {
-  userId: string;
   skills: SuggestedSkill[];
 }
 
-const SkillSuggestionResponseSchema = z.object({
-  userId: z.string(),
-  skills: z.array(SuggestedSkillSchema)
-});
-
 class UserSkillAgent {
   private readonly agentName = 'user-skill-agent';
-  private readonly model = 'gpt-4o-mini';
-
-  private agent: ReturnType<typeof createAgent> | null = null;
-  private initPromise: Promise<void> | null = null;
-
-  private async initialize(): Promise<void> {
-    if (this.agent) return;
-
-    if (!this.initPromise) {
-      this.initPromise = (async () => {
-        try {
-          const systemPrompt = await getAgentPrompt(this.agentName);
-          this.agent = createAgent({
-            model: new ChatOpenAI({ model: this.model }),
-            tools: [fetchUserTool, saveSuggestedSkillsTool],
-            systemPrompt: new SystemMessage(systemPrompt),
-            responseFormat: providerStrategy(SkillSuggestionResponseSchema)
-          });
-        } catch (error) {
-          this.initPromise = null;
-          throw error;
-        }
-      })();
-    }
-
-    await this.initPromise;
-  }
 
   public async suggestSkills(userId: string, opikOptions?: OpikHandlerOptions): Promise<SkillSuggestionResponse> {
-    await this.initialize();
-    assert(this.agent, `${this.agentName} not ready`);
+    const user = getUserById(userId);
 
-    const handler = createOpikHandler({
-      tags: [this.agentName, 'operation:suggest', ...(opikOptions?.tags || [])],
-      metadata: {
-        agentName: this.agentName,
-        userId,
-        ...opikOptions?.metadata
-      },
-      threadId: opikOptions?.threadId
+    for await (const event of this.streamSkillSuggestions(user, opikOptions)) {
+      if (event.type === 'complete' && event.result) {
+        return event.result;
+      }
+    }
+
+    return { skills: [] };
+  }
+
+  public async *streamSkillSuggestions(user: User, opikOptions?: OpikHandlerOptions): AsyncGenerator<UserSkillStreamEvent> {
+    if (!user) {
+      throw new Error('User is required');
+    }
+    const userId = user.id;
+
+    const llm = createStreamingLLM('gpt-5-mini');
+    const handler = createAgentOpikHandler(this.agentName, 'suggest-stream', { userId }, opikOptions);
+
+    const systemPrompt = await getAgentPrompt('user-skill-agent:system-prompt');
+    const userPrompt = await getAgentPrompt('user-skill-agent:user-prompt', { user: JSON.stringify(user) });
+
+    yield { type: 'token', userId };
+
+    const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
+      callbacks: [handler],
+      runName: this.agentName
     });
 
-    const result = await this.agent.invoke(
-      { messages: [new HumanMessage(JSON.stringify({ userId }))] },
-      { callbacks: [handler], runName: this.agentName }
-    );
+    const emittedSkills: SuggestedSkill[] = [];
+    let skillIndex = 0;
 
-    return {
+    for await (const data of parseJsonLinesStream(stream, SuggestedSkillSchema)) {
+      const skill: SuggestedSkill = {
+        id: `skill-${userId}-${skillIndex++}`,
+        userId,
+        name: data.name,
+        priority: data.priority,
+        reasoning: data.reasoning
+      };
+      emittedSkills.push(skill);
+      yield { type: 'skill', userId, skill };
+    }
+
+    yield {
+      type: 'complete',
       userId,
-      skills: result.structuredResponse.skills
+      result: { skills: emittedSkills }
     };
   }
+}
+
+export interface UserSkillStreamEvent {
+  type: 'token' | 'skill' | 'complete';
+  content?: string;
+  toolName?: string;
+  input?: unknown;
+  output?: unknown;
+  userId: string;
+  skill?: SuggestedSkill;
+  result?: SkillSuggestionResponse;
 }
 
 const userSkillAgentInstance = new UserSkillAgent();
