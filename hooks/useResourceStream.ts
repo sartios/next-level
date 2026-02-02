@@ -2,32 +2,45 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-export interface StreamedSkill {
-  name: string;
-  reasoning: string;
-  priority: number;
+export interface StreamedResource {
+  id: string;
+  url: string;
+  title: string;
+  description: string | null;
+  provider: string;
+  resourceType: 'course' | 'book' | 'tutorial' | 'article';
+  learningObjectives: string[];
+  targetAudience: string[];
+  totalHours: number | null;
+  sections: Array<{
+    id: string;
+    resourceId: string;
+    title: string;
+    estimatedMinutes: number | null;
+    orderIndex: number;
+    topics: string[];
+  }>;
 }
 
-interface UseSkillStreamOptions {
-  apiUrl?: string;
-  onSkill?: (skill: StreamedSkill) => void;
+interface UseResourceStreamOptions {
+  onResource?: (resource: StreamedResource) => void;
   onError?: (error: Error) => void;
-  onFinish?: (skills: StreamedSkill[]) => void;
+  onFinish?: (resources: StreamedResource[]) => void;
 }
 
-interface UseSkillStreamReturn {
-  skills: StreamedSkill[];
+interface UseResourceStreamReturn {
+  resources: StreamedResource[];
   isLoading: boolean;
   error: Error | null;
   status: string;
-  submit: (userId: string) => void;
+  startStream: (userId: string, goalId: string) => void;
   stop: () => void;
 }
 
-export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStreamReturn {
-  const { apiUrl = '/api/skill/stream', onSkill, onError, onFinish } = options;
+export function useResourceStream(options: UseResourceStreamOptions = {}): UseResourceStreamReturn {
+  const { onResource, onError, onFinish } = options;
 
-  const [skills, setSkills] = useState<StreamedSkill[]>([]);
+  const [resources, setResources] = useState<StreamedResource[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [status, setStatus] = useState('');
@@ -43,18 +56,18 @@ export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStr
     setStatus('');
   }, []);
 
-  const submit = useCallback(
-    (userId: string) => {
+  const startStream = useCallback(
+    (userId: string, goalId: string) => {
       // Close any existing connection
       stop();
 
       // Reset state
-      setSkills([]);
+      setResources([]);
       setError(null);
       setIsLoading(true);
       setStatus('Connecting...');
 
-      const eventSource = new EventSource(`${apiUrl}?userId=${userId}`);
+      const eventSource = new EventSource(`/api/users/${userId}/goals/${goalId}/resources/stream`);
       eventSourceRef.current = eventSource;
 
       eventSource.onmessage = (event) => {
@@ -65,19 +78,21 @@ export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStr
             case 'token':
               if (data.content) {
                 setStatus(data.content);
+              } else if (data.toolName) {
+                setStatus(`Using: ${data.toolName}...`);
               } else {
-                setStatus('Generating suggestions...');
+                setStatus('Finding resources...');
               }
               break;
 
-            case 'skill':
-              if (data.skill) {
-                setSkills((prev) => {
-                  const newSkills = [...prev, data.skill];
-                  onSkill?.(data.skill);
-                  return newSkills;
+            case 'resource':
+              if (data.resource) {
+                setResources((prev) => {
+                  const newResources = [...prev, data.resource];
+                  onResource?.(data.resource);
+                  return newResources;
                 });
-                setStatus(`Found: ${data.skill.name}`);
+                setStatus(`Found: ${data.resource.title}`);
               }
               break;
 
@@ -85,8 +100,8 @@ export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStr
               setIsLoading(false);
               setStatus('');
               eventSource.close();
-              if (data.result?.skills) {
-                onFinish?.(data.result.skills);
+              if (data.result?.resources) {
+                onFinish?.(data.result.resources);
               }
               break;
 
@@ -118,7 +133,7 @@ export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStr
         onError?.(connectionError);
       };
     },
-    [apiUrl, stop, onSkill, onError, onFinish]
+    [stop, onResource, onError, onFinish]
   );
 
   // Cleanup on unmount
@@ -131,11 +146,11 @@ export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStr
   }, []);
 
   return {
-    skills,
+    resources,
     isLoading,
     error,
     status,
-    submit,
+    startStream,
     stop
   };
 }
