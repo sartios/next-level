@@ -2,6 +2,26 @@ import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, real } f
 import { relations } from 'drizzle-orm';
 
 // ============================================================================
+// Users
+// ============================================================================
+
+/**
+ * Users table - Stores user profiles for the learning platform
+ */
+export const users = pgTable(
+  'users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    role: text('role').notNull(),
+    skills: jsonb('skills').$type<string[]>().default([]).notNull(),
+    careerGoals: jsonb('career_goals').$type<string[]>().default([]).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [index('users_created_at_idx').on(table.createdAt)]
+);
+
+// ============================================================================
 // Learning Resources System
 // ============================================================================
 
