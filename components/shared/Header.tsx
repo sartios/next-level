@@ -87,7 +87,7 @@ const Header = () => {
                 <DrawerHeader className="flex items-center justify-between">
                   <DrawerTitle>Menu</DrawerTitle>
                   <DrawerClose asChild>
-                    <Button variant="ghost" className="p-2">
+                    <Button variant="ghost" className="p-2" aria-label="Close menu">
                       <X className="h-6 w-6" />
                     </Button>
                   </DrawerClose>
