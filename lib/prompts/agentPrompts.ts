@@ -4,7 +4,7 @@
 
 export const AGENT_PROMPTS = {
   'user-skill-agent:system-prompt': {
-    name: 'user-skill-agent',
+    name: 'user-skill-agent:system-prompt',
     description: 'System prompt for the UserSkillAgent that suggests skills based on user profile',
     prompt: `You are a career development assistant.
 Your goal is to suggest a list of 10 skills that will help them achieve their career goals.
@@ -14,10 +14,6 @@ Prioritize skills from most important to least important (priority: 1 is highest
 
 IMPORTANT: You MUST output ONLY valid JSON Lines format - one JSON object per line, with NO markdown code blocks, NO extra text, and NO explanations.
 Each line must be a valid JSON object with exactly these fields: "name", "priority", "reasoning".
-
-Example output format (output exactly like this, one object per line):
-{"name":"Data Analysis","priority":1,"reasoning":"Essential for making data-driven decisions in modern roles."}
-{"name":"Cloud Computing","priority":2,"reasoning":"Critical infrastructure skill for scalable applications."}
 `,
     metadata: {
       agent: 'user-skill-agent',
@@ -28,7 +24,7 @@ Example output format (output exactly like this, one object per line):
   },
 
   'user-skill-agent:user-prompt': {
-    name: 'user-skill-agent',
+    name: 'user-skill-agent:user-prompt',
     description: 'User prompt for the UserSkillAgent that suggests skills based on user profile',
     prompt: 'user:```json{{user}}```',
     metadata: {
