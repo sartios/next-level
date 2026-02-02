@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSkillStream, StreamedSkill } from '@/hooks/useSkillStream';
-import { Goal } from '@/lib/mockDb';
 
 function SkillCardSkeleton() {
   return (
@@ -40,7 +39,7 @@ function TopSkillsListSkeleton({ occupation }: { occupation: string }) {
 interface TopSkillsListProps {
   userId: string | undefined;
   occupation: string;
-  onGoalCreated: (goal: Goal) => void;
+  onGoalCreated: (goalId: string, goalName: string) => void;
 }
 
 export default function TopSkillsList({ userId, occupation, onGoalCreated }: TopSkillsListProps) {
@@ -83,7 +82,7 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
     setError(null);
 
     try {
-      const response = await fetch('/api/goals', {
+      const response = await fetch(`/api/users/${userId}/goals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -100,7 +99,7 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
       }
 
       const data = await response.json();
-      onGoalCreated(data.goal);
+      onGoalCreated(data.goal.id, data.goal.name);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
