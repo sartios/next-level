@@ -1,9 +1,13 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Check, X } from 'lucide-react';
+import { CheckCircle2, Check, X, MoreVertical, Rocket } from 'lucide-react';
 import { Goal } from '@/lib/mockDb';
+import { useState } from 'react';
 
 interface ActiveRoadmapProps {
   goal: Goal | null;
@@ -12,6 +16,8 @@ interface ActiveRoadmapProps {
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
+  const [, /*showArchiveDialog*/ setShowArchiveDialog] = useState(false);
+
   if (!goal) {
     return (
       <div className="lg:col-span-2 space-y-8">
@@ -97,95 +103,150 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
     .filter((s) => s.status === 'missed').length;
 
   return (
-    <div className="lg:col-span-2 space-y-8">
-      <section className="space-y-4">
-        <div className="space-y-2 mb-4">
-          <h3 className="text-sm font-black uppercase text-border tracking-widest">Active Roadmap</h3>
-          <h2 className="text-2xl font-black text-foreground">{goal.name}</h2>
-        </div>
-        <div className="flex justify-between items-end">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">Overall Progress</h2>
-            <p className="text-muted-foreground font-medium">
-              {completedSteps} of {totalSteps} steps completed{startedSteps > 0 && `, ${startedSteps} in progress`}
-            </p>
-          </div>
-          <span className="text-4xl font-black text-foreground">{progress}%</span>
-        </div>
-        <Progress value={progress} className="h-4 bg-muted *:data-[slot='progress-indicator']:bg-accent" />
-      </section>
+    <div>
+      <div className="flex flex-col xl:flex-row justify-between gap-8">
+        <div className="space-y-8">
+          <section className="space-y-4 mb-9">
+            <div className="flex justify-between items-end">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Overall Progress</h2>
+                <p className="text-muted-foreground font-medium">
+                  {completedSteps} of {totalSteps} steps completed{startedSteps > 0 && `, ${startedSteps} in progress`}
+                </p>
+              </div>
+              <span className="text-4xl font-black text-foreground">{progress}%</span>
+            </div>
+            <Progress value={progress} className="h-4 bg-muted *:data-[slot='progress-indicator']:bg-accent" />
+          </section>
 
-      {/* Weekly Plan Section */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">This Week&apos;s Plan</h2>
-            <p className="text-muted-foreground font-medium">Track your commitment and stay accountable</p>
-          </div>
-          <div className="flex gap-4 text-sm font-bold">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-green-100 border-2 border-green-300"></div>
-              <span className="text-foreground">{completedCount} Done</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-blue-100 border-2 border-blue-300"></div>
-              <span className="text-foreground">{startedCount} Started</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-red-100 border-2 border-red-300"></div>
-              <span className="text-foreground">{missedCount} Missed</span>
-            </div>
-          </div>
-        </div>
-
-        <Card className="border-2 border-muted">
-          <CardContent className="p-6">
-            <div className="overflow-x-auto -mx-2 px-2">
-              <div className="grid grid-cols-7 gap-2 min-w-max">
-                {days.map((day) => (
-                  <div key={day} className="space-y-2 min-w-20">
-                    <div className="text-center font-black text-xs text-border uppercase">{day}</div>
-                    <div className="space-y-1">
-                      {weeklySchedule[day].length > 0 ? (
-                        weeklySchedule[day].map((slot, idx) => (
-                          <div
-                            key={idx}
-                            className={`min-h-16 rounded-md border-2 flex flex-col items-center justify-center p-1 text-xs font-bold ${
-                              slot.status === 'completed'
-                                ? 'bg-green-50 border-green-200 text-green-700'
-                                : slot.status === 'started'
-                                  ? 'bg-blue-50 border-blue-200 text-blue-700'
-                                  : slot.status === 'missed'
-                                    ? 'bg-red-50 border-red-200 text-red-700'
-                                    : 'bg-muted border-muted text-muted-foreground'
-                            }`}
-                            title={`Step ${slot.stepIndex}: ${slot.stepName} - ${slot.time} to ${slot.endTime} (${slot.duration}min)`}
-                          >
-                            <span className="text-[10px]">
-                              {slot.time}-{slot.endTime}
-                            </span>
-                            <span className="text-[9px] opacity-75">{slot.duration}min</span>
-                            {slot.status === 'completed' && <Check className="h-3 w-3 mt-0.5" />}
-                            {slot.status === 'missed' && <X className="h-3 w-3 mt-0.5" />}
-                          </div>
-                        ))
-                      ) : (
-                        <div className="min-h-16 rounded-md bg-muted/30 border-2 border-dashed border-muted flex items-center justify-center">
-                          <span className="text-[10px] text-border font-bold">—</span>
-                        </div>
-                      )}
-                    </div>
+          {/* Weekly Plan Section */}
+          <section className="space-y-4">
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">This Week&apos;s Plan</h2>
+                <p className="text-muted-foreground font-medium">Track your commitment and stay accountable</p>
+              </div>
+              <div className="flex flex-col xl:items-end">
+                <div className="text-sm text-muted-foreground mb-2 pt-3">
+                  Slot duration: <span className="font-semibold">30 min</span>
+                </div>
+                <div className="flex gap-4 text-xs md:text-sm font-bold">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-green-100 border-2 border-green-300"></div>
+                    <span className="text-foreground">{completedCount} Done</span>
                   </div>
-                ))}
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-blue-100 border-2 border-blue-300"></div>
+                    <span className="text-foreground">{startedCount} Started</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-red-100 border-2 border-red-300"></div>
+                    <span className="text-foreground">{missedCount} Missed</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
 
+            <Card className="border-2 border-muted">
+              <CardContent className="p-4">
+                <div className="overflow-x-auto -mx-2 px-2">
+                  <div className="grid grid-cols-7 gap-2 min-w-max">
+                    {days.map((day) => (
+                      <div key={day} className="space-y-2 min-w-20">
+                        <div className="text-center font-black text-xs md:text-sm text-border uppercase">{day}</div>
+                        <div className="space-y-1">
+                          {weeklySchedule[day].length > 0 ? (
+                            weeklySchedule[day].map((slot, idx) => (
+                              <div
+                                key={idx}
+                                className={`min-h-16 rounded-md border-2 flex flex-col items-center justify-center p-2 text-xs font-bold ${
+                                  slot.status === 'completed'
+                                    ? 'bg-green-50 border-green-200 text-green-700'
+                                    : slot.status === 'started'
+                                      ? 'bg-blue-50 border-blue-200 text-blue-700'
+                                      : slot.status === 'missed'
+                                        ? 'bg-red-50 border-red-200 text-red-700'
+                                        : 'bg-muted border-muted text-muted-foreground'
+                                }`}
+                                title={`Step ${slot.stepIndex}: ${slot.stepName} - ${slot.time} to ${slot.endTime} (${slot.duration}min)`}
+                              >
+                                <span className="text-xs">
+                                  {slot.time}-{slot.endTime}
+                                </span>
+                                {/* <span className="text-[9px] opacity-75">{slot.duration}min</span> */}
+                                {slot.status === 'completed' && <Check className="h-3 w-3 mt-0.5" />}
+                                {slot.status === 'missed' && <X className="h-3 w-3 mt-0.5" />}
+                              </div>
+                            ))
+                          ) : (
+                            <div className="min-h-16 rounded-md bg-muted/30 border-2 border-dashed border-muted flex items-center justify-center">
+                              <span className="text-sm text-border font-bold">—</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        </div>
+        <aside className="space-y-6 xl:w-250">
+          <Card className="border-2 border-muted p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex flex-col">
+                <h3 className="text-sm font-black uppercase text-border tracking-widest">Active Roadmap</h3>
+                <h2 className="text-xl font-black text-foreground">{goal.name}</h2>
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="h-11 w-11 p-0 rounded-md hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none inline-flex items-center justify-center"
+                  aria-label="Goal options"
+                >
+                  <MoreVertical className="h-5 w-5 text-foreground" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => setShowArchiveDialog(true)}
+                    className="text-foreground font-medium cursor-pointer focus:bg-muted focus:text-foreground"
+                  >
+                    Archive goal
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="space-y-6">
+              <div>
+                <p className="text-sm font-bold uppercase text-border">Target Industry</p>
+                <p className="text-lg font-medium text-foreground">selectedIndustry</p>
+              </div>
+              <div>
+                <p className="text-sm font-bold uppercase text-border">Core Skill</p>
+                <p className="text-lg font-medium text-foreground">selectedSkill</p>
+              </div>
+              <hr className="border-muted" />
+              <div>
+                <p className="text-sm font-bold uppercase text-border">Daily Streak</p>
+                <div className="flex gap-1">
+                  <p className="text-lg font-medium text-foreground">5 Days</p>
+                  <Rocket className="h-6 w-6 text-accent shrink-0" />
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <div className="p-6 bg-accent/10 rounded-2xl border-2 border-accent">
+            <p className="text-sm xl:text-base font-medium text-foreground leading-relaxed">
+              You are on track to graduate on <strong>graduationDate</strong> based on your current study pace.
+            </p>
+          </div>
+        </aside>
+      </div>
       {/* Roadmap Steps */}
       {roadmap.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-4 w-full mt-6 xl:mt-11">
           <h3 className="text-xl font-black text-foreground">Roadmap Steps</h3>
           {roadmap.map((step, idx) => (
             <div
@@ -222,20 +283,20 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                       </Badge>
                     )}
                   </div>
-                  <p className="text-sm font-medium text-muted-foreground leading-relaxed">{step.description}</p>
+                  <p className="text-md font-medium text-foreground leading-relaxed">{step.description}</p>
                   {step.timeline && step.timeline.length > 0 && (
                     <div>
-                      <p className="text-sm font-bold text-border mb-1">Scheduled Sessions:</p>
+                      <p className="text-sm font-bold text-foreground mb-1">Scheduled Sessions:</p>
                       <div className="flex flex-wrap gap-2">
                         {(step.timeline ?? []).map((slot, tIdx) => (
                           <span
                             key={tIdx}
-                            className={`text-xs px-2 py-1 rounded-md ${
+                            className={`text-sm px-2 py-1 rounded-md ${
                               step.status === 'completed'
                                 ? 'bg-green-100 text-green-700'
                                 : step.status === 'started'
                                   ? 'bg-blue-100 text-blue-700'
-                                  : 'bg-muted text-muted-foreground'
+                                  : 'border-2 border-muted text-foreground'
                             }`}
                           >
                             {new Date(slot.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}{' '}
