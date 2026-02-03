@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, real } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, uuid, jsonb, index, uniqueIndex, vector, real } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // ============================================================================
@@ -72,10 +72,7 @@ export const schedules = pgTable(
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull()
   },
-  (table) => [
-    index('schedules_user_id_idx').on(table.userId),
-    index('schedules_goal_id_idx').on(table.goalId)
-  ]
+  (table) => [index('schedules_user_id_idx').on(table.userId), index('schedules_goal_id_idx').on(table.goalId)]
 );
 
 /**
@@ -94,6 +91,65 @@ export const scheduleSlots = pgTable(
     durationMinutes: integer('duration_minutes').notNull()
   },
   (table) => [index('schedule_slots_schedule_id_idx').on(table.scheduleId)]
+);
+
+// ============================================================================
+// Weekly Plans
+// ============================================================================
+
+/**
+ * Plan session status type
+ */
+export type PlanSessionStatus = 'pending' | 'in_progress' | 'completed' | 'missed';
+
+/**
+ * Weekly plans table - Stores weekly learning plans for a goal
+ * Each goal can have multiple weekly plans (one per week)
+ */
+export const weeklyPlans = pgTable(
+  'weekly_plans',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    goalId: uuid('goal_id')
+      .notNull()
+      .references(() => goals.id, { onDelete: 'cascade' }),
+    weekNumber: integer('week_number').notNull(),
+    weekStartDate: timestamp('week_start_date').notNull(),
+    focusArea: text('focus_area').notNull(),
+    totalMinutes: integer('total_minutes').notNull(),
+    completionPercentage: integer('completion_percentage').default(0).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [
+    index('weekly_plans_goal_id_idx').on(table.goalId),
+    index('weekly_plans_week_start_date_idx').on(table.weekStartDate),
+    uniqueIndex('weekly_plans_goal_week_unique').on(table.goalId, table.weekNumber)
+  ]
+);
+
+/**
+ * Plan sessions table - Individual learning sessions within a weekly plan
+ */
+export const planSessions = pgTable(
+  'plan_sessions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    weeklyPlanId: uuid('weekly_plan_id')
+      .notNull()
+      .references(() => weeklyPlans.id, { onDelete: 'cascade' }),
+    dayOfWeek: text('day_of_week').$type<DayOfWeek>().notNull(),
+    startTime: text('start_time').notNull(), // Format: "HH:MM"
+    endTime: text('end_time').notNull(), // Format: "HH:MM"
+    durationMinutes: integer('duration_minutes').notNull(),
+    topic: text('topic').notNull(),
+    activities: jsonb('activities').$type<string[]>().default([]).notNull(),
+    status: text('status').$type<PlanSessionStatus>().default('pending').notNull(),
+    completedAt: timestamp('completed_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [index('plan_sessions_weekly_plan_id_idx').on(table.weeklyPlanId), index('plan_sessions_status_idx').on(table.status)]
 );
 
 // ============================================================================
@@ -221,7 +277,8 @@ export const goalsRelations = relations(goals, ({ one, many }) => ({
     fields: [goals.selectedResourceId],
     references: [learningResources.id]
   }),
-  schedules: many(schedules)
+  schedules: many(schedules),
+  weeklyPlans: many(weeklyPlans)
 }));
 
 export const schedulesRelations = relations(schedules, ({ one, many }) => ({
@@ -240,5 +297,20 @@ export const scheduleSlotsRelations = relations(scheduleSlots, ({ one }) => ({
   schedule: one(schedules, {
     fields: [scheduleSlots.scheduleId],
     references: [schedules.id]
+  })
+}));
+
+export const weeklyPlansRelations = relations(weeklyPlans, ({ one, many }) => ({
+  goal: one(goals, {
+    fields: [weeklyPlans.goalId],
+    references: [goals.id]
+  }),
+  sessions: many(planSessions)
+}));
+
+export const planSessionsRelations = relations(planSessions, ({ one }) => ({
+  weeklyPlan: one(weeklyPlans, {
+    fields: [planSessions.weeklyPlanId],
+    references: [weeklyPlans.id]
   })
 }));
