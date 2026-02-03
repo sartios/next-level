@@ -11,6 +11,7 @@ import UserCreationForm from '@/components/LandingPage/UserCreationForm';
 import TopSkillsList from '@/components/LandingPage/TopSkillsList';
 import BackButton from '@/components/shared/BackButton';
 import Resources from '@/components/LandingPage/Resources';
+import { setUserId as storeUserId, setGoalId as storeGoalId } from '@/lib/storage';
 
 export default function Home() {
   const router = useRouter();
@@ -26,14 +27,16 @@ export default function Home() {
 
   const handleUserCreated = useCallback((newUserId: string, userOccupation: string) => {
     setUserId(newUserId);
+    storeUserId(newUserId);
     setOccupation(userOccupation);
     setShowTopSkills(true);
     setShowUserCreationForm(false);
   }, []);
 
-  const handleGoalCreated = useCallback((newGoalId: string, goalName: string) => {
+  const handleGoalCreated = useCallback((newGoalId: string, newGoalName: string) => {
     setGoalId(newGoalId);
-    setGoalName(goalName);
+    storeGoalId(newGoalId);
+    setGoalName(newGoalName);
     setShowTopSkills(false);
     setShowUserCreationForm(false);
     setShowResources(true);
