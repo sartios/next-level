@@ -1,0 +1,323 @@
+[
+  {
+    "id": "skr-001",
+    "name": "Python Resources for Beginner Engineer",
+    "input": {
+      "user": {
+        "id": "eval-001",
+        "role": "Software Engineer",
+        "skills": ["JavaScript", "React", "Node.js"],
+        "careerGoals": ["Learn Python for data science", "Expand programming languages"]
+      },
+      "goal": {
+        "id": "goal-001",
+        "userId": "eval-001",
+        "name": "Python Programming",
+        "reasoning": "Foundation for data science and backend development"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["udemy", "upskill"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": [
+        "https://www.udemy.com/course/the-python-bible/",
+        "https://upskillcourses.com/courses/computer-science-data-structures-algorithms"
+      ]
+    }
+  },
+  {
+    "id": "skr-002",
+    "name": "Machine Learning Resources for Intermediate",
+    "input": {
+      "user": {
+        "id": "eval-002",
+        "role": "Data Analyst",
+        "skills": ["SQL", "Python", "Data Visualization"],
+        "careerGoals": ["Transition to ML Engineer", "Build ML models"]
+      },
+      "goal": {
+        "id": "goal-002",
+        "userId": "eval-002",
+        "name": "Machine Learning",
+        "reasoning": "Foundation needed for ML engineering career"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["coursera", "oreilly"],
+      "expectedResourceTypes": ["course", "book"],
+      "expectedResourceUrls": [
+        "https://www.coursera.org/learn/machine-learning",
+        "https://learning.oreilly.com/library/view/deep-learning/9781491924570/"
+      ]
+    }
+  },
+  {
+    "id": "skr-003",
+    "name": "Deep Learning Resources for Expert",
+    "input": {
+      "user": {
+        "id": "eval-003",
+        "role": "ML Engineer",
+        "skills": ["Python", "Machine Learning", "TensorFlow"],
+        "careerGoals": ["Specialize in deep learning", "Research applications"]
+      },
+      "goal": {
+        "id": "goal-003",
+        "userId": "eval-003",
+        "name": "Deep Learning",
+        "reasoning": "Advanced specialization for research and complex models"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["oreilly", "coursera"],
+      "expectedResourceTypes": ["book", "course"],
+      "expectedResourceUrls": [
+        "https://learning.oreilly.com/library/view/deep-learning/9781491924570/",
+        "https://www.coursera.org/learn/machine-learning"
+      ]
+    }
+  },
+  {
+    "id": "skr-004",
+    "name": "Data Science Resources for Beginner",
+    "input": {
+      "user": {
+        "id": "eval-004",
+        "role": "Business Analyst",
+        "skills": ["Excel", "SQL", "Business Intelligence"],
+        "careerGoals": ["Transition to Data Scientist", "Learn statistical analysis"]
+      },
+      "goal": {
+        "id": "goal-004",
+        "userId": "eval-004",
+        "name": "Data Science Fundamentals",
+        "reasoning": "Entry point for data science career transition"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["udacity", "udemy", "upskill"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": [
+        "https://www.udacity.com/course/data-analysis-and-visualization-fluency--cd5224",
+        "https://www.udemy.com/course/the-python-bible/",
+        "https://upskillcourses.com/courses/computer-science-data-structures-algorithms"
+      ]
+    }
+  },
+  {
+    "id": "skr-005",
+    "name": "React Native Resources for Mobile Developer",
+    "input": {
+      "user": {
+        "id": "eval-005",
+        "role": "Frontend Developer",
+        "skills": ["JavaScript", "React", "CSS"],
+        "careerGoals": ["Build mobile apps", "Cross-platform development"]
+      },
+      "goal": {
+        "id": "goal-005",
+        "userId": "eval-005",
+        "name": "Mobile Development with React Native",
+        "reasoning": "Leverage existing React skills for mobile development"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["coursera", "youtube", "code academy"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": [
+        "https://www.coursera.org/learn/react-native-course",
+        "https://www.youtube.com/watch?v=NMOdEHyMXBo",
+        "https://www.codecademy.com/learn/learn-redux"
+      ]
+    }
+  },
+  {
+    "id": "skr-006",
+    "name": "Next.js Resources for React Developer",
+    "input": {
+      "user": {
+        "id": "eval-006",
+        "role": "Frontend Developer",
+        "skills": ["JavaScript", "React", "HTML", "CSS"],
+        "careerGoals": ["Learn server-side rendering", "Build full-stack apps"]
+      },
+      "goal": {
+        "id": "goal-006",
+        "userId": "eval-006",
+        "name": "Next.js Framework",
+        "reasoning": "Advance React skills with server-side rendering and optimization"
+      }
+    },
+    "expected": {
+      "minResourceCount": 1,
+      "expectedProviders": ["code academy"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": ["https://www.codecademy.com/learn/learn-next-js"]
+    }
+  },
+  {
+    "id": "skr-007",
+    "name": "UX Design Resources for Designer",
+    "input": {
+      "user": {
+        "id": "eval-007",
+        "role": "Graphic Designer",
+        "skills": ["Photoshop", "Illustrator", "Visual Design"],
+        "careerGoals": ["Transition to UX Design", "Learn user research"]
+      },
+      "goal": {
+        "id": "goal-007",
+        "userId": "eval-007",
+        "name": "UX Design Fundamentals",
+        "reasoning": "Expand design skills into user experience"
+      }
+    },
+    "expected": {
+      "minResourceCount": 3,
+      "expectedProviders": ["youtube", "skillshare", "udemy", "Give Good UX"],
+      "expectedResourceTypes": ["course", "book"],
+      "expectedResourceUrls": [
+        "https://www.youtube.com/watch?v=QJBP2uy8LcU",
+        "https://www.youtube.com/watch?v=1SNZRCVNizg",
+        "https://www.udemy.com/course/ux-strategy-fundamentals/",
+        "https://givegoodux.com/download-joe-natolis-the-way-it-is-e-book/"
+      ]
+    }
+  },
+  {
+    "id": "skr-008",
+    "name": "Figma Resources for UI Designer",
+    "input": {
+      "user": {
+        "id": "eval-008",
+        "role": "UI Designer",
+        "skills": ["Sketch", "Adobe XD", "Visual Design"],
+        "careerGoals": ["Master Figma", "Build design systems"]
+      },
+      "goal": {
+        "id": "goal-008",
+        "userId": "eval-008",
+        "name": "Figma Design System Mastery",
+        "reasoning": "Industry standard tool for modern UI design workflows"
+      }
+    },
+    "expected": {
+      "minResourceCount": 3,
+      "expectedProviders": ["youtube", "skillshare", "domestika"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": [
+        "https://www.youtube.com/watch?v=Od7AfBvBwWo",
+        "https://www.skillshare.com/en/classes/figma-ui-ux-design-advanced-become-a-figma-pro/50973510",
+        "https://www.domestika.org/en/courses/5031-design-systems-for-websites-using-figma",
+        "https://www.youtube.com/watch?v=opTANvl9G1g"
+      ]
+    }
+  },
+  {
+    "id": "skr-009",
+    "name": "Web Accessibility Resources for Developer",
+    "input": {
+      "user": {
+        "id": "eval-009",
+        "role": "Web Developer",
+        "skills": ["HTML", "CSS", "JavaScript", "React"],
+        "careerGoals": ["Build accessible websites", "Learn WCAG standards"]
+      },
+      "goal": {
+        "id": "goal-009",
+        "userId": "eval-009",
+        "name": "Web Accessibility",
+        "reasoning": "Create inclusive digital experiences compliant with standards"
+      }
+    },
+    "expected": {
+      "minResourceCount": 1,
+      "expectedProviders": ["code academy"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": ["https://www.codecademy.com/learn/learn-digital-accessibility"]
+    }
+  },
+  {
+    "id": "skr-010",
+    "name": "Blockchain Development Resources",
+    "input": {
+      "user": {
+        "id": "eval-010",
+        "role": "Software Engineer",
+        "skills": ["JavaScript", "Python", "Node.js"],
+        "careerGoals": ["Learn blockchain development", "Build dApps"]
+      },
+      "goal": {
+        "id": "goal-010",
+        "userId": "eval-010",
+        "name": "Blockchain and Ethereum Development",
+        "reasoning": "Transition into Web3 and decentralized application development"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["alchemy"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": ["https://www.alchemy.com/university/courses/ethereum", "https://www.alchemy.com/university/courses/solidity"]
+    }
+  },
+  {
+    "id": "skr-011",
+    "name": "Data Visualization Resources",
+    "input": {
+      "user": {
+        "id": "eval-011",
+        "role": "Data Analyst",
+        "skills": ["Excel", "SQL", "Power BI basics"],
+        "careerGoals": ["Master data visualization", "Tell compelling data stories"]
+      },
+      "goal": {
+        "id": "goal-011",
+        "userId": "eval-011",
+        "name": "Advanced Data Visualization",
+        "reasoning": "Communicate insights effectively through visualizations"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["udacity"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": [
+        "https://www.udacity.com/course/data-analysis-and-visualization-fluency--cd5224",
+        "https://www.udacity.com/course/advanced-data-analysis-with-power-bi--cd0014"
+      ]
+    }
+  },
+  {
+    "id": "skr-012",
+    "name": "Cybersecurity Resources for IT Professional",
+    "input": {
+      "user": {
+        "id": "eval-012",
+        "role": "IT Administrator",
+        "skills": ["Networking", "Linux", "System Administration"],
+        "careerGoals": ["Transition to cybersecurity", "Learn AI in security"]
+      },
+      "goal": {
+        "id": "goal-012",
+        "userId": "eval-012",
+        "name": "Cybersecurity with AI",
+        "reasoning": "Modern cybersecurity leverages AI for threat detection"
+      }
+    },
+    "expected": {
+      "minResourceCount": 2,
+      "expectedProviders": ["edX", "code academy"],
+      "expectedResourceTypes": ["course"],
+      "expectedResourceUrls": [
+        "https://www.edx.org/certificates/professional-certificate/ibm-generative-ai-for-cybersecurity",
+        "https://www.codecademy.com/learn/ext-paths/certified-information-systems-security-professional-cissp-journey"
+      ]
+    }
+  }
+]

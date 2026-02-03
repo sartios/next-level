@@ -8,6 +8,34 @@
       "when": 1769896382167,
       "tag": "0000_lazy_joystick",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770064569200,
+      "tag": "0001_peaceful_brother_voodoo",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770067193101,
+      "tag": "0002_breezy_tana_nile",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1770072724406,
+      "tag": "0003_misty_blackheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1770074689975,
+      "tag": "0004_pretty_donald_blake",
+      "breakpoints": true
     }
   ]
 }

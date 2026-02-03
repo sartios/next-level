@@ -2,6 +2,101 @@ import { pgTable, text, timestamp, integer, uuid, jsonb, index, vector, real } f
 import { relations } from 'drizzle-orm';
 
 // ============================================================================
+// Users
+// ============================================================================
+
+/**
+ * Users table - Stores user profiles for the learning platform
+ */
+export const users = pgTable(
+  'users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    role: text('role').notNull(),
+    skills: jsonb('skills').$type<string[]>().default([]).notNull(),
+    careerGoals: jsonb('career_goals').$type<string[]>().default([]).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [index('users_created_at_idx').on(table.createdAt)]
+);
+
+// ============================================================================
+// Goals
+// ============================================================================
+
+/**
+ * Goals table - Stores user learning goals
+ */
+export const goals = pgTable(
+  'goals',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    reasoning: text('reasoning').notNull(),
+    selectedResourceId: uuid('selected_resource_id').references(() => learningResources.id, { onDelete: 'set null' }),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [index('goals_user_id_idx').on(table.userId)]
+);
+
+// ============================================================================
+// Schedules
+// ============================================================================
+
+/**
+ * Day of week type for schedule slots
+ */
+export type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+
+/**
+ * User schedules table - Stores weekly availability for a user's learning goal
+ */
+export const schedules = pgTable(
+  'schedules',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    goalId: uuid('goal_id')
+      .notNull()
+      .references(() => goals.id, { onDelete: 'cascade' }),
+    startDate: timestamp('start_date').notNull(),
+    weeklyHours: real('weekly_hours').notNull(),
+    targetCompletionDate: timestamp('target_completion_date'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [
+    index('schedules_user_id_idx').on(table.userId),
+    index('schedules_goal_id_idx').on(table.goalId)
+  ]
+);
+
+/**
+ * Schedule slots table - Individual time slots within a schedule
+ */
+export const scheduleSlots = pgTable(
+  'schedule_slots',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    scheduleId: uuid('schedule_id')
+      .notNull()
+      .references(() => schedules.id, { onDelete: 'cascade' }),
+    dayOfWeek: text('day_of_week').$type<DayOfWeek>().notNull(),
+    startTime: text('start_time').notNull(), // Format: "HH:MM"
+    endTime: text('end_time').notNull(), // Format: "HH:MM"
+    durationMinutes: integer('duration_minutes').notNull()
+  },
+  (table) => [index('schedule_slots_schedule_id_idx').on(table.scheduleId)]
+);
+
+// ============================================================================
 // Learning Resources System
 // ============================================================================
 
@@ -109,5 +204,41 @@ export const resourceEmbeddingsRelations = relations(resourceEmbeddings, ({ one 
   section: one(learningResourceSections, {
     fields: [resourceEmbeddings.sectionId],
     references: [learningResourceSections.id]
+  })
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  goals: many(goals),
+  schedules: many(schedules)
+}));
+
+export const goalsRelations = relations(goals, ({ one, many }) => ({
+  user: one(users, {
+    fields: [goals.userId],
+    references: [users.id]
+  }),
+  selectedResource: one(learningResources, {
+    fields: [goals.selectedResourceId],
+    references: [learningResources.id]
+  }),
+  schedules: many(schedules)
+}));
+
+export const schedulesRelations = relations(schedules, ({ one, many }) => ({
+  user: one(users, {
+    fields: [schedules.userId],
+    references: [users.id]
+  }),
+  goal: one(goals, {
+    fields: [schedules.goalId],
+    references: [goals.id]
+  }),
+  slots: many(scheduleSlots)
+}));
+
+export const scheduleSlotsRelations = relations(scheduleSlots, ({ one }) => ({
+  schedule: one(schedules, {
+    fields: [scheduleSlots.scheduleId],
+    references: [schedules.id]
   })
 }));

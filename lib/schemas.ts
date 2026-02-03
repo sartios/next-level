@@ -30,14 +30,11 @@ const LearningResourceSchema = z.object({
   updatedAt: z.string()
 });
 
-const LearningResourceWithSectionsSchema = LearningResourceSchema.extend({
+export const LearningResourceWithSectionsSchema = LearningResourceSchema.extend({
   sections: z.array(LearningResourceSectionSchema)
 });
 
-export const GoalResourceSchema = LearningResourceWithSectionsSchema.extend({
-  relevancePercentage: z.number().describe('The relevance percentage of the resource to the goal'),
-  reasoning: z.string().describe('The reason of resource relevance to the skill')
-});
+export const GoalResourceSchema = LearningResourceWithSectionsSchema;
 
 export const RoadmapStepStatusSchema = z.enum(['pending', 'started', 'completed']).describe('The status of the roadmap step');
 

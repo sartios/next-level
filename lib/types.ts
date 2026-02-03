@@ -49,7 +49,4 @@ export interface EmbeddingSearchResult {
   resource?: LearningResourceWithSections;
 }
 
-export type GoalResource = LearningResourceWithSections & {
-  relevancePercentage: number;
-  reasoning: string;
-};
+export type GoalResource = LearningResourceWithSections;

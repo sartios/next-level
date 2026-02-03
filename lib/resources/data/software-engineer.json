@@ -1,0 +1,568 @@
+{
+  "resources": [
+    {
+      "url": "https://upskillcourses.com/courses/cryptocurrency-tracker",
+      "title": "How to Use APIs: Cryptocurrency Tracker",
+      "provider": "upskill",
+      "resourceType": "course",
+      "description": "Build a mini cryptocurrency tracker while applying JavaScript skills and integrating APIs. Learn practical experience in data fetching and application communication, with lessons from expert Mike Dane. Skills gained are transferable to diverse API-driven projects, making this a hands-on, practical learning experience.",
+      "learningObjectives": [
+        "Apply JavaScript skills to build a functional mini-application.",
+        "Integrate and interact with external APIs.",
+        "Fetch, process, and display dynamic data in an application.",
+        "Understand practical API communication between applications.",
+        "Develop transferable skills for building API-driven projects."
+      ],
+      "targetAudience": [
+        "Aspiring JavaScript developers",
+        "Learners with basic programming knowledge seeking hands-on projects",
+        "Students interested in API integration",
+        "Developers looking to practice building mini-applications"
+      ],
+      "totalHours": 1,
+      "sections": [
+        {
+          "title": "Introduction",
+          "estimatedMinutes": 5,
+          "topics": ["Intro"]
+        },
+        {
+          "title": "API Basics & Setup",
+          "estimatedMinutes": 20,
+          "topics": ["Crypto Compare Api", "Http Requests"]
+        },
+        {
+          "title": "Fetching & Displaying Data",
+          "estimatedMinutes": 25,
+          "topics": ["Getting Coin Prices", "Displaying Coin Prices", "Updating Prices"]
+        },
+        {
+          "title": "Review & Wrap-up",
+          "estimatedMinutes": 5,
+          "topics": ["Code Review"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.codecademy.com/learn/learn-next-js",
+      "title": "Learn Next.js",
+      "provider": "code academy",
+      "resourceType": "course",
+      "description": "Unlock the full potential of Next.js in this comprehensive course designed for web developers aiming to elevate their applications. Explore server-side and client-side rendering, dynamic routing, and Next.js’s powerful optimization. With hands-on lessons on Next.js’s file-based routing system, data fetching, and optimization, you’ll gain the skills to create high-performing, scalable, and SEO-friendly web applications. Whether you’re transitioning from React or starting fresh, this course offers the insights to leverage Next.js to its fullest.",
+      "learningObjectives": [
+        "Utilize Next.js for advanced server and client-side rendering",
+        "Implement dynamic routing and navigation with Next.js Router",
+        "Optimize web apps using Next.js optimization techniques"
+      ],
+      "targetAudience": [
+        "Intermediate web developers familiar with JavaScript and React",
+        "Developers aiming to build scalable, high‑performance web applications",
+        "Learners seeking to master Next.js features like routing and data fetching",
+        "Frontend engineers expanding into full‑stack React frameworks",
+        "Codecademy users ready for advanced web development challenges"
+      ],
+      "totalHours": 12,
+      "sections": [
+        {
+          "title": "Fundamentals of Next.js",
+          "estimatedMinutes": 180,
+          "topics": ["Next.js Core Concepts", "Next.js Routing"]
+        },
+        {
+          "title": "Component Architecture",
+          "estimatedMinutes": 150,
+          "topics": ["Next.js Server Components"]
+        },
+        {
+          "title": "Data Management",
+          "estimatedMinutes": 180,
+          "topics": ["Next.js Data Fetching"]
+        },
+        {
+          "title": "Performance & Optimization",
+          "estimatedMinutes": 120,
+          "topics": ["Next.js Optimization"]
+        },
+        {
+          "title": "Deployment & Capstone",
+          "estimatedMinutes": 90,
+          "topics": ["Next.js Deployment", "Projects and Quizzes"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.codecademy.com/learn/ext-paths/certified-information-systems-security-professional-cissp-journey",
+      "title": "Certified Information Systems Security Professional CISSP",
+      "provider": "code academy",
+      "resourceType": "course",
+      "description": "Prepare for the CISSP certification with a structured journey covering all eight core domains of information security. Gain essential knowledge in risk management, network security, IAM, and more, with curated resources designed to guide your study and boost readiness for this globally recognized professional exam.",
+      "learningObjectives": [
+        "Master the eight CISSP domains, including security and risk management, asset security, and network security.",
+        "Understand and apply security governance, policies, and compliance best practices.",
+        "Develop skills in identity and access management, security operations, and assessment/testing.",
+        "Design and evaluate secure architectures and engineering controls.",
+        "Prepare effectively for the CISSP certification exam through structured study and resources."
+      ],
+      "targetAudience": [
+        "Aspiring information security professionals",
+        "IT and cybersecurity specialists seeking CISSP certification",
+        "Experienced security practitioners aiming to validate expertise",
+        "Professionals preparing for advanced security roles",
+        "Learners wanting structured guidance for the CISSP exam"
+      ],
+      "totalHours": 19,
+      "sections": [
+        {
+          "title": "Security Foundations & Governance",
+          "estimatedMinutes": 210,
+          "topics": ["Security and Risk Management", "Professional Ethics and Security Concepts", "Security Governance & Compliance"]
+        },
+        {
+          "title": "Asset Protection & Engineering",
+          "estimatedMinutes": 200,
+          "topics": ["Asset Security", "Security Architecture and Engineering", "Secure Design Principles"]
+        },
+        {
+          "title": "Network & Communication Security",
+          "estimatedMinutes": 190,
+          "topics": ["Communication and Network Security", "Secure Network Components", "Secure Communication Channels"]
+        },
+        {
+          "title": "Identity, Access & Testing",
+          "estimatedMinutes": 180,
+          "topics": ["Identity and Access Management (IAM)", "Security Assessment and Testing", "Audit and Control Strategy"]
+        },
+        {
+          "title": "Operations & Response",
+          "estimatedMinutes": 180,
+          "topics": ["Security Operations", "Incident Management", "Monitoring, Logging and Recovery"]
+        },
+        {
+          "title": "Software Security & Exam Preparation",
+          "estimatedMinutes": 180,
+          "topics": ["Software Development Security", "Exam Readiness", "Practice Questions"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.codecademy.com/learn/learn-intermediate-php",
+      "title": "Learn Intermediate PHP",
+      "provider": "code academy",
+      "resourceType": "course",
+      "description": "Take your PHP skills to the next level with Intermediate PHP. This course focuses on creating dynamic web applications by leveraging databases, file handling, APIs, and more. You’ll also learn how to set up PHP on your computer using XAMPP, empowering you to build functional and interactive projects.",
+      "learningObjectives": [
+        "Managing databases to store and retrieve data",
+        "Working with external APIs for dynamic applications",
+        "Performing file handling in PHP",
+        "Setting up a local PHP environment with XAMPP"
+      ],
+      "targetAudience": [
+        "Intermediate web developers with basic PHP experience",
+        "Learners who have completed an introductory PHP course",
+        "Developers building dynamic web applications",
+        "Programmers wanting to work with databases and APIs in PHP",
+        "Back-end developers aiming to expand backend development skills"
+      ],
+      "totalHours": 4,
+      "sections": [
+        {
+          "title": "Databases & Server Setup",
+          "estimatedMinutes": 90,
+          "topics": ["Connecting to Databases", "Going Off-Platform with PHP"]
+        },
+        {
+          "title": "File Handling & APIs",
+          "estimatedMinutes": 120,
+          "topics": ["File Handling", "APIs"]
+        },
+        {
+          "title": "Practice & Application",
+          "estimatedMinutes": 90,
+          "topics": ["Project: CodeClub", "Project: Aisha’s Greetings"]
+        },
+        {
+          "title": "Review & Assessment",
+          "estimatedMinutes": 40,
+          "topics": ["Quiz: Connecting to Databases", "Quiz: File Handling"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.codecademy.com/learn/learn-redux",
+      "title": "Learn Redux",
+      "provider": "code academy",
+      "resourceType": "course",
+      "description": "Learn Redux, the powerful state-management library widely used with React to handle complex data sharing between components. With a focus on predictable, reliable apps, Redux helps you manage state in an efficient and scalable way. This course will guide you from core concepts to advanced tools, empowering you to create better React applications.",
+      "learningObjectives": [
+        "Learn core Redux concepts: reducers, stores, actions",
+        "Use Redux Toolkit, React Redux, Redux Thunk",
+        "Manage state in complex React apps",
+        "Build scalable, predictable applications with Redux"
+      ],
+      "targetAudience": [
+        "Intermediate JavaScript and React developers wanting to manage application state with Redux",
+        "Frontend engineers who need predictable, scalable state management in React apps",
+        "Developers aiming to enhance React applications with Redux Toolkit and middleware",
+        "Learners prepared with JavaScript and React fundamentals seeking practical Redux skills",
+        "Software developers building real-world projects and state‑driven interfaces"
+      ],
+      "totalHours": 8,
+      "sections": [
+        {
+          "title": "Core Redux Fundamentals",
+          "estimatedMinutes": 120,
+          "topics": ["Core Concepts in Redux", "Reducers, actions, state, and store"]
+        },
+        {
+          "title": "Using the Redux API",
+          "estimatedMinutes": 110,
+          "topics": ["Core Redux API methods", "Integrating Redux state into apps"]
+        },
+        {
+          "title": "Simplifying Redux with Redux Toolkit",
+          "estimatedMinutes": 100,
+          "topics": ["Redux Toolkit basics", "Refactoring apps with Redux Toolkit"]
+        },
+        {
+          "title": "Async Actions with Middleware & Thunks",
+          "estimatedMinutes": 110,
+          "topics": ["Handling asynchronous actions", "Middleware and thunk patterns"]
+        },
+        {
+          "title": "Hands‑On Projects",
+          "estimatedMinutes": 200,
+          "topics": ["Project: Redux Road", "Project: Codecademy Store", "Project: Expense Tracker", "Project: Redux News Reader"]
+        },
+        {
+          "title": "Quizzes & Knowledge Checks",
+          "estimatedMinutes": 200,
+          "topics": ["Quiz: Core Concepts", "Quiz: Redux API", "Quiz: Redux Toolkit", "Quiz: Middleware and Thunks"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.coursera.org/learn/react-native-course",
+      "title": "React Native Meta",
+      "provider": "coursera",
+      "resourceType": "course",
+      "description": "Fundamentals of React Native app development: build cross‑platform mobile UIs, core components, navigation, and interactivity with hands‑on modules and projects, earning a shareable certificate upon completion.",
+      "learningObjectives": [
+        "Build single-page React Native apps using core components like View, Text, and StyleSheet",
+        "Style components and layouts effectively using React Native styling methods",
+        "Create large, performant lists with FlatList and SectionList components",
+        "Configure and handle user inputs with TextInput components",
+        "Implement interactive elements using Pressable and other UI components",
+        "Set up navigation and transition between screens using React Navigation",
+        "Gain hands-on experience with React, JSX, and mobile development tools like Expo and Visual Studio Code",
+        "Prepare for a career in cross-platform mobile app development"
+      ],
+      "targetAudience": [
+        "Aspiring mobile app developers",
+        "Web developers looking to transition to mobile development",
+        "Students and professionals interested in cross-platform app development",
+        "Beginner to intermediate programmers seeking hands-on React Native experience",
+        "Developers aiming to build interactive and responsive mobile applications"
+      ],
+      "totalHours": 40,
+      "sections": [
+        {
+          "title": "Basics & UI Foundations",
+          "estimatedMinutes": 510,
+          "topics": [
+            "Introduction to React Native basics and setup",
+            "Building single‑page applications with View, Text, StyleSheet",
+            "Understanding core components and expo tooling"
+          ]
+        },
+        {
+          "title": "Lists & User Inputs",
+          "estimatedMinutes": 540,
+          "topics": ["Performant list rendering (FlatList, SectionList)", "Configuring TextInput and handling keyboard inputs"]
+        },
+        {
+          "title": "Interactivity & UI Enhancements",
+          "estimatedMinutes": 510,
+          "topics": [
+            "Using Pressable for interactive elements",
+            "Displaying and styling Images",
+            "Exploring React Native hooks (useColorScheme, useWindowDimensions)"
+          ]
+        },
+        {
+          "title": "Navigation Patterns",
+          "estimatedMinutes": 540,
+          "topics": ["Setting up React Navigation", "Stack, Tab and Drawer navigation", "Screen transitions and passing props"]
+        },
+        {
+          "title": "Project Practice",
+          "estimatedMinutes": 300,
+          "topics": ["Culmination project reflecting course skills"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=NMOdEHyMXBo",
+      "title": "Android App Development Full Course with PRACTICAL ( Beginners to Advanced ) ",
+      "provider": "youtube",
+      "resourceType": "course",
+      "description": "A comprehensive Android app development video course covering fundamentals to advanced topics like UI design, background services, notifications, app architecture, performance optimization, and publishing real apps with Android Studio through practical, step‑by‑step projects and examples.",
+      "learningObjectives": [
+        "Set up Android Studio and configure the development environment for building Android apps",
+        "Understand core Android components such as Activities, Fragments, and Intents",
+        "Design user interfaces using layouts, UI widgets, and XML",
+        "Write Android app logic using Java and/or Kotlin programming languages",
+        "Work with data storage options like SQLite and shared preferences",
+        "Integrate networking and APIs, parsing JSON responses",
+        "Debug, test, and optimize Android applications for performance",
+        "Use practical, hands‑on projects to build real Android applications"
+      ],
+      "targetAudience": [
+        "Aspiring Android developers",
+        "Beginner to intermediate programmers interested in mobile app development",
+        "Students and professionals looking to build real Android applications",
+        "Developers transitioning from other programming languages to Kotlin",
+        "Software engineers seeking hands-on experience with Android Studio and app deployment"
+      ],
+      "totalHours": 34,
+      "sections": [
+        {
+          "title": "Introduction & Environment Setup",
+          "estimatedMinutes": 180,
+          "topics": [
+            "Installing Android Studio and SDK setup",
+            "Creating first Android project",
+            "Understanding Android Studio interface and tools"
+          ]
+        },
+        {
+          "title": "Core Android Fundamentals",
+          "estimatedMinutes": 540,
+          "topics": [
+            "Activities, lifecycle, and Intents",
+            "Layouts and UI components (XML)",
+            "Java/Kotlin basics in Android context",
+            "Handling user input and events"
+          ]
+        },
+        {
+          "title": "UI Design & Navigation",
+          "estimatedMinutes": 480,
+          "topics": ["Designing layouts with XML", "RecyclerView/ListView and adapters", "Navigation between screens and passing data"]
+        },
+        {
+          "title": "Data & Persistence",
+          "estimatedMinutes": 360,
+          "topics": ["Local storage with SharedPreferences", "SQLite/Room databases", "Working with data in Android apps"]
+        },
+        {
+          "title": "Advanced Features & APIs",
+          "estimatedMinutes": 480,
+          "topics": ["Networking and API integration", "Background services and notifications", "Performance optimization and debugging"]
+        },
+        {
+          "title": "Practical Projects & Deployment",
+          "estimatedMinutes": 300,
+          "topics": ["Building real applications", "Testing and debugging workflows", "Publishing Android apps to Google Play"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.edx.org/certificates/professional-certificate/ibm-generative-ai-for-cybersecurity",
+      "title": "Generative AI for Cybersecurity",
+      "provider": "edX",
+      "resourceType": "course",
+      "description": "A hands-on IBM program teaching how to integrate generative AI into cybersecurity workflows. Learn AI models, prompting strategies, threat intelligence automation, and risk assessment while building real-world projects and a portfolio to prepare for high-demand cybersecurity roles with competitive salaries.",
+      "learningObjectives": [
+        "Understand the role of generative AI in cybersecurity workflows",
+        "Differentiate between generative AI and discriminative AI",
+        "Explore real-world use cases of AI in threat detection and security operations",
+        "Learn key prompting strategies, including zero-shot and few-shot learning",
+        "Work with AI tools like IBM watsonx, Prompt Lab, Spellbook, and Dust",
+        "Enhance threat intelligence and automate User and Entity Behavior Analytics (UEBA)",
+        "Summarize security reports and optimize cybersecurity playbooks using AI",
+        "Assess AI risks and vulnerabilities in cybersecurity applications",
+        "Analyze real-world case studies to understand AI-driven threat mitigation",
+        "Build a portfolio demonstrating AI-powered cybersecurity skills"
+      ],
+      "targetAudience": [
+        "Aspiring cybersecurity professionals",
+        "IT and security specialists looking to integrate AI into workflows",
+        "Software developers seeking to enter the cybersecurity field",
+        "Engineers aiming to enhance skills with AI-driven security tools",
+        "Students or career changers interested in AI-powered threat detection and automation"
+      ],
+      "totalHours": 38,
+      "sections": [
+        {
+          "title": "Foundations of Generative AI",
+          "estimatedMinutes": 480,
+          "topics": [
+            "Introduction to generative AI concepts",
+            "Difference between generative and discriminative AI",
+            "Real‑world use cases across text, image, audio, and code",
+            "Overview of popular generative AI models and tools"
+          ]
+        },
+        {
+          "title": "Prompt Engineering & AI Tools",
+          "estimatedMinutes": 540,
+          "topics": [
+            "Principles of prompt engineering and best practices",
+            "Zero‑shot and few‑shot prompting techniques",
+            "Hands‑on use of tools like IBM watsonx, Prompt Lab, Spellbook, Dust",
+            "Creating effective prompts for cybersecurity scenarios"
+          ]
+        },
+        {
+          "title": "AI in Cybersecurity Practices",
+          "estimatedMinutes": 600,
+          "topics": [
+            "Applying generative AI to threat intelligence and analytics",
+            "Automating User and Entity Behavior Analytics (UEBA)",
+            "Using AI for report summarization and playbook optimization",
+            "Real‑world case studies: phishing, malware, NLP‑based threats"
+          ]
+        },
+        {
+          "title": "Applied Projects & Portfolio",
+          "estimatedMinutes": 420,
+          "topics": [
+            "Hands‑on labs with generative AI in security workflows",
+            "Capstone or project work addressing cybersecurity use cases",
+            "Assessment of AI risks and mitigation strategies",
+            "Building a showcase portfolio for potential employers"
+          ]
+        },
+        {
+          "title": "Review & Mastery",
+          "estimatedMinutes": 240,
+          "topics": [
+            "Consolidation of key concepts and techniques",
+            "Practice assessments and self‑study",
+            "Reflection on ethical considerations and security risks",
+            "Preparation for certification or career readiness"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://www.alchemy.com/university/courses/ethereum",
+      "title": "Ethereum Developer Bootcamp",
+      "provider": "alchemy",
+      "resourceType": "course",
+      "description": "A comprehensive Ethereum Developer Bootcamp teaching EVM fundamentals, cryptography, Solidity smart contracts, blockchain data structures, and full dApp development with interactive coding challenges, projects, and community support to prepare learners for web3 engineering roles.",
+      "learningObjectives": [
+        "Understand Ethereum blockchain fundamentals and the Ethereum Virtual Machine (EVM)",
+        "Learn Solidity programming for writing smart contracts",
+        "Develop decentralized applications (dApps) on Ethereum",
+        "Explore blockchain data structures, transactions, and cryptography",
+        "Interact with Ethereum using web3.js and Alchemy tools",
+        "Deploy and test smart contracts on testnets",
+        "Build end-to-end blockchain projects and hands-on exercises"
+      ],
+      "targetAudience": [
+        "Aspiring blockchain and Ethereum developers",
+        "Web developers seeking to transition to decentralized applications",
+        "Students and professionals interested in Web3 and smart contract development",
+        "Programmers looking to learn Solidity and Ethereum dApp deployment",
+        "Software engineers aiming to understand blockchain infrastructure and web3 tools"
+      ],
+      "totalHours": 50,
+      "sections": [
+        {
+          "title": "Blockchain & Ethereum Fundamentals",
+          "estimatedMinutes": 480,
+          "topics": [
+            "Blockchain cryptography and core principles",
+            "Blockchain balances and data structures",
+            "Ethereum architecture and state machine"
+          ]
+        },
+        {
+          "title": "Smart Contract Basics",
+          "estimatedMinutes": 540,
+          "topics": [
+            "Introduction to Solidity syntax",
+            "Data types and basic contract structure",
+            "Writing and deploying basic smart contracts"
+          ]
+        },
+        {
+          "title": "Solidity Intermediate Concepts",
+          "estimatedMinutes": 600,
+          "topics": ["Core Solidity features and control structures", "Reference and complex types", "Error handling, mappings, structs"]
+        },
+        {
+          "title": "Advanced Solidity & Projects",
+          "estimatedMinutes": 480,
+          "topics": [
+            "Mastering advanced Solidity constructs",
+            "Project‑based coding challenges",
+            "Building real contracts with patterns and practices"
+          ]
+        },
+        {
+          "title": "Governance & Contract Interaction",
+          "estimatedMinutes": 420,
+          "topics": ["Smart contract governance models", "Interaction patterns between contracts", "Governance‑focused project modules"]
+        },
+        {
+          "title": "Capstone Projects & Integration",
+          "estimatedMinutes": 480,
+          "topics": ["Hands‑on projects using Ethereum tooling", "Deploying full dApps", "Integration with web3 libraries and front‑end"]
+        }
+      ]
+    },
+    {
+      "url": "https://www.alchemy.com/university/courses/solidity",
+      "title": "Learn Solidity",
+      "provider": "alchemy",
+      "resourceType": "course",
+      "description": "A free intermediate Solidity course teaching Solidity syntax, best practices, and smart contract development for Ethereum EVM chains, with in‑browser coding, Foundry test cases, and real‑world projects like voting dApps and escrow contracts.",
+      "learningObjectives": [
+        "Understand Solidity syntax and core programming concepts",
+        "Develop and deploy smart contracts on Ethereum-compatible blockchains",
+        "Write secure and efficient Solidity code following best practices",
+        "Test contracts using Foundry and other development tools",
+        "Build real-world projects such as voting dApps and escrow contracts",
+        "Debug, audit, and optimize smart contracts for security and performance",
+        "Integrate smart contracts with front-end applications using web3 libraries"
+      ],
+      "targetAudience": [
+        "Intermediate blockchain developers",
+        "Ethereum developers seeking to deepen Solidity skills",
+        "Programmers familiar with smart contracts and dApp development",
+        "Web3 developers looking to build secure and efficient contracts",
+        "Tech enthusiasts aiming to work on real-world blockchain projects"
+      ],
+      "totalHours": 15,
+      "sections": [
+        {
+          "title": "Introduction & Solidity Basics",
+          "estimatedMinutes": 120,
+          "topics": ["Solidity Introduction", "Learn Smart Contracts and Basic Solidity Syntax"]
+        },
+        {
+          "title": "Address Interactions & Value Transfer",
+          "estimatedMinutes": 180,
+          "topics": ["Sending Ether between addresses", "Data interactions across addresses"]
+        },
+        {
+          "title": "Reference Types in Solidity",
+          "estimatedMinutes": 120,
+          "topics": ["Arrays and Structs", "Mappings and other reference types"]
+        },
+        {
+          "title": "Applied Solidity Projects",
+          "estimatedMinutes": 300,
+          "topics": ["Building Voting dApp contract", "Implementing Escrow contract", "Hands‑on smart contract examples"]
+        },
+        {
+          "title": "Practice & Review",
+          "estimatedMinutes": 180,
+          "topics": ["Reinforcing core syntax and reference types", "Consolidation of lessons"]
+        }
+      ]
+    }
+  ]
+}
