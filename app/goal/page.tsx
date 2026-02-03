@@ -4,17 +4,26 @@ import { useEffect, useState } from 'react';
 import ActiveRoadmap from '@/components/GoalPage/ActiveRoadmap';
 import MotivationalHeader from '@/components/GoalPage/MotivationalHeader';
 import { Goal } from '@/lib/mockDb';
+import { getGoalId, getUserId } from '@/lib/storage';
 
 export default function GoalPage() {
-  const userId = '123';
+  const [userId, setUserId] = useState<string | null>(null);
+  const [goalId, setGoalId] = useState<string | null>(null);
   const [goal, setGoal] = useState<Goal | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setUserId(getUserId());
+    setGoalId(getGoalId());
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
     const fetchGoal = async () => {
       try {
-        const response = await fetch(`/api/users/${userId}/goal`);
+        const response = await fetch(`/api/users/${userId}/goals/${goalId}`);
 
         if (!response.ok) {
           throw new Error(`API Error: ${response.status}`);
@@ -31,7 +40,7 @@ export default function GoalPage() {
     };
 
     fetchGoal();
-  }, []);
+  }, [goalId, userId]);
 
   if (error) {
     return (

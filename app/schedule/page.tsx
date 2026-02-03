@@ -1,10 +1,11 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import ControlsSidebar from '@/components/SchedulePage/ControlsSidebar';
 import Calendar from '@/components/SchedulePage/Calendar';
+import { getUserId, getGoalId } from '@/lib/storage';
 
 interface GoalWithResource {
   id: string;
@@ -21,11 +22,14 @@ function ScheduleContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [goal, setGoal] = useState<GoalWithResource | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [goalId, setGoalId] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  const userId = searchParams.get('userId');
-  const goalId = searchParams.get('goalId');
+  useEffect(() => {
+    setUserId(getUserId());
+    setGoalId(getGoalId());
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,7 +112,7 @@ function ScheduleContent() {
       if (!response.ok) {
         throw new Error('Failed to save availability');
       }
-      router.push(`/goal?goalId=${goalId}`);
+      router.push('/goal');
     } catch (error) {
       console.error('Error saving schedule:', error);
     } finally {
@@ -145,22 +149,5 @@ function ScheduleContent() {
 }
 
 export default function SchedulePage() {
-  return (
-    <Suspense fallback={<ScheduleLoading />}>
-      <ScheduleContent />
-    </Suspense>
-  );
-}
-
-function ScheduleLoading() {
-  return (
-    <div className="max-w-6xl mx-auto px-6 py-12">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-        <div className="space-y-2">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight">Architect your week</h1>
-          <p className="text-xl text-muted-foreground font-medium leading-relaxed">Loading...</p>
-        </div>
-      </header>
-    </div>
-  );
+  return <ScheduleContent />;
 }
