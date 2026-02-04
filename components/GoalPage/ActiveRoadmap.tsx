@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Check, X, MoreVertical, Rocket, Circle } from 'lucide-react';
 import { useState, useCallback } from 'react';
+import { toast } from 'sonner';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { PlanSessionStatus } from '@/lib/db/schema';
 import type { WeeklyPlanWithSessions } from '@/lib/db/weeklyPlanRepository';
@@ -63,7 +64,13 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
     async (sessionId: string, newStatus: PlanSessionStatus) => {
       if (!goal) return;
 
+      // Store previous status for rollback
+      const previousStatus = localSessions.get(sessionId);
+
+      // Optimistic update
+      setLocalSessions((prev) => new Map(prev).set(sessionId, newStatus));
       setUpdatingSessionId(sessionId);
+
       try {
         const response = await fetch(`/api/users/${goal.userId}/goals/${goal.id}/sessions/${sessionId}`, {
           method: 'PATCH',
@@ -71,16 +78,40 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
           body: JSON.stringify({ status: newStatus })
         });
 
-        if (response.ok) {
-          setLocalSessions((prev) => new Map(prev).set(sessionId, newStatus));
+        if (!response.ok) {
+          // Rollback optimistic update
+          if (previousStatus !== undefined) {
+            setLocalSessions((prev) => new Map(prev).set(sessionId, previousStatus));
+          } else {
+            setLocalSessions((prev) => {
+              const next = new Map(prev);
+              next.delete(sessionId);
+              return next;
+            });
+          }
+
+          const data = await response.json().catch(() => ({}));
+          const errorMessage = data.errorMessage || 'Failed to update session';
+          toast.error(errorMessage);
         }
       } catch (error) {
-        console.error('Failed to update session status:', error);
+        // Rollback optimistic update on network error
+        if (previousStatus !== undefined) {
+          setLocalSessions((prev) => new Map(prev).set(sessionId, previousStatus));
+        } else {
+          setLocalSessions((prev) => {
+            const next = new Map(prev);
+            next.delete(sessionId);
+            return next;
+          });
+        }
+
+        toast.error(`Failed to update session ${(error as unknown as Error).message}`);
       } finally {
         setUpdatingSessionId(null);
       }
     },
-    [goal]
+    [goal, localSessions]
   );
 
   const toggleSessionCompletion = useCallback(

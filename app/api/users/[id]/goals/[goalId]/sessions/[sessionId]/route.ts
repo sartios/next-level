@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { updateSessionStatus, getPlanSessionById } from '@/lib/db/weeklyPlanRepository';
+import { updateSessionStatus, getPlanSessionById, getWeeklyPlanById } from '@/lib/db/weeklyPlanRepository';
 import { getGoalById } from '@/lib/db/goalRepository';
 import { type PlanSessionStatus } from '@/lib/db/schema';
 
@@ -44,6 +44,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (!existingSession) {
       return new Response(JSON.stringify({ errorMessage: 'Session not found' }), {
         status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const weeklyPlan = await getWeeklyPlanById(existingSession.weeklyPlanId);
+    if (!weeklyPlan || weeklyPlan.goalId !== goalId) {
+      return new Response(JSON.stringify({ errorMessage: 'Session does not belong to this goal' }), {
+        status: 403,
         headers: { 'Content-Type': 'application/json' }
       });
     }
