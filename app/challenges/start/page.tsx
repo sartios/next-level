@@ -40,7 +40,7 @@ interface ChallengeProgressData {
   answers: Record<number, { answer: string; isCorrect: boolean }>;
   correctAnswers: number;
   earnedPoints: number;
-  isComplete: boolean;
+  status: 'not_started' | 'in_progress' | 'completed';
 }
 
 const DIFFICULTY_CONFIG = {
@@ -123,7 +123,7 @@ function ChallengeContent() {
         const progressData: ChallengeProgressData = await progressResponse.json();
 
         // Restore progress state
-        if (progressData.isComplete) {
+        if (progressData.status === 'completed') {
           // Challenge was already completed, show summary
           setAnsweredQuestions(progressData.answers);
           setCorrectAnswersCount(progressData.correctAnswers);

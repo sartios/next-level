@@ -57,6 +57,13 @@
       "when": 1770238897662,
       "tag": "0007_oval_lily_hollister",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1770243211825,
+      "tag": "0008_parched_killraven",
+      "breakpoints": true
     }
   ]
 }

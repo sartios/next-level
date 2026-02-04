@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getGoalById } from '@/lib/db/goalRepository';
 import { getChallengeById, unlockNextDifficulty } from '@/lib/db/challengeRepository';
+import { markComplete, getOrCreateProgress } from '@/lib/db/challengeProgressRepository';
 import { startGenerateChallengesJob } from '@/lib/jobs/generateChallengesJob';
 
 interface RouteParams {
@@ -67,9 +68,24 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     });
   }
 
+  // Check if already completed
+  const existingProgress = await getOrCreateProgress(challengeId, userId);
+  if (existingProgress.status === 'completed') {
+    return new Response(JSON.stringify({ errorMessage: 'Challenge already completed' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   // Calculate score percentage
   const scorePercentage = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
   const passed = scorePercentage >= 50;
+
+  // Calculate points (10 points per correct answer)
+  const earnedPoints = correctAnswers * 10;
+
+  // Mark the challenge progress as complete
+  await markComplete(challengeId, userId, correctAnswers, earnedPoints);
 
   let unlockedChallenge = null;
 

@@ -255,6 +255,14 @@ export type ChallengeDifficulty = 'easy' | 'medium' | 'hard';
 export type ChallengeStatus = 'locked' | 'pending' | 'generating' | 'complete' | 'failed';
 
 /**
+ * Challenge progress status
+ * - not_started: Progress record exists but no questions answered
+ * - in_progress: User has started answering questions
+ * - completed: User has finished the challenge
+ */
+export type ChallengeProgressStatus = 'not_started' | 'in_progress' | 'completed';
+
+/**
  * Challenges table - Stores challenge metadata per resource section
  * These are created when a goal selects a resource, and questions are generated in background
  */
@@ -326,7 +334,7 @@ export const challengeProgress = pgTable(
     answers: jsonb('answers').$type<Record<number, { answer: string; isCorrect: boolean }>>().default({}).notNull(),
     correctAnswers: integer('correct_answers').default(0).notNull(),
     earnedPoints: integer('earned_points').default(0).notNull(),
-    isComplete: integer('is_complete').default(0).notNull(),
+    status: text('status').$type<ChallengeProgressStatus>().default('not_started').notNull(),
     startedAt: timestamp('started_at').defaultNow().notNull(),
     lastActivityAt: timestamp('last_activity_at').defaultNow().notNull(),
     completedAt: timestamp('completed_at')

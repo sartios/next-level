@@ -1,6 +1,6 @@
 import { eq, and, inArray } from 'drizzle-orm';
 import { requireDb } from './index';
-import { challengeProgress } from './schema';
+import { challengeProgress, type ChallengeProgressStatus } from './schema';
 
 // ============================================================================
 // Types
@@ -14,7 +14,7 @@ export interface ChallengeProgress {
   answers: Record<number, { answer: string; isCorrect: boolean }>;
   correctAnswers: number;
   earnedPoints: number;
-  isComplete: boolean;
+  status: ChallengeProgressStatus;
   startedAt: Date;
   lastActivityAt: Date;
   completedAt: Date | null;
@@ -45,10 +45,7 @@ export async function getOrCreateProgress(challengeId: string, visitorId: string
     .limit(1);
 
   if (existing.length > 0) {
-    return {
-      ...existing[0],
-      isComplete: existing[0].isComplete === 1
-    };
+    return existing[0];
   }
 
   // Create new progress
@@ -61,14 +58,11 @@ export async function getOrCreateProgress(challengeId: string, visitorId: string
       answers: {},
       correctAnswers: 0,
       earnedPoints: 0,
-      isComplete: 0
+      status: 'not_started'
     })
     .returning();
 
-  return {
-    ...created,
-    isComplete: false
-  };
+  return created;
 }
 
 /**
@@ -93,22 +87,48 @@ export async function recordAnswer(challengeId: string, visitorId: string, recor
   const newCorrectAnswers = record.isCorrect ? progress.correctAnswers + 1 : progress.correctAnswers;
   const newEarnedPoints = progress.earnedPoints + record.points;
 
-  // Update progress
+  // Update progress - set to in_progress if not already completed
   const [updated] = await db
     .update(challengeProgress)
     .set({
       answers: updatedAnswers,
       correctAnswers: newCorrectAnswers,
       earnedPoints: newEarnedPoints,
+      status: progress.status === 'completed' ? 'completed' : 'in_progress',
       lastActivityAt: new Date()
     })
     .where(eq(challengeProgress.id, progress.id))
     .returning();
 
-  return {
-    ...updated,
-    isComplete: updated.isComplete === 1
-  };
+  return updated;
+}
+
+/**
+ * Mark a challenge as complete
+ */
+export async function markComplete(
+  challengeId: string,
+  visitorId: string,
+  correctAnswers: number,
+  earnedPoints: number
+): Promise<ChallengeProgress> {
+  const db = requireDb();
+
+  const progress = await getOrCreateProgress(challengeId, visitorId);
+
+  const [updated] = await db
+    .update(challengeProgress)
+    .set({
+      correctAnswers,
+      earnedPoints,
+      status: 'completed',
+      completedAt: new Date(),
+      lastActivityAt: new Date()
+    })
+    .where(eq(challengeProgress.id, progress.id))
+    .returning();
+
+  return updated;
 }
 
 /**
@@ -126,27 +146,24 @@ export async function resetProgress(challengeId: string, visitorId: string): Pro
       answers: {},
       correctAnswers: 0,
       earnedPoints: 0,
-      isComplete: 0,
+      status: 'not_started',
       completedAt: null,
       lastActivityAt: new Date()
     })
     .where(eq(challengeProgress.id, progress.id))
     .returning();
 
-  return {
-    ...updated,
-    isComplete: false
-  };
+  return updated;
 }
 
 /**
  * Get progress summary for multiple challenges
- * Returns a map of challengeId -> { hasProgress, answeredCount, isComplete }
+ * Returns a map of challengeId -> { hasProgress, answeredCount, status }
  */
 export async function getProgressForChallenges(
   challengeIds: string[],
   visitorId: string
-): Promise<Record<string, { hasProgress: boolean; answeredCount: number; isComplete: boolean }>> {
+): Promise<Record<string, { hasProgress: boolean; answeredCount: number; status: ChallengeProgressStatus }>> {
   if (challengeIds.length === 0) {
     return {};
   }
@@ -158,14 +175,14 @@ export async function getProgressForChallenges(
     .from(challengeProgress)
     .where(and(inArray(challengeProgress.challengeId, challengeIds), eq(challengeProgress.visitorId, visitorId)));
 
-  const progressMap: Record<string, { hasProgress: boolean; answeredCount: number; isComplete: boolean }> = {};
+  const progressMap: Record<string, { hasProgress: boolean; answeredCount: number; status: ChallengeProgressStatus }> = {};
 
   for (const row of results) {
     const answeredCount = Object.keys(row.answers || {}).length;
     progressMap[row.challengeId] = {
       hasProgress: answeredCount > 0,
       answeredCount,
-      isComplete: row.isComplete === 1
+      status: row.status
     };
   }
 

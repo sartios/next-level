@@ -40,7 +40,7 @@ interface ResourceInfo {
 interface ChallengeProgressInfo {
   hasProgress: boolean;
   answeredCount: number;
-  isComplete: boolean;
+  status: 'not_started' | 'in_progress' | 'completed';
 }
 
 const DIFFICULTY_CONFIG = {
@@ -298,7 +298,7 @@ export default function ChallengesPage() {
                   const isLocked = challenge.status === 'locked';
                   const isGenerating = challenge.status === 'generating';
                   const challengeProgress = progress[challenge.id];
-                  const hasProgress = challengeProgress?.hasProgress && !challengeProgress?.isComplete;
+                  const hasProgress = challengeProgress?.hasProgress && challengeProgress?.status !== 'completed';
 
                   return (
                     <Card
