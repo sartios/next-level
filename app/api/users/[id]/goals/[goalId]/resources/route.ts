@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server';
-import { getGoalById, updateGoalSelectedResource } from '@/lib/db/goalRepository';
+import { getGoalById } from '@/lib/db/goalRepository';
 import { getLearningResourceWithSections } from '@/lib/db/resourceRepository';
-import { createChallengesForGoal, challengesExistForGoal } from '@/lib/db/challengeRepository';
+import { challengesExistForGoal } from '@/lib/db/challengeRepository';
 import { startGenerateChallengesJob } from '@/lib/jobs/generateChallengesJob';
+import { selectResourceAndCreateChallenges } from '@/lib/db/goalResourceService';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string; goalId: string }> }) {
   const { id: userId, goalId } = await params;
@@ -32,32 +33,26 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     });
   }
 
-  // Update the goal with selected resource
-  const updatedGoal = await updateGoalSelectedResource(goalId, resourceId);
+  // Get the resource with its sections
+  const resource = await getLearningResourceWithSections(resourceId);
+  const challengesExist = await challengesExistForGoal(goalId);
 
-  // Get the resource with its sections and create challenge placeholders
-  try {
-    const resource = await getLearningResourceWithSections(resourceId);
-
-    if (resource && resource.sections.length > 0) {
-      const challengesExist = await challengesExistForGoal(goalId);
-
-      if (!challengesExist) {
-        const sections = resource.sections.map((section) => ({
+  // Prepare sections for challenge creation if needed
+  const sections =
+    resource && resource.sections.length > 0 && !challengesExist
+      ? resource.sections.map((section) => ({
           id: section.id,
           title: section.title,
           topics: section.topics || []
-        }));
+        }))
+      : null;
 
-        await createChallengesForGoal(goalId, sections);
+  // Update goal and create challenges atomically in a transaction
+  const updatedGoal = await selectResourceAndCreateChallenges(goalId, resourceId, sections);
 
-        // Start background job to generate challenges
-        startGenerateChallengesJob(userId, goalId);
-      }
-    }
-  } catch (error) {
-    // Log but don't fail - challenges feature may not be set up yet
-    console.warn('Could not create challenge placeholders:', error);
+  // Start background job to generate challenges if we created them
+  if (sections) {
+    startGenerateChallengesJob(userId, goalId);
   }
 
   return new Response(JSON.stringify(updatedGoal), {
