@@ -324,13 +324,13 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                   key={idx}
                                   onClick={() => slot.id && toggleSessionCompletion(slot.id, slot.status)}
                                   disabled={!slot.id || isUpdating}
-                                  className={`min-h-16 w-full min-w-20 rounded-md border-2 flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
+                                  className={`min-h-16 w-full min-w-20 rounded-md flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
                                     slot.status === 'completed'
-                                      ? 'bg-green-50 border-green-200 text-green-800 hover:bg-green-100'
+                                      ? 'bg-green-100 hover:bg-green-200'
                                       : slot.status === 'started'
-                                        ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
+                                        ? 'bg-blue-100  hover:bg-blue-200'
                                         : slot.status === 'missed'
-                                          ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
+                                          ? 'bg-red-100 hover:bg-red-200'
                                           : 'bg-muted border-muted text-muted-foreground hover:bg-muted/80'
                                   } ${slot.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
                                   title={`${slot.topic ? `${slot.topic}\n` : ''}${slot.time} to ${slot.endTime} (${slot.duration}min)${slot.activities.length ? `\n• ${slot.activities.join('\n• ')}` : ''}\n\nClick to mark as ${slot.status === 'completed' ? 'incomplete' : 'completed'}`}
@@ -367,13 +367,13 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                   key={idx}
                                   onClick={() => slot.id && toggleSessionCompletion(slot.id, slot.status)}
                                   disabled={!slot.id || isUpdating}
-                                  className={`min-h-16 w-full min-w-20 rounded-md border-2 flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
+                                  className={`min-h-16 w-full min-w-20 rounded-md flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
                                     slot.status === 'completed'
-                                      ? 'bg-green-50 border-green-200 text-green-800 hover:bg-green-100'
+                                      ? 'bg-green-100  hover:bg-green-200'
                                       : slot.status === 'started'
-                                        ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
+                                        ? 'bg-blue-100  hover:bg-blue-200'
                                         : slot.status === 'missed'
-                                          ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
+                                          ? 'bg-red-100  hover:bg-red-200'
                                           : 'bg-muted border-muted text-muted-foreground hover:bg-muted/80'
                                   } ${slot.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
                                   title={`${slot.topic ? `${slot.topic}\n` : ''}${slot.time} to ${slot.endTime} (${slot.duration}min)${slot.activities.length ? `\n• ${slot.activities.join('\n• ')}` : ''}\n\nClick to mark as ${slot.status === 'completed' ? 'incomplete' : 'completed'}`}
@@ -390,7 +390,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                               );
                             })
                           ) : (
-                            <div className="min-h-16 w-full min-w-20 rounded-md bg-muted/30 border-2 border-dashed border-muted flex items-center justify-center">
+                            <div className="min-h-16 w-full min-w-20 rounded-md bg-muted/30 flex items-center justify-center">
                               <span className="text-sm text-border font-bold">—</span>
                             </div>
                           )}
@@ -462,89 +462,81 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
               <div
                 key={idx}
                 className={`p-3 md:p-6 rounded-xl border-2 transition-all space-y-3 ${
-                  displayStatus === 'completed'
-                    ? 'border-green-200 bg-green-50'
-                    : displayStatus === 'started'
-                      ? 'border-blue-200 bg-blue-50'
-                      : 'border-muted'
+                  displayStatus === 'completed' ? 'border-green-300' : displayStatus === 'started' ? 'border-blue-200' : 'border-muted'
                 }`}
               >
-                <div className="flex items-start gap-4">
-                  {displayStatus === 'completed' && <CheckCircle2 className="hidden md:block h-6 w-6 shrink-0 mt-1" />}
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-start justify-between gap-4">
-                      <h4 className="font-black text-foreground text-lg">
-                        Step {idx + 1}: {step.topic}
-                      </h4>
-                      {displayStatus === 'started' && (
-                        <Badge variant="outline" className="hidden md:inline-flex border-blue-500 text-blue-700 shrink-0">
-                          In Progress
-                        </Badge>
-                      )}
-                      {isSecondPending && (
-                        <Badge variant="outline" className="hidden md:inline-flex border-border shrink-0">
-                          Next Up
-                        </Badge>
-                      )}
-                    </div>
-                    {step.sessions.length > 0 && (
-                      <div>
-                        <p className="text-sm font-bold text-foreground mb-2">Scheduled Sessions:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {step.sessions.map((session, sIdx) => {
-                            // Find which day this session is on
-                            const dayEntry = Object.entries(weeklySchedule).find(([, slots]) =>
-                              slots.some((s) => s.time === session.time && s.topic === session.topic)
-                            );
-                            const dayName = dayEntry ? dayEntry[0] : '';
-                            const isUpdating = Boolean(session.id && updatingSessionId === session.id);
-
-                            return (
-                              <button
-                                key={sIdx}
-                                onClick={() => session.id && toggleSessionCompletion(session.id, session.status)}
-                                disabled={!session.id || isUpdating}
-                                className={`text-sm px-2 py-1 rounded-md flex items-center gap-1 transition-all ${
-                                  session.status === 'completed'
-                                    ? 'border-2 border-green-500 text-green-800 hover:bg-green-200'
-                                    : session.status === 'started'
-                                      ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                                      : session.status === 'missed'
-                                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                        : 'border-2 border-muted text-foreground hover:bg-muted'
-                                } ${session.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
-                                title={`Click to mark as ${session.status === 'completed' ? 'incomplete' : 'completed'}`}
-                              >
-                                {session.status === 'completed' ? (
-                                  <Check className={`h-4 w-4 ${isUpdating ? 'animate-pulse' : ''}`} />
-                                ) : null}
-                                {dayName} {session.time}-{session.endTime} ({session.duration}min)
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <h4 className="font-black text-foreground text-lg">
+                      Step {idx + 1}: {step.topic}
+                    </h4>
+                    {displayStatus === 'completed' && <CheckCircle2 className="hidden md:block h-6 w-6 shrink-0 text-green-500" />}
+                    {displayStatus === 'started' && (
+                      <Badge variant="outline" className="hidden md:inline-flex border-blue-500 text-blue-700 shrink-0">
+                        In Progress
+                      </Badge>
                     )}
-                    {(() => {
-                      // Collect all unique activities from all sessions
-                      const allActivities = [...new Set(step.sessions.flatMap((s) => s.activities))];
-                      return allActivities.length > 0 ? (
-                        <div>
-                          <p className="text-sm xl:text-base font-bold text-border mb-1">Activities:</p>
-                          <ul className="text-sm xl:text-base font-medium text-muted-foreground space-y-1 list-disc list-inside">
-                            {allActivities.map((activity, aIdx) => (
-                              <li key={aIdx}>{activity}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null;
-                    })()}
-                    {displayStatus === 'completed' && (
-                      <Button className="text-lg bg-foreground text-background min-h-11 px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold hover:bg-foreground/90">
-                        Start Challenge
-                      </Button>
+                    {isSecondPending && (
+                      <Badge variant="outline" className="hidden md:inline-flex border-border shrink-0">
+                        Next Up
+                      </Badge>
                     )}
                   </div>
+                  {step.sessions.length > 0 && (
+                    <div>
+                      <p className="text-sm xl:text-base text-foreground mb-2">Scheduled Sessions:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {step.sessions.map((session, sIdx) => {
+                          // Find which day this session is on
+                          const dayEntry = Object.entries(weeklySchedule).find(([, slots]) =>
+                            slots.some((s) => s.time === session.time && s.topic === session.topic)
+                          );
+                          const dayName = dayEntry ? dayEntry[0] : '';
+                          const isUpdating = Boolean(session.id && updatingSessionId === session.id);
+
+                          return (
+                            <button
+                              key={sIdx}
+                              onClick={() => session.id && toggleSessionCompletion(session.id, session.status)}
+                              disabled={!session.id || isUpdating}
+                              className={`border-2 border-muted text-foreground text-sm px-2 py-3 rounded-md flex items-center gap-1 transition-all ${
+                                session.status === 'completed'
+                                  ? ' hover:bg-green-200'
+                                  : session.status === 'started'
+                                    ? ' hover:bg-blue-200'
+                                    : session.status === 'missed'
+                                      ? ' hover:bg-red-200'
+                                      : 'hover:bg-muted'
+                              } ${session.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
+                              title={`Click to mark as ${session.status === 'completed' ? 'incomplete' : 'completed'}`}
+                            >
+                              {session.status === 'completed' ? <Check className={`h-4 w-4 ${isUpdating ? 'animate-pulse' : ''}`} /> : null}
+                              {dayName} {session.time}-{session.endTime}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {(() => {
+                    // Collect all unique activities from all sessions
+                    const allActivities = [...new Set(step.sessions.flatMap((s) => s.activities))];
+                    return allActivities.length > 0 ? (
+                      <div>
+                        <p className="text-sm xl:text-base text-foreground mb-2">Activities:</p>
+                        <ul className="text-sm xl:text-base font-medium text-foreground space-y-1 list-disc list-inside">
+                          {allActivities.map((activity, aIdx) => (
+                            <li key={aIdx}>{activity}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null;
+                  })()}
+                  {displayStatus === 'completed' && (
+                    <Button className="text-lg bg-foreground text-background min-h-11 px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold hover:bg-foreground/90">
+                      Start Challenge
+                    </Button>
+                  )}
                 </div>
               </div>
             );
