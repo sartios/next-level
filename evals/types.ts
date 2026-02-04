@@ -1,4 +1,4 @@
-import { User, Goal } from '@/lib/mockDb';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LearningResourceWithSections } from '@/lib/types';
 import { z } from 'zod';
 
@@ -11,10 +11,22 @@ export interface BaseDatasetItem {
   name: string;
 }
 
+export interface UserSkillDatasetItem extends BaseDatasetItem {
+  input: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    user: any;
+  };
+  expected: {
+    skillCount: number;
+    excludedSkills: string[];
+    expectedCategories?: string[];
+  };
+}
+
 export interface SkillResourceDatasetItem extends BaseDatasetItem {
   input: {
-    user: User;
-    goal: Omit<Goal, 'resources' | 'roadmap' | 'plan'>;
+    user: any;
+    goal: any;
   };
   expected: {
     minResourceCount: number;
@@ -26,8 +38,8 @@ export interface SkillResourceDatasetItem extends BaseDatasetItem {
 
 export interface SkillResourceEvaluatorDatasetItem extends BaseDatasetItem {
   input: {
-    user: User;
-    goal: Omit<Goal, 'resources' | 'roadmap' | 'plan'>;
+    user: any;
+    goal: any;
     resources: LearningResourceWithSections[];
   };
   expected: {
@@ -135,6 +147,42 @@ export interface EvaluationTaskResult {
     /** For RAGRetrievalMetric (optional - only needed if using RAGRetrievalMetric) */
     minResourceCount?: number;
     expectedResourceUrls?: string[];
+  };
+}
+
+// ============================================================================
+// UserSkillAgent Evaluation Task Result
+// ============================================================================
+
+export interface EvaluationSkill {
+  name: string;
+  priority: number;
+  reasoning: string;
+}
+
+/**
+ * Evaluation task result for UserSkillAgent.
+ * Includes skill-specific data for custom metrics.
+ */
+export interface UserSkillEvaluationTaskResult {
+  // LLM-as-judge metrics
+  input: string;
+  output: string;
+  context: string[];
+
+  // Custom metrics - agent output data
+  taskOutput: {
+    rawOutput: unknown;
+    responseTimeMs?: number;
+    skills: EvaluationSkill[];
+  };
+
+  // Custom metrics - expected/ground truth data
+  reference: {
+    schema: z.ZodSchema;
+    schemaName: string;
+    expectedCount: number;
+    excludedSkills: string[];
   };
 }
 

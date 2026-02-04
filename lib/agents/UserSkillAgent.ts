@@ -2,8 +2,7 @@ import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
 import { OpikHandlerOptions } from '@/lib/opik';
-import { SuggestedSkill, User } from '@/lib/mockDb';
-import { getUserById } from '@/lib/db/userRepository';
+import { getUserById, User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
 
@@ -30,6 +29,14 @@ const SkillSchema = z.object({
   priority: z.number(),
   reasoning: z.string()
 });
+
+interface SuggestedSkill {
+  id: string;
+  userId: string;
+  name: string;
+  priority: number;
+  reasoning: string;
+}
 
 type ParsedSkill = z.infer<typeof SkillSchema>;
 

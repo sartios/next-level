@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import { OpikHandlerOptions } from '@/lib/opik';
 import { searchCuratedResourcesTool, searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
-import { Goal, User } from '@/lib/mockDb';
 import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
 import { LearningResourceWithSections } from '../types';
 import { BaseAgent } from './BaseAgent';
@@ -28,11 +27,13 @@ Each query should target different aspects of the learning goal:
 
 Generate queries that would match course titles, descriptions, and learning objectives in a resource database.`;
 
-function buildUserPrompt(user: User, goal: Goal): string {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildUserPrompt(user: any, goal: any): string {
   return `user:\`\`\`json${JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') })}\`\`\` goal:\`\`\`json${JSON.stringify({ name: goal.name, reasoning: goal.reasoning })}\`\`\``;
 }
 
-function buildQueryGenerationUserPrompt(user: User, goal: Goal): string {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildQueryGenerationUserPrompt(user: any, goal: any): string {
   return `User Profile:
 - Role: ${user.role}
 - Current Skills: ${user.skills.join(', ')}
@@ -76,7 +77,8 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
    * Retrieve resources from the curated database using RAG.
    * This is the first step in the resource suggestion pipeline.
    */
-  public async retrieve(user: User, goal: Goal, opikOptions?: OpikHandlerOptions): Promise<RetrieverOutput> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async retrieve(user: any, goal: any, opikOptions?: OpikHandlerOptions): Promise<RetrieverOutput> {
     await this.ensureInitialized();
     const agent = this.getAgent();
 
@@ -91,7 +93,8 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
     return { resources: result.structuredResponse.resources };
   }
 
-  public async *streamResources(user: User, goal: Goal, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async *streamResources(user: any, goal: any, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
     if (!user) {
       throw new Error('User is required');
     }
