@@ -1,7 +1,7 @@
 import type { LearningResourceWithSections } from '@/lib/types';
 import type { ScheduleSlot } from '@/lib/db/scheduleRepository';
 import type { DayOfWeek } from '@/lib/db/schema';
-import type { NewWeeklyPlan, NewPlanSession, PlanSession } from '@/lib/db/weeklyPlanRepository';
+import type { NewWeeklyPlan, NewPlanSession } from '@/lib/db/weeklyPlanRepository';
 
 export interface AvailabilitySlot {
   day: string;
