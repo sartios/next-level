@@ -384,19 +384,23 @@ export async function syncSessionsWithAvailability(weeklyPlanId: string, availab
   const deletedSessionIds: string[] = [];
   const remainingSessions: PlanSession[] = [];
 
-  // Find sessions to delete (no matching slot and not completed)
+  // Categorize sessions: delete pending ones without matching slots, retain the rest
   for (const session of existingSessions) {
     const hasMatchingSlot = availableSlots.some(
       (slot) => slot.dayOfWeek === session.dayOfWeek && slot.startTime === session.startTime && slot.endTime === session.endTime
     );
 
     if (!hasMatchingSlot && session.status === 'pending') {
-      // Only delete pending sessions - retain completed sessions
-      await db.delete(planSessions).where(eq(planSessions.id, session.id));
       deletedSessionIds.push(session.id);
     } else {
       remainingSessions.push(session);
     }
+  }
+
+  // Batch delete all sessions in a single query
+  if (deletedSessionIds.length > 0) {
+    await db.delete(planSessions).where(inArray(planSessions.id, deletedSessionIds));
+    await recalculateCompletionPercentage(weeklyPlanId);
   }
 
   // Find new slots (no matching session)
@@ -406,10 +410,6 @@ export async function syncSessionsWithAvailability(weeklyPlanId: string, availab
     );
     return !hasMatchingSession;
   });
-
-  if (deletedSessionIds.length > 0) {
-    await recalculateCompletionPercentage(weeklyPlanId);
-  }
 
   return { deletedSessionIds, remainingSessions, newSlots };
 }
