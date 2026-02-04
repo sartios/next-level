@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Timer, CheckCircle2, BookOpen, Loader2, Check } from 'lucide-react';
+import { Timer, CheckCircle2, BookOpen, Loader2 } from 'lucide-react';
 
 import { useResourceStream, StreamedResource } from '@/hooks/useResourceStream';
 
@@ -24,29 +23,15 @@ interface ResourceCardProps {
 function ResourceCard({ resource, index, isSelected, onSelect }: ResourceCardProps) {
   return (
     <Card
-      className={`border-2 overflow-hidden shadow-sm hover:shadow-md transition-all animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-        isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border'
+      onClick={onSelect}
+      className={`border-2 overflow-hidden shadow-sm hover:shadow-lg transition-all animate-in fade-in slide-in-from-bottom-2 duration-300 cursor-pointer ${
+        isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border hover:border-accent/50 shadow-sm'
       }`}
     >
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 p-6 md:p-8">
           <div className="flex items-center justify-between gap-4 mb-4">
             <span className="text-border font-bold text-sm uppercase tracking-tight">{resource.provider}</span>
-            <Button
-              variant={isSelected ? 'default' : 'outline'}
-              size="sm"
-              onClick={onSelect}
-              className={isSelected ? 'bg-accent hover:bg-accent/90' : ''}
-            >
-              {isSelected ? (
-                <>
-                  <Check className="h-4 w-4 mr-1" />
-                  Selected
-                </>
-              ) : (
-                'Select'
-              )}
-            </Button>
           </div>
 
           <h2 className="text-2xl font-black mb-6">
@@ -83,10 +68,10 @@ function ResourceCard({ resource, index, isSelected, onSelect }: ResourceCardPro
                   {resource.sections.map((s) => (
                     <li key={s.id} className="flex items-start gap-2 bg-background p-3 rounded-md border border-muted">
                       <CheckCircle2 className="h-4 w-4 text-accent mt-1 shrink-0" />
-                      <div className="flex flex-col">
+                      <div className="flex flex-col text-sm md:text-base">
                         <span className="text-foreground font-bold">{s.title}</span>
                         {s.topics?.map((t) => (
-                          <span className="text-muted-foreground text-sm font-medium" key={t}>
+                          <span className="text-muted-foreground" key={t}>
                             {t}
                           </span>
                         ))}

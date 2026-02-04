@@ -74,8 +74,6 @@ export default function GoalPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 md:py-16">
-      <MotivationalHeader />
-
       {loading && (
         <div className="max-w-6xl mx-auto px-6 py-10 md:py-16">
           <p className="text-muted-foreground">Loading...</p>
