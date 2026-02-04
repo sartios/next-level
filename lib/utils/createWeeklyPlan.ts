@@ -21,6 +21,11 @@ export interface MultiWeekPlanResult {
   weeks: GeneratedWeeklyPlan[];
 }
 
+export interface IncompleteSession {
+  topic: string;
+  activities: string[];
+}
+
 export interface GenerateSingleWeekInput {
   goalId: string;
   weekNumber: number;
@@ -30,7 +35,7 @@ export interface GenerateSingleWeekInput {
   /** Sections already completed (by title) */
   completedSectionTitles: string[];
   /** Incomplete sessions from previous week to carry over */
-  incompleteSessionsFromPreviousWeek: PlanSession[];
+  incompleteSessionsFromPreviousWeek: IncompleteSession[];
 }
 
 /**

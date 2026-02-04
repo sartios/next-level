@@ -1,6 +1,6 @@
 const STORAGE_KEYS = {
   USER_ID: 'next-level-user-id',
-  GOAL_ID: 'next-level-goal-id',
+  GOAL_ID: 'next-level-goal-id'
 } as const;
 
 export function getUserId(): string | null {

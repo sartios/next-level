@@ -8,7 +8,8 @@ import {
   generateSessionsForNewSlots,
   scheduleToAvailabilitySlots,
   getWeekStartDate,
-  getCurrentWeekNumber
+  getCurrentWeekNumber,
+  type IncompleteSession
 } from '@/lib/utils/createWeeklyPlan';
 import {
   createWeeklyPlan,
@@ -195,7 +196,7 @@ export async function POST(req: NextRequest) {
           const completedSectionTitles = await getCompletedSectionTitles(goalId);
 
           // Get incomplete sessions from the previous week if it exists
-          let incompleteSessionsFromPreviousWeek: { topic: string; activities: string[] }[] = [];
+          let incompleteSessionsFromPreviousWeek: IncompleteSession[] = [];
           if (currentWeekNumber > 1) {
             const previousWeekPlan = await getWeeklyPlanByWeekNumber(goalId, currentWeekNumber - 1);
             if (previousWeekPlan) {
