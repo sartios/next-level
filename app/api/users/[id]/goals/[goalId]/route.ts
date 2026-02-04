@@ -4,7 +4,7 @@ import { getLearningResourceById } from '@/lib/db/resourceRepository';
 import { getScheduleByUserAndGoal } from '@/lib/db/scheduleRepository';
 import { getWeeklyPlansByGoalId, getCurrentWeeklyPlan } from '@/lib/db/weeklyPlanRepository';
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string; goalId: string }> }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string; goalId: string }> }) {
   const { id: userId, goalId } = await params;
 
   const goal = await getGoalById(goalId);

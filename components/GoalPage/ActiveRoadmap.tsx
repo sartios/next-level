@@ -37,9 +37,25 @@ interface ActiveRoadmapProps {
   onSessionUpdate?: () => void;
 }
 
+interface ScheduleSlot {
+  id?: string;
+  time: string;
+  endTime: string;
+  duration: number;
+  topic: string;
+  activities: string[];
+  status: 'completed' | 'started' | 'scheduled' | 'missed';
+}
+
+interface TopicStep {
+  topic: string;
+  sessions: ScheduleSlot[];
+  status: 'completed' | 'started' | 'pending';
+}
+
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export default function ActiveRoadmap({ goal, onSessionUpdate }: ActiveRoadmapProps) {
+export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
   const [, /*showArchiveDialog*/ setShowArchiveDialog] = useState(false);
   const [updatingSessionId, setUpdatingSessionId] = useState<string | null>(null);
   const [localSessions, setLocalSessions] = useState<Map<string, PlanSessionStatus>>(new Map());
@@ -58,8 +74,6 @@ export default function ActiveRoadmap({ goal, onSessionUpdate }: ActiveRoadmapPr
 
         if (response.ok) {
           setLocalSessions((prev) => new Map(prev).set(sessionId, newStatus));
-          // Notify parent to refresh data
-          onSessionUpdate?.();
         }
       } catch (error) {
         console.error('Failed to update session status:', error);
@@ -67,7 +81,7 @@ export default function ActiveRoadmap({ goal, onSessionUpdate }: ActiveRoadmapPr
         setUpdatingSessionId(null);
       }
     },
-    [goal, onSessionUpdate]
+    [goal]
   );
 
   const toggleSessionCompletion = useCallback(
@@ -101,16 +115,6 @@ export default function ActiveRoadmap({ goal, onSessionUpdate }: ActiveRoadmapPr
   }
 
   // Build weekly schedule from plan sessions (preferred) or availability slots (fallback)
-  interface ScheduleSlot {
-    id?: string;
-    time: string;
-    endTime: string;
-    duration: number;
-    topic: string;
-    activities: string[];
-    status: 'completed' | 'started' | 'scheduled' | 'missed';
-  }
-
   const weeklySchedule: Record<string, ScheduleSlot[]> = {
     Mon: [],
     Tue: [],
@@ -182,16 +186,7 @@ export default function ActiveRoadmap({ goal, onSessionUpdate }: ActiveRoadmapPr
   const allSlots = Object.values(weeklySchedule).flat();
   const totalSlots = allSlots.length;
   const completedCount = allSlots.filter((s) => s.status === 'completed').length;
-  const startedCount = allSlots.filter((s) => s.status === 'started').length;
-  const missedCount = allSlots.filter((s) => s.status === 'missed').length;
   const weeklyHours = goal.availability?.weeklyHours ?? 0;
-
-  // Derive roadmap steps from weekly plan topics
-  interface TopicStep {
-    topic: string;
-    sessions: ScheduleSlot[];
-    status: 'completed' | 'started' | 'pending';
-  }
 
   const topicSteps: TopicStep[] = [];
   const topicMap = new Map<string, ScheduleSlot[]>();
@@ -256,20 +251,6 @@ export default function ActiveRoadmap({ goal, onSessionUpdate }: ActiveRoadmapPr
               <div className="flex flex-col xl:items-end">
                 <div className="text-sm text-muted-foreground mb-2 pt-3">
                   Weekly commitment: <span className="font-semibold">{weeklyHours}h</span> ({totalSlots} slots)
-                </div>
-                <div className="flex gap-4 text-xs md:text-sm font-bold">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-green-100 border-2 border-green-300"></div>
-                    <span className="text-foreground">{completedCount} Done</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-blue-100 border-2 border-blue-300"></div>
-                    <span className="text-foreground">{startedCount} Started</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-red-100 border-2 border-red-300"></div>
-                    <span className="text-foreground">{missedCount} Missed</span>
-                  </div>
                 </div>
               </div>
             </div>
