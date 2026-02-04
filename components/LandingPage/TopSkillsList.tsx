@@ -144,7 +144,7 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
                 key={`${skill.name}-${index}`}
                 onClick={() => setSelectedSkill(skillId)}
                 className={`flex flex-col p-5 min-h-15 rounded-xl border-2 bg-background transition-colors cursor-pointer animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-                  isSelected ? 'border-foreground bg-muted' : 'border-border hover:bg-muted hover:border-muted-foreground'
+                  isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border hover:border-accent/50 shadow-sm'
                 }`}
               >
                 <div>
