@@ -248,7 +248,7 @@ function ChallengeContent() {
     [userId, goalId, challengeId, hasSubmittedCompletion]
   );
 
-  const nextQuestion = () => {
+  const nextQuestion = async () => {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       setSelectedAnswer(null);
@@ -257,7 +257,7 @@ function ChallengeContent() {
       setIsCorrect(false);
     } else {
       // Submit completion when finishing the challenge
-      submitCompletion(correctAnswersCount, totalQuestions);
+      await submitCompletion(correctAnswersCount, totalQuestions);
       setViewState('summary');
     }
   };
