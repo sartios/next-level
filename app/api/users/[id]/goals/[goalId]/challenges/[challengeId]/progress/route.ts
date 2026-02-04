@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getGoalById } from '@/lib/db/goalRepository';
-import { getChallengeById } from '@/lib/db/challengeRepository';
+import { getChallengeById, getChallengeQuestion } from '@/lib/db/challengeRepository';
 import { getOrCreateProgress, recordAnswer, resetProgress } from '@/lib/db/challengeProgressRepository';
 
 interface RouteParams {
@@ -56,8 +56,6 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     action: 'answer' | 'reset';
     questionNumber?: number;
     answer?: string;
-    isCorrect?: boolean;
-    points?: number;
   };
 
   try {
@@ -96,22 +94,31 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
 
   switch (body.action) {
     case 'answer':
-      if (
-        typeof body.questionNumber !== 'number' ||
-        typeof body.answer !== 'string' ||
-        typeof body.isCorrect !== 'boolean' ||
-        typeof body.points !== 'number'
-      ) {
+      if (typeof body.questionNumber !== 'number' || typeof body.answer !== 'string') {
         return new Response(JSON.stringify({ errorMessage: 'Missing required fields for answer action' }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
         });
       }
+
+      // Fetch the question to validate the answer server-side
+      const question = await getChallengeQuestion(challengeId, body.questionNumber);
+      if (!question) {
+        return new Response(JSON.stringify({ errorMessage: 'Question not found' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+      // Validate answer server-side
+      const isCorrect = body.answer === question.correctAnswer;
+      const pointsPerQuestion = 10;
+
       progress = await recordAnswer(challengeId, visitorId, {
         questionNumber: body.questionNumber,
         answer: body.answer,
-        isCorrect: body.isCorrect,
-        points: body.isCorrect ? body.points : 0
+        isCorrect,
+        points: isCorrect ? pointsPerQuestion : 0
       });
       break;
 

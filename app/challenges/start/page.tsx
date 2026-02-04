@@ -176,9 +176,9 @@ function ChallengeContent() {
     }
   }, [userId, goalId, challengeId, fetchChallengeAndProgress]);
 
-  // Save answer to server
+  // Save answer to server (server validates correctness)
   const saveAnswer = useCallback(
-    async (questionNumber: number, answer: string, correct: boolean, points: number) => {
+    async (questionNumber: number, answer: string) => {
       if (!userId || !goalId || !challengeId) return;
 
       try {
@@ -188,9 +188,7 @@ function ChallengeContent() {
           body: JSON.stringify({
             action: 'answer',
             questionNumber,
-            answer,
-            isCorrect: correct,
-            points
+            answer
           })
         });
       } catch (err) {
@@ -218,8 +216,8 @@ function ChallengeContent() {
       setCorrectAnswersCount((prev) => prev + 1);
     }
 
-    // Save to server
-    saveAnswer(currentQuestionIndex, selectedAnswer, correct, pointsPerQuestion);
+    // Save to server (server validates correctness)
+    saveAnswer(currentQuestionIndex, selectedAnswer);
   };
 
   const submitCompletion = useCallback(

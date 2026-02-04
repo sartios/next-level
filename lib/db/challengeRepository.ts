@@ -118,6 +118,24 @@ export async function updateChallengeStatus(
 // ============================================================================
 
 /**
+ * Get a specific question by challenge ID and question number
+ */
+export async function getChallengeQuestion(
+  challengeId: string,
+  questionNumber: number
+): Promise<ChallengeQuestion | undefined> {
+  const db = requireDb();
+
+  const results = await db
+    .select()
+    .from(challengeQuestions)
+    .where(and(eq(challengeQuestions.challengeId, challengeId), eq(challengeQuestions.questionNumber, questionNumber)))
+    .limit(1);
+
+  return results[0];
+}
+
+/**
  * Add questions to a challenge
  */
 export async function addChallengeQuestions(challengeId: string, questions: NewChallengeQuestion[]): Promise<ChallengeQuestion[]> {
