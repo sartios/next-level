@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Check, X, MoreVertical, Rocket, Circle } from 'lucide-react';
+import { CheckCircle2, Check, X, MoreVertical } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import type { Goal } from '@/lib/db/goalRepository';
@@ -26,10 +26,18 @@ interface GoalAvailability {
   slots: AvailabilitySlot[];
 }
 
+interface SelectedResource {
+  id: string;
+  title: string;
+  totalHours: number | null;
+}
+
 /** Extended Goal type with enriched data from API */
 interface EnrichedGoal extends Goal {
   availability?: GoalAvailability | null;
   currentWeekPlan?: WeeklyPlanWithSessions | null;
+  selectedResource?: SelectedResource | null;
+  userCareerGoals?: string[];
 }
 
 interface ActiveRoadmapProps {
@@ -252,13 +260,26 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
   const totalSteps = topicSteps.length;
   const completedSteps = topicSteps.filter((s) => s.status === 'completed').length;
   const startedSteps = topicSteps.filter((s) => s.status === 'started').length;
-  const progress = totalSteps > 0 ? Math.round((completedCount / totalSlots) * 100) : 0;
+  const progress = totalSteps > 0 ? Math.max(5, Math.round((completedCount / totalSlots) * 100)) : 5;
+
+  // Calculate graduation date
+  const totalCourseHours = goal.selectedResource?.totalHours ?? 0;
+  const hoursCompleted = completedCount * 0.5; // Each slot is 30 minutes
+  const hoursRemaining = Math.max(0, totalCourseHours - hoursCompleted);
+  const weeksRemaining = weeklyHours > 0 ? Math.ceil(hoursRemaining / weeklyHours) : 0;
+  const graduationDate = new Date();
+  graduationDate.setDate(graduationDate.getDate() + weeksRemaining * 7);
+  const formattedGraduationDate = graduationDate.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
 
   return (
     <div>
       <div className="flex flex-col xl:flex-row justify-between gap-8">
         <div className="space-y-8">
-          <section className="space-y-4 mb-9">
+          <section className="space-y-4 mb-8 xl:mb-11">
             <div className="flex justify-between items-end">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Overall Progress</h2>
@@ -273,25 +294,68 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
 
           {/* Weekly Plan Section */}
           <section className="space-y-4">
-            <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">This Week&apos;s Plan</h2>
                 <p className="text-muted-foreground font-medium">Track your commitment and stay accountable</p>
               </div>
-              <div className="flex flex-col xl:items-end">
-                <div className="text-sm text-muted-foreground mb-2 pt-3">
-                  Weekly commitment: <span className="font-semibold">{weeklyHours}h</span> ({totalSlots} slots)
-                </div>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Weekly commitment: <span className="font-semibold">{weeklyHours}h</span> ({totalSlots} slots)
+              </p>
             </div>
 
-            <Card className="border-2 border-muted">
+            <Card className="border-2 border-muted shadow-none">
               <CardContent className="p-4">
-                <div className="overflow-x-auto -mx-2 px-2">
+                {/* Mobile view - only days with slots */}
+                <div className="md:hidden max-h-104 overflow-y-auto">
+                  <div className="grid grid-cols-3 gap-x-2 gap-y-5">
+                    {days
+                      .filter((day) => weeklySchedule[day].length > 0)
+                      .map((day) => (
+                        <div key={day} className="space-y-2">
+                          <div className="text-center font-black text-xs text-border uppercase">{day}</div>
+                          <div className="space-y-1">
+                            {weeklySchedule[day].map((slot, idx) => {
+                              const isUpdating = Boolean(slot.id && updatingSessionId === slot.id);
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => slot.id && toggleSessionCompletion(slot.id, slot.status)}
+                                  disabled={!slot.id || isUpdating}
+                                  className={`min-h-16 w-full min-w-20 rounded-md flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
+                                    slot.status === 'completed'
+                                      ? 'bg-green-100 hover:bg-green-200'
+                                      : slot.status === 'started'
+                                        ? 'bg-blue-100  hover:bg-blue-200'
+                                        : slot.status === 'missed'
+                                          ? 'bg-red-100 hover:bg-red-200'
+                                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                  } ${slot.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
+                                  title={`${slot.topic ? `${slot.topic}\n` : ''}${slot.time} to ${slot.endTime} (${slot.duration}min)${slot.activities.length ? `\n• ${slot.activities.join('\n• ')}` : ''}\n\nClick to mark as ${slot.status === 'completed' ? 'incomplete' : 'completed'}`}
+                                >
+                                  <span className="text-xs">
+                                    {slot.time}-{slot.endTime}
+                                  </span>
+                                  {slot.status === 'completed' ? (
+                                    <Check className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                  ) : slot.status === 'missed' ? (
+                                    <X className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                  ) : null}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+
+                {/* Tablet and above - full week view */}
+                <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-42 -mx-2 px-2">
                   <div className="grid grid-cols-7 gap-2 min-w-max">
                     {days.map((day) => (
                       <div key={day} className="space-y-2 min-w-20">
-                        <div className="text-center font-black text-xs md:text-sm text-border uppercase">{day}</div>
+                        <div className="text-center font-black text-sm text-border uppercase">{day}</div>
                         <div className="space-y-1">
                           {weeklySchedule[day].length > 0 ? (
                             weeklySchedule[day].map((slot, idx) => {
@@ -301,34 +365,30 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                   key={idx}
                                   onClick={() => slot.id && toggleSessionCompletion(slot.id, slot.status)}
                                   disabled={!slot.id || isUpdating}
-                                  className={`min-h-16 rounded-md border-2 flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
+                                  className={`min-h-16 w-full min-w-20 rounded-md flex flex-col items-center justify-center p-2 text-xs font-bold transition-all ${
                                     slot.status === 'completed'
-                                      ? 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
+                                      ? 'bg-green-100  hover:bg-green-200'
                                       : slot.status === 'started'
-                                        ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
+                                        ? 'bg-blue-100  hover:bg-blue-200'
                                         : slot.status === 'missed'
-                                          ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
-                                          : 'bg-muted border-muted text-muted-foreground hover:bg-muted/80'
+                                          ? 'bg-red-100  hover:bg-red-200'
+                                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                   } ${slot.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
                                   title={`${slot.topic ? `${slot.topic}\n` : ''}${slot.time} to ${slot.endTime} (${slot.duration}min)${slot.activities.length ? `\n• ${slot.activities.join('\n• ')}` : ''}\n\nClick to mark as ${slot.status === 'completed' ? 'incomplete' : 'completed'}`}
                                 >
                                   <span className="text-xs">
                                     {slot.time}-{slot.endTime}
                                   </span>
-                                  {isUpdating ? (
-                                    <Circle className="h-3 w-3 mt-0.5 animate-pulse" />
-                                  ) : slot.status === 'completed' ? (
-                                    <Check className="h-3 w-3 mt-0.5" />
+                                  {slot.status === 'completed' ? (
+                                    <Check className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : slot.status === 'missed' ? (
-                                    <X className="h-3 w-3 mt-0.5" />
-                                  ) : (
-                                    <Circle className="h-3 w-3 mt-0.5 opacity-40" />
-                                  )}
+                                    <X className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                  ) : null}
                                 </button>
                               );
                             })
                           ) : (
-                            <div className="min-h-16 rounded-md bg-muted/30 border-2 border-dashed border-muted flex items-center justify-center">
+                            <div className="min-h-16 w-full min-w-20 rounded-md bg-muted/30 flex items-center justify-center">
                               <span className="text-sm text-border font-bold">—</span>
                             </div>
                           )}
@@ -342,11 +402,11 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
           </section>
         </div>
         <aside className="space-y-6 xl:w-250">
-          <Card className="border-2 border-muted p-6">
+          <Card className="border-2 border-muted p-6 shadow-none">
             <div className="flex items-start justify-between mb-4">
               <div className="flex flex-col">
                 <h3 className="text-sm font-black uppercase text-border tracking-widest">Active Roadmap</h3>
-                <h2 className="text-xl font-black text-foreground">{goal.name}</h2>
+                <h2 className="text-xl font-black text-foreground">{goal.selectedResource?.title ?? goal.name}</h2>
               </div>
 
               <DropdownMenu>
@@ -368,27 +428,19 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
             </div>
             <div className="space-y-6">
               <div>
-                <p className="text-sm font-bold uppercase text-border">Target Industry</p>
-                <p className="text-lg font-medium text-foreground">selectedIndustry</p>
+                <p className="text-sm font-bold uppercase text-border">Career Goals</p>
+                <p className="text-lg font-medium text-foreground">{goal.userCareerGoals?.join(', ') || 'Not specified'}</p>
               </div>
               <div>
                 <p className="text-sm font-bold uppercase text-border">Core Skill</p>
-                <p className="text-lg font-medium text-foreground">selectedSkill</p>
-              </div>
-              <hr className="border-muted" />
-              <div>
-                <p className="text-sm font-bold uppercase text-border">Daily Streak</p>
-                <div className="flex gap-1">
-                  <p className="text-lg font-medium text-foreground">5 Days</p>
-                  <Rocket className="h-6 w-6 text-accent shrink-0" />
-                </div>
+                <p className="text-lg font-medium text-foreground">{goal.name}</p>
               </div>
             </div>
           </Card>
 
-          <div className="p-6 bg-accent/10 rounded-2xl border-2 border-accent">
+          <div className="xl:mt-11 p-6 bg-accent/10 rounded-2xl">
             <p className="text-sm xl:text-base font-medium text-foreground leading-relaxed">
-              You are on track to graduate on <strong>graduationDate</strong> based on your current study pace.
+              You are on track to graduate on <strong>{formattedGraduationDate}</strong> based on your current study pace.
             </p>
           </div>
         </aside>
@@ -396,7 +448,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
       {/* Roadmap Steps from Weekly Plan Topics */}
       {topicSteps.length > 0 && (
         <div className="space-y-4 w-full mt-6 xl:mt-11">
-          <h3 className="text-xl font-black text-foreground">Roadmap Steps</h3>
+          <h3 className="text-2xl font-bold text-foreground">Roadmap Steps</h3>
           {topicSteps.map((step, idx) => {
             // Determine display status: first non-completed step is active, second non-completed is next
             const completedCount = topicSteps.slice(0, idx).filter((s) => s.status === 'completed').length;
@@ -407,100 +459,82 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
             return (
               <div
                 key={idx}
-                className={`p-6 rounded-xl border-2 transition-all space-y-3 ${
-                  displayStatus === 'completed'
-                    ? 'border-green-200 bg-green-50'
-                    : displayStatus === 'started'
-                      ? 'border-blue-200 bg-blue-50'
-                      : 'border-muted opacity-60'
+                className={`p-3 md:p-6 rounded-xl border-2 transition-all space-y-3 ${
+                  displayStatus === 'completed' ? 'border-green-300' : displayStatus === 'started' ? 'border-blue-200' : 'border-muted'
                 }`}
               >
-                <div className="flex items-start gap-4">
-                  {displayStatus === 'completed' ? (
-                    <CheckCircle2 className="h-6 w-6 text-green-700 shrink-0 mt-1" />
-                  ) : displayStatus === 'started' ? (
-                    <div className="h-6 w-6 rounded-full border-2 border-blue-500 bg-blue-100 shrink-0 mt-1" />
-                  ) : (
-                    <div className="h-6 w-6 rounded-full border-2 border-muted shrink-0 mt-1" />
-                  )}
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-start justify-between gap-4">
-                      <h4 className="font-black text-foreground text-lg">
-                        Step {idx + 1}: {step.topic}
-                      </h4>
-                      {displayStatus === 'started' && (
-                        <Badge variant="outline" className="border-blue-500 text-blue-700 shrink-0">
-                          In Progress
-                        </Badge>
-                      )}
-                      {isSecondPending && (
-                        <Badge variant="outline" className="border-border shrink-0">
-                          Next Up
-                        </Badge>
-                      )}
-                    </div>
-                    {step.sessions.length > 0 && (
-                      <div>
-                        <p className="text-sm font-bold text-foreground mb-2">Scheduled Sessions:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {step.sessions.map((session, sIdx) => {
-                            // Find which day this session is on
-                            const dayEntry = Object.entries(weeklySchedule).find(([, slots]) =>
-                              slots.some((s) => s.time === session.time && s.topic === session.topic)
-                            );
-                            const dayName = dayEntry ? dayEntry[0] : '';
-                            const isUpdating = Boolean(session.id && updatingSessionId === session.id);
-
-                            return (
-                              <button
-                                key={sIdx}
-                                onClick={() => session.id && toggleSessionCompletion(session.id, session.status)}
-                                disabled={!session.id || isUpdating}
-                                className={`text-sm px-2 py-1 rounded-md flex items-center gap-1 transition-all ${
-                                  session.status === 'completed'
-                                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                                    : session.status === 'started'
-                                      ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                                      : session.status === 'missed'
-                                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                        : 'border-2 border-muted text-foreground hover:bg-muted'
-                                } ${session.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
-                                title={`Click to mark as ${session.status === 'completed' ? 'incomplete' : 'completed'}`}
-                              >
-                                {isUpdating ? (
-                                  <Circle className="h-3 w-3 animate-pulse" />
-                                ) : session.status === 'completed' ? (
-                                  <Check className="h-3 w-3" />
-                                ) : (
-                                  <Circle className="h-3 w-3 opacity-40" />
-                                )}
-                                {dayName} {session.time}-{session.endTime} ({session.duration}min)
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <h4 className="font-bold text-foreground text-lg">
+                      Step {idx + 1}: {step.topic}
+                    </h4>
+                    {displayStatus === 'completed' && <CheckCircle2 className="hidden md:block h-6 w-6 shrink-0 text-green-500" />}
+                    {displayStatus === 'started' && (
+                      <Badge variant="outline" className="hidden md:inline-flex border-blue-500 text-blue-700 shrink-0">
+                        In Progress
+                      </Badge>
                     )}
-                    {(() => {
-                      // Collect all unique activities from all sessions
-                      const allActivities = [...new Set(step.sessions.flatMap((s) => s.activities))];
-                      return allActivities.length > 0 ? (
-                        <div>
-                          <p className="text-sm font-bold text-border mb-1">Activities:</p>
-                          <ul className="text-sm font-medium text-muted-foreground space-y-1 list-disc list-inside">
-                            {allActivities.map((activity, aIdx) => (
-                              <li key={aIdx}>{activity}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null;
-                    })()}
-                    {displayStatus === 'completed' && (
-                      <Button className="bg-foreground text-background min-h-11 px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold hover:bg-foreground/90">
-                        Start Challenge
-                      </Button>
+                    {isSecondPending && (
+                      <Badge variant="outline" className="hidden md:inline-flex border-border shrink-0">
+                        Next Up
+                      </Badge>
                     )}
                   </div>
+                  {step.sessions.length > 0 && (
+                    <div>
+                      <p className="text-sm xl:text-base text-muted-foreground mb-2">Scheduled Sessions:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {step.sessions.map((session, sIdx) => {
+                          // Find which day this session is on
+                          const dayEntry = Object.entries(weeklySchedule).find(([, slots]) =>
+                            slots.some((s) => s.time === session.time && s.topic === session.topic)
+                          );
+                          const dayName = dayEntry ? dayEntry[0] : '';
+                          const isUpdating = Boolean(session.id && updatingSessionId === session.id);
+
+                          return (
+                            <button
+                              key={sIdx}
+                              onClick={() => session.id && toggleSessionCompletion(session.id, session.status)}
+                              disabled={!session.id || isUpdating}
+                              className={`border-2 border-muted text-foreground text-sm px-2 py-3 rounded-md flex items-center gap-1 transition-all ${
+                                session.status === 'completed'
+                                  ? ' hover:bg-green-200'
+                                  : session.status === 'started'
+                                    ? ' hover:bg-blue-200'
+                                    : session.status === 'missed'
+                                      ? ' hover:bg-red-200'
+                                      : 'hover:bg-muted'
+                              } ${session.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
+                              title={`Click to mark as ${session.status === 'completed' ? 'incomplete' : 'completed'}`}
+                            >
+                              {session.status === 'completed' ? <Check className={`h-4 w-4 ${isUpdating ? 'animate-pulse' : ''}`} /> : null}
+                              {dayName} {session.time}-{session.endTime}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {(() => {
+                    // Collect all unique activities from all sessions
+                    const allActivities = [...new Set(step.sessions.flatMap((s) => s.activities))];
+                    return allActivities.length > 0 ? (
+                      <div>
+                        <p className="text-sm xl:text-base text-muted-foreground mb-2">Activities:</p>
+                        <ul className="text-sm xl:text-base font-medium text-foreground space-y-1 list-disc list-inside">
+                          {allActivities.map((activity, aIdx) => (
+                            <li key={aIdx}>{activity}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null;
+                  })()}
+                  {displayStatus === 'completed' && (
+                    <Button className="text-lg bg-foreground text-background min-h-11 px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold hover:bg-foreground/90">
+                      Start Challenge
+                    </Button>
+                  )}
                 </div>
               </div>
             );
