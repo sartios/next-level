@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getScheduleByUserAndGoal, upsertSchedule, type NewScheduleSlot } from '@/lib/db/scheduleRepository';
 import type { DayOfWeek } from '@/lib/db/schema';
+import { syncWeeklyPlanWithSchedule } from '@/lib/services/weeklyPlanService';
 
 interface AvailableSlotInput {
   day: string;
@@ -9,25 +10,15 @@ interface AvailableSlotInput {
   durationMinutes: number;
 }
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string; goalId: string }> }) {
-  const { id: userId, goalId } = await params;
-
-  if (!userId) {
-    return NextResponse.json({ errorMessage: 'userId is required' }, { status: 400 });
-  }
-
-  if (!goalId) {
-    return NextResponse.json({ errorMessage: 'goalId is required' }, { status: 400 });
-  }
-
-  const schedule = await getScheduleByUserAndGoal(userId, goalId);
-
-  if (!schedule) {
-    return NextResponse.json({ availability: null }, { status: 200 });
-  }
-
-  // Transform to the expected format
-  const availability = {
+function formatScheduleResponse(schedule: {
+  userId: string;
+  goalId: string;
+  startDate: Date;
+  weeklyHours: number;
+  targetCompletionDate: Date | null;
+  slots: { dayOfWeek: string; startTime: string; endTime: string; durationMinutes: number }[];
+}) {
+  return {
     userId: schedule.userId,
     goalId: schedule.goalId,
     startDate: schedule.startDate.toISOString().split('T')[0],
@@ -40,8 +31,22 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       durationMinutes: slot.durationMinutes
     }))
   };
+}
 
-  return NextResponse.json({ availability }, { status: 200 });
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string; goalId: string }> }) {
+  const { id: userId, goalId } = await params;
+
+  if (!userId || !goalId) {
+    return NextResponse.json({ errorMessage: 'userId and goalId are required' }, { status: 400 });
+  }
+
+  const schedule = await getScheduleByUserAndGoal(userId, goalId);
+
+  if (!schedule) {
+    return NextResponse.json({ availability: null }, { status: 200 });
+  }
+
+  return NextResponse.json({ availability: formatScheduleResponse(schedule) }, { status: 200 });
 }
 
 export async function POST(req: NextRequest) {
@@ -57,7 +62,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ errorMessage: 'startDate and totalHours are required' }, { status: 400 });
     }
 
-    // Transform slots to database format
     const slots: NewScheduleSlot[] = (availableSlots || []).map((slot: AvailableSlotInput) => ({
       dayOfWeek: slot.day as DayOfWeek,
       startTime: slot.startTime,
@@ -76,22 +80,15 @@ export async function POST(req: NextRequest) {
       slots
     );
 
-    // Transform response to expected format
-    const availability = {
-      userId: schedule.userId,
-      goalId: schedule.goalId,
-      startDate: schedule.startDate.toISOString().split('T')[0],
-      totalHours: schedule.weeklyHours,
-      targetCompletionDate: schedule.targetCompletionDate?.toISOString().split('T')[0] ?? null,
-      availableSlots: schedule.slots.map((slot) => ({
-        day: slot.dayOfWeek,
-        startTime: slot.startTime,
-        endTime: slot.endTime,
-        durationMinutes: slot.durationMinutes
-      }))
-    };
+    const weeklyPlanResult = await syncWeeklyPlanWithSchedule({ goalId, schedule });
 
-    return NextResponse.json({ availability }, { status: 200 });
+    return NextResponse.json(
+      {
+        availability: formatScheduleResponse(schedule),
+        weeklyPlan: weeklyPlanResult
+      },
+      { status: 200 }
+    );
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     console.error('Error saving availability:', errorMessage);

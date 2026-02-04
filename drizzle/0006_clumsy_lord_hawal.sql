@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "weekly_plans_goal_week_unique" ON "weekly_plans" USING btree ("goal_id","week_number");
