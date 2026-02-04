@@ -50,6 +50,13 @@
       "when": 1770157500765,
       "tag": "0006_clumsy_lord_hawal",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1770238897662,
+      "tag": "0007_oval_lily_hollister",
+      "breakpoints": true
     }
   ]
 }
