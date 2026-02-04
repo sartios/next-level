@@ -168,16 +168,110 @@ describe('weeklyPlanRepository integration tests', () => {
 
       expect(result).toEqual([]);
     });
+
+    it('should fetch sessions for all plans, not just the first one', async () => {
+      // Create multiple plans with different sessions
+      const plan1Data: NewWeeklyPlan = {
+        goalId: testGoalId,
+        weekNumber: 101,
+        weekStartDate: new Date('2024-06-01'),
+        focusArea: 'Plan 1 Focus',
+        totalMinutes: 60
+      };
+
+      const plan1Sessions: NewPlanSession[] = [
+        {
+          dayOfWeek: 'Monday',
+          startTime: '09:00',
+          endTime: '10:00',
+          durationMinutes: 60,
+          topic: 'Plan 1 Topic',
+          activities: ['Activity 1']
+        }
+      ];
+
+      const plan2Data: NewWeeklyPlan = {
+        goalId: testGoalId,
+        weekNumber: 102,
+        weekStartDate: new Date('2024-06-08'),
+        focusArea: 'Plan 2 Focus',
+        totalMinutes: 120
+      };
+
+      const plan2Sessions: NewPlanSession[] = [
+        {
+          dayOfWeek: 'Tuesday',
+          startTime: '14:00',
+          endTime: '15:00',
+          durationMinutes: 60,
+          topic: 'Plan 2 Topic A',
+          activities: ['Activity 2A']
+        },
+        {
+          dayOfWeek: 'Thursday',
+          startTime: '14:00',
+          endTime: '15:00',
+          durationMinutes: 60,
+          topic: 'Plan 2 Topic B',
+          activities: ['Activity 2B']
+        }
+      ];
+
+      const plan3Data: NewWeeklyPlan = {
+        goalId: testGoalId,
+        weekNumber: 103,
+        weekStartDate: new Date('2024-06-15'),
+        focusArea: 'Plan 3 Focus',
+        totalMinutes: 90
+      };
+
+      const plan3Sessions: NewPlanSession[] = [
+        {
+          dayOfWeek: 'Wednesday',
+          startTime: '10:00',
+          endTime: '11:30',
+          durationMinutes: 90,
+          topic: 'Plan 3 Topic',
+          activities: ['Activity 3']
+        }
+      ];
+
+      await createWeeklyPlan(plan1Data, plan1Sessions);
+      await createWeeklyPlan(plan2Data, plan2Sessions);
+      await createWeeklyPlan(plan3Data, plan3Sessions);
+
+      // Fetch all plans
+      const result = await getWeeklyPlansByGoalId(testGoalId);
+
+      // Find the plans we just created
+      const plan1 = result.find((p) => p.weekNumber === 101);
+      const plan2 = result.find((p) => p.weekNumber === 102);
+      const plan3 = result.find((p) => p.weekNumber === 103);
+
+      // Verify each plan has the correct number of sessions
+      expect(plan1).toBeDefined();
+      expect(plan1?.sessions.length).toBe(1);
+      expect(plan1?.sessions[0].topic).toBe('Plan 1 Topic');
+
+      expect(plan2).toBeDefined();
+      expect(plan2?.sessions.length).toBe(2);
+      expect(plan2?.sessions.some((s) => s.topic === 'Plan 2 Topic A')).toBe(true);
+      expect(plan2?.sessions.some((s) => s.topic === 'Plan 2 Topic B')).toBe(true);
+
+      expect(plan3).toBeDefined();
+      expect(plan3?.sessions.length).toBe(1);
+      expect(plan3?.sessions[0].topic).toBe('Plan 3 Topic');
+    });
   });
 
   describe('getCurrentWeeklyPlan', () => {
     it('should retrieve the most recent plan for a goal', async () => {
-      // Create a second week plan
+      // Create a plan with a high week number to ensure it's the most recent
       const planData: NewWeeklyPlan = {
         goalId: testGoalId,
-        weekNumber: 2,
-        weekStartDate: new Date('2024-01-08'),
-        focusArea: 'Week 2 Focus',
+        weekNumber: 999,
+        weekStartDate: new Date('2024-12-31'),
+        focusArea: 'Most Recent Week Focus',
         totalMinutes: 60
       };
 
@@ -186,7 +280,7 @@ describe('weeklyPlanRepository integration tests', () => {
       const result = await getCurrentWeeklyPlan(testGoalId);
 
       expect(result).toBeDefined();
-      expect(result?.weekNumber).toBe(2);
+      expect(result?.weekNumber).toBe(999);
     });
   });
 
@@ -199,7 +293,7 @@ describe('weeklyPlanRepository integration tests', () => {
     });
 
     it('should return undefined for non-existent week', async () => {
-      const result = await getWeeklyPlanByWeekNumber(testGoalId, 999);
+      const result = await getWeeklyPlanByWeekNumber(testGoalId, 99999);
 
       expect(result).toBeUndefined();
     });

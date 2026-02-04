@@ -28,7 +28,6 @@ interface GoalAvailability {
 /** Extended Goal type with enriched data from API */
 interface EnrichedGoal extends Goal {
   availability?: GoalAvailability | null;
-  weeklyPlans?: WeeklyPlanWithSessions[];
   currentWeekPlan?: WeeklyPlanWithSessions | null;
 }
 
