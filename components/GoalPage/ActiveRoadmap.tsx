@@ -351,7 +351,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                 </div>
 
                 {/* Tablet and above - full week view */}
-                <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-34 -mx-2 px-2">
+                <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-42 -mx-2 px-2">
                   <div className="grid grid-cols-7 gap-2 min-w-max">
                     {days.map((day) => (
                       <div key={day} className="space-y-2 min-w-20">
