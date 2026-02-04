@@ -198,7 +198,7 @@ function ChallengeContent() {
     [userId, goalId, challengeId]
   );
 
-  const submitAnswer = () => {
+  const submitAnswer = async () => {
     if (!currentQuestion || !selectedAnswer) return;
 
     const correct = selectedAnswer === currentQuestion.correctAnswer;
@@ -217,7 +217,7 @@ function ChallengeContent() {
     }
 
     // Save to server (server validates correctness)
-    saveAnswer(currentQuestionIndex, selectedAnswer);
+    await saveAnswer(currentQuestionIndex, selectedAnswer);
   };
 
   const submitCompletion = useCallback(
