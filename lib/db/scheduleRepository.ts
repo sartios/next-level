@@ -44,10 +44,7 @@ export interface NewScheduleSlot {
 /**
  * Create a new schedule with slots
  */
-export async function createSchedule(
-  scheduleData: NewSchedule,
-  slots: NewScheduleSlot[]
-): Promise<ScheduleWithSlots> {
+export async function createSchedule(scheduleData: NewSchedule, slots: NewScheduleSlot[]): Promise<ScheduleWithSlots> {
   const db = requireDb();
 
   // Insert schedule
@@ -98,10 +95,7 @@ export async function getScheduleById(id: string): Promise<ScheduleWithSlots | u
 /**
  * Get schedule by user and goal
  */
-export async function getScheduleByUserAndGoal(
-  userId: string,
-  goalId: string
-): Promise<ScheduleWithSlots | undefined> {
+export async function getScheduleByUserAndGoal(userId: string, goalId: string): Promise<ScheduleWithSlots | undefined> {
   const db = requireDb();
   const results = await db
     .select()
@@ -182,10 +176,7 @@ export async function deleteSchedule(id: string): Promise<boolean> {
 /**
  * Upsert schedule - create or update if exists for user/goal
  */
-export async function upsertSchedule(
-  scheduleData: NewSchedule,
-  slots: NewScheduleSlot[]
-): Promise<ScheduleWithSlots> {
+export async function upsertSchedule(scheduleData: NewSchedule, slots: NewScheduleSlot[]): Promise<ScheduleWithSlots> {
   const existing = await getScheduleByUserAndGoal(scheduleData.userId, scheduleData.goalId);
 
   if (existing) {
