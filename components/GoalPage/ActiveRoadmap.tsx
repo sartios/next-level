@@ -279,7 +279,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
     <div>
       <div className="flex flex-col xl:flex-row justify-between gap-8">
         <div className="space-y-8">
-          <section className="space-y-4 mb-9">
+          <section className="space-y-4 mb-8 xl:mb-11">
             <div className="flex justify-between items-end">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Overall Progress</h2>
@@ -294,19 +294,17 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
 
           {/* Weekly Plan Section */}
           <section className="space-y-4">
-            <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-1">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">This Week&apos;s Plan</h2>
                 <p className="text-muted-foreground font-medium">Track your commitment and stay accountable</p>
               </div>
-              <div className="flex flex-col xl:items-end">
-                <div className="text-sm text-muted-foreground mb-2 pt-3">
-                  Weekly commitment: <span className="font-semibold">{weeklyHours}h</span> ({totalSlots} slots)
-                </div>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                Weekly commitment: <span className="font-semibold">{weeklyHours}h</span> ({totalSlots} slots)
+              </p>
             </div>
 
-            <Card className="border-2 border-muted">
+            <Card className="border-2 border-muted shadow-none">
               <CardContent className="p-4">
                 {/* Mobile view - only days with slots */}
                 <div className="md:hidden max-h-104 overflow-y-auto">
@@ -331,7 +329,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                         ? 'bg-blue-100  hover:bg-blue-200'
                                         : slot.status === 'missed'
                                           ? 'bg-red-100 hover:bg-red-200'
-                                          : 'bg-muted border-muted text-muted-foreground hover:bg-muted/80'
+                                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                   } ${slot.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
                                   title={`${slot.topic ? `${slot.topic}\n` : ''}${slot.time} to ${slot.endTime} (${slot.duration}min)${slot.activities.length ? `\n• ${slot.activities.join('\n• ')}` : ''}\n\nClick to mark as ${slot.status === 'completed' ? 'incomplete' : 'completed'}`}
                                 >
@@ -353,7 +351,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                 </div>
 
                 {/* Tablet and above - full week view */}
-                <div className="hidden md:block overflow-x-auto -mx-2 px-2">
+                <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-34 -mx-2 px-2">
                   <div className="grid grid-cols-7 gap-2 min-w-max">
                     {days.map((day) => (
                       <div key={day} className="space-y-2 min-w-20">
@@ -374,7 +372,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                         ? 'bg-blue-100  hover:bg-blue-200'
                                         : slot.status === 'missed'
                                           ? 'bg-red-100  hover:bg-red-200'
-                                          : 'bg-muted border-muted text-muted-foreground hover:bg-muted/80'
+                                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                   } ${slot.id ? 'cursor-pointer' : 'cursor-default'} ${isUpdating ? 'opacity-50' : ''}`}
                                   title={`${slot.topic ? `${slot.topic}\n` : ''}${slot.time} to ${slot.endTime} (${slot.duration}min)${slot.activities.length ? `\n• ${slot.activities.join('\n• ')}` : ''}\n\nClick to mark as ${slot.status === 'completed' ? 'incomplete' : 'completed'}`}
                                 >
@@ -404,7 +402,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
           </section>
         </div>
         <aside className="space-y-6 xl:w-250">
-          <Card className="border-2 border-muted p-6">
+          <Card className="border-2 border-muted p-6 shadow-none">
             <div className="flex items-start justify-between mb-4">
               <div className="flex flex-col">
                 <h3 className="text-sm font-black uppercase text-border tracking-widest">Active Roadmap</h3>
@@ -440,7 +438,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
             </div>
           </Card>
 
-          <div className="p-6 bg-accent/10 rounded-2xl border-2 border-accent">
+          <div className="xl:mt-11 p-6 bg-accent/10 rounded-2xl">
             <p className="text-sm xl:text-base font-medium text-foreground leading-relaxed">
               You are on track to graduate on <strong>{formattedGraduationDate}</strong> based on your current study pace.
             </p>
@@ -450,7 +448,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
       {/* Roadmap Steps from Weekly Plan Topics */}
       {topicSteps.length > 0 && (
         <div className="space-y-4 w-full mt-6 xl:mt-11">
-          <h3 className="text-xl font-black text-foreground">Roadmap Steps</h3>
+          <h3 className="text-2xl font-bold text-foreground">Roadmap Steps</h3>
           {topicSteps.map((step, idx) => {
             // Determine display status: first non-completed step is active, second non-completed is next
             const completedCount = topicSteps.slice(0, idx).filter((s) => s.status === 'completed').length;
@@ -465,9 +463,9 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                   displayStatus === 'completed' ? 'border-green-300' : displayStatus === 'started' ? 'border-blue-200' : 'border-muted'
                 }`}
               >
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-start justify-between gap-4">
-                    <h4 className="font-black text-foreground text-lg">
+                    <h4 className="font-bold text-foreground text-lg">
                       Step {idx + 1}: {step.topic}
                     </h4>
                     {displayStatus === 'completed' && <CheckCircle2 className="hidden md:block h-6 w-6 shrink-0 text-green-500" />}
@@ -484,7 +482,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                   </div>
                   {step.sessions.length > 0 && (
                     <div>
-                      <p className="text-sm xl:text-base text-foreground mb-2">Scheduled Sessions:</p>
+                      <p className="text-sm xl:text-base text-muted-foreground mb-2">Scheduled Sessions:</p>
                       <div className="flex flex-wrap gap-2">
                         {step.sessions.map((session, sIdx) => {
                           // Find which day this session is on
@@ -523,7 +521,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                     const allActivities = [...new Set(step.sessions.flatMap((s) => s.activities))];
                     return allActivities.length > 0 ? (
                       <div>
-                        <p className="text-sm xl:text-base text-foreground mb-2">Activities:</p>
+                        <p className="text-sm xl:text-base text-muted-foreground mb-2">Activities:</p>
                         <ul className="text-sm xl:text-base font-medium text-foreground space-y-1 list-disc list-inside">
                           {allActivities.map((activity, aIdx) => (
                             <li key={aIdx}>{activity}</li>
