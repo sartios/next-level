@@ -1,7 +1,6 @@
 import skillResourceAgent, { RetrieverOutputSchema } from '@/lib/agents/SkillResourceRetrieverAgent';
 import { SkillResourceDatasetItem, EvaluationTaskResult } from '../types';
 import { getAgentPrompt } from '@/lib/prompts';
-import { Goal } from '@/lib/mockDb';
 
 /**
  * Evaluation task for the SkillResourceAgent retriever step.
@@ -11,7 +10,7 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   // Measure response time
   const startTime = Date.now();
 
-  const result = await skillResourceAgent.retrieve(item.input.user, item.input.goal as Goal, {
+  const result = await skillResourceAgent.retrieve(item.input.user, item.input.goal, {
     tags: ['evaluation', 'retriever'],
     metadata: {
       evaluationId: item.id,
