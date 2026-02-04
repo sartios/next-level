@@ -5,7 +5,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Check, X, MoreVertical } from 'lucide-react';
+import { CheckCircle2, Check, X, MoreVertical, Trophy } from 'lucide-react';
+import Link from 'next/link';
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import type { Goal } from '@/lib/db/goalRepository';
@@ -399,6 +400,15 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="flex justify-end">
+              <Button asChild variant="outline" className="min-h-11 px-6 font-bold">
+                <Link href="/challenges">
+                  <Trophy className="h-4 w-4 mr-2" />
+                  Challenges
+                </Link>
+              </Button>
+            </div>
           </section>
         </div>
         <aside className="space-y-6 xl:w-250">

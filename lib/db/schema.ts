@@ -236,6 +236,118 @@ export const resourceEmbeddings = pgTable(
 );
 
 // ============================================================================
+// Challenges
+// ============================================================================
+
+/**
+ * Challenge difficulty type
+ */
+export type ChallengeDifficulty = 'easy' | 'medium' | 'hard';
+
+/**
+ * Challenge status type
+ * - locked: Challenge exists but cannot be started yet (requires previous difficulty completion)
+ * - pending: Ready to have questions generated
+ * - generating: Questions are being generated
+ * - complete: Questions generated and ready to play
+ * - failed: Question generation failed
+ */
+export type ChallengeStatus = 'locked' | 'pending' | 'generating' | 'complete' | 'failed';
+
+/**
+ * Challenge progress status
+ * - not_started: Progress record exists but no questions answered
+ * - in_progress: User has started answering questions
+ * - completed: User has finished the challenge
+ */
+export type ChallengeProgressStatus = 'not_started' | 'in_progress' | 'completed';
+
+/**
+ * Challenges table - Stores challenge metadata per resource section
+ * These are created when a goal selects a resource, and questions are generated in background
+ */
+export const challenges = pgTable(
+  'challenges',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    goalId: uuid('goal_id')
+      .notNull()
+      .references(() => goals.id, { onDelete: 'cascade' }),
+    sectionId: uuid('section_id')
+      .notNull()
+      .references(() => learningResourceSections.id, { onDelete: 'cascade' }),
+    sectionTitle: text('section_title').notNull(),
+    sectionTopics: jsonb('section_topics').$type<string[]>().default([]),
+    difficulty: text('difficulty').$type<ChallengeDifficulty>().default('easy').notNull(),
+    status: text('status').$type<ChallengeStatus>().default('pending').notNull(),
+    totalQuestions: integer('total_questions').default(10).notNull(),
+    errorMessage: text('error_message'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => [
+    index('challenges_goal_id_idx').on(table.goalId),
+    index('challenges_section_id_idx').on(table.sectionId),
+    index('challenges_status_idx').on(table.status),
+    uniqueIndex('challenges_goal_section_difficulty_unique').on(table.goalId, table.sectionId, table.difficulty)
+  ]
+);
+
+/**
+ * Challenge questions table - Stores the questions for challenges
+ */
+export const challengeQuestions = pgTable(
+  'challenge_questions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    challengeId: uuid('challenge_id')
+      .notNull()
+      .references(() => challenges.id, { onDelete: 'cascade' }),
+    questionNumber: integer('question_number').notNull(),
+    question: text('question').notNull(),
+    options: jsonb('options').$type<{ label: string; text: string }[]>().notNull(),
+    correctAnswer: text('correct_answer').notNull(),
+    explanation: text('explanation').notNull(),
+    hint: text('hint'),
+    createdAt: timestamp('created_at').defaultNow().notNull()
+  },
+  (table) => [
+    index('challenge_questions_challenge_id_idx').on(table.challengeId),
+    uniqueIndex('challenge_questions_challenge_number_unique').on(table.challengeId, table.questionNumber)
+  ]
+);
+
+/**
+ * Challenge progress table - Tracks user's progress on a challenge
+ * Allows resuming from where they left off
+ */
+export const challengeProgress = pgTable(
+  'challenge_progress',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    challengeId: uuid('challenge_id')
+      .notNull()
+      .references(() => challenges.id, { onDelete: 'cascade' }),
+    visitorId: text('visitor_id').notNull(),
+    currentQuestionIndex: integer('current_question_index').default(0).notNull(),
+    // Store answers as JSON: { questionNumber: { answer: string, isCorrect: boolean } }
+    answers: jsonb('answers').$type<Record<number, { answer: string; isCorrect: boolean }>>().default({}).notNull(),
+    correctAnswers: integer('correct_answers').default(0).notNull(),
+    earnedPoints: integer('earned_points').default(0).notNull(),
+    status: text('status').$type<ChallengeProgressStatus>().default('not_started').notNull(),
+    startedAt: timestamp('started_at').defaultNow().notNull(),
+    lastActivityAt: timestamp('last_activity_at').defaultNow().notNull(),
+    completedAt: timestamp('completed_at')
+  },
+  (table) => [
+    index('challenge_progress_challenge_id_idx').on(table.challengeId),
+    index('challenge_progress_visitor_id_idx').on(table.visitorId),
+    // One progress record per challenge per visitor
+    uniqueIndex('challenge_progress_challenge_visitor_unique').on(table.challengeId, table.visitorId)
+  ]
+);
+
+// ============================================================================
 // Relations
 // ============================================================================
 
@@ -278,7 +390,8 @@ export const goalsRelations = relations(goals, ({ one, many }) => ({
     references: [learningResources.id]
   }),
   schedules: many(schedules),
-  weeklyPlans: many(weeklyPlans)
+  weeklyPlans: many(weeklyPlans),
+  challenges: many(challenges)
 }));
 
 export const schedulesRelations = relations(schedules, ({ one, many }) => ({
@@ -312,5 +425,32 @@ export const planSessionsRelations = relations(planSessions, ({ one }) => ({
   weeklyPlan: one(weeklyPlans, {
     fields: [planSessions.weeklyPlanId],
     references: [weeklyPlans.id]
+  })
+}));
+
+export const challengesRelations = relations(challenges, ({ one, many }) => ({
+  goal: one(goals, {
+    fields: [challenges.goalId],
+    references: [goals.id]
+  }),
+  section: one(learningResourceSections, {
+    fields: [challenges.sectionId],
+    references: [learningResourceSections.id]
+  }),
+  questions: many(challengeQuestions),
+  progress: many(challengeProgress)
+}));
+
+export const challengeQuestionsRelations = relations(challengeQuestions, ({ one }) => ({
+  challenge: one(challenges, {
+    fields: [challengeQuestions.challengeId],
+    references: [challenges.id]
+  })
+}));
+
+export const challengeProgressRelations = relations(challengeProgress, ({ one }) => ({
+  challenge: one(challenges, {
+    fields: [challengeProgress.challengeId],
+    references: [challenges.id]
   })
 }));
