@@ -437,12 +437,20 @@ export const challengesRelations = relations(challenges, ({ one, many }) => ({
     fields: [challenges.sectionId],
     references: [learningResourceSections.id]
   }),
-  questions: many(challengeQuestions)
+  questions: many(challengeQuestions),
+  progress: many(challengeProgress)
 }));
 
 export const challengeQuestionsRelations = relations(challengeQuestions, ({ one }) => ({
   challenge: one(challenges, {
     fields: [challengeQuestions.challengeId],
+    references: [challenges.id]
+  })
+}));
+
+export const challengeProgressRelations = relations(challengeProgress, ({ one }) => ({
+  challenge: one(challenges, {
+    fields: [challengeProgress.challengeId],
     references: [challenges.id]
   })
 }));
