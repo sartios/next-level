@@ -640,4 +640,114 @@ describe('weeklyPlanRepository integration tests', () => {
       expect(updatedPlan?.sessions).toHaveLength(1);
     });
   });
+
+  describe('createWeeklyPlan concurrency', () => {
+    it('should handle concurrent requests for the same goal and week without creating duplicates', async () => {
+      const weekNumber = 500; // Use a unique week number for this test
+
+      // Create multiple concurrent plan creation requests
+      const concurrentRequests = Array.from({ length: 5 }, (_, i) => {
+        const planData: NewWeeklyPlan = {
+          goalId: testGoalId,
+          weekNumber,
+          weekStartDate: new Date('2024-10-01'),
+          focusArea: `Concurrent Plan ${i + 1}`,
+          totalMinutes: 30 * (i + 1)
+        };
+
+        const sessions: NewPlanSession[] = [
+          {
+            dayOfWeek: 'Monday',
+            startTime: '09:00',
+            endTime: '09:30',
+            durationMinutes: 30,
+            topic: `Topic from request ${i + 1}`,
+            activities: [`Activity ${i + 1}`]
+          }
+        ];
+
+        return createWeeklyPlan(planData, sessions);
+      });
+
+      // Execute all requests concurrently
+      const results = await Promise.all(concurrentRequests);
+
+      // All requests should succeed (each one replaces the previous)
+      expect(results).toHaveLength(5);
+      results.forEach((result) => {
+        expect(result).toBeDefined();
+        expect(result.id).toBeDefined();
+        expect(result.weekNumber).toBe(weekNumber);
+      });
+
+      // Verify only ONE plan exists for this goal and week
+      const plan = await getWeeklyPlanByWeekNumber(testGoalId, weekNumber);
+      expect(plan).toBeDefined();
+      expect(plan?.sessions).toHaveLength(1);
+
+      // Verify no duplicate plans exist
+      const allPlans = await getWeeklyPlansByGoalId(testGoalId);
+      const plansForWeek = allPlans.filter((p) => p.weekNumber === weekNumber);
+      expect(plansForWeek).toHaveLength(1);
+    });
+
+    it('should serialize concurrent updates and preserve data integrity', async () => {
+      const weekNumber = 501;
+
+      // First, create an initial plan
+      const initialPlan: NewWeeklyPlan = {
+        goalId: testGoalId,
+        weekNumber,
+        weekStartDate: new Date('2024-10-08'),
+        focusArea: 'Initial Plan',
+        totalMinutes: 60
+      };
+
+      const initialSessions: NewPlanSession[] = [
+        {
+          dayOfWeek: 'Tuesday',
+          startTime: '10:00',
+          endTime: '11:00',
+          durationMinutes: 60,
+          topic: 'Initial Topic',
+          activities: ['Initial Activity']
+        }
+      ];
+
+      await createWeeklyPlan(initialPlan, initialSessions);
+
+      // Now send concurrent replacement requests
+      const replacementRequests = Array.from({ length: 3 }, (_, i) => {
+        const planData: NewWeeklyPlan = {
+          goalId: testGoalId,
+          weekNumber,
+          weekStartDate: new Date('2024-10-08'),
+          focusArea: `Replacement ${i + 1}`,
+          totalMinutes: 90
+        };
+
+        const sessions: NewPlanSession[] = [
+          {
+            dayOfWeek: 'Wednesday',
+            startTime: '14:00',
+            endTime: '15:30',
+            durationMinutes: 90,
+            topic: `Replacement Topic ${i + 1}`,
+            activities: [`Replacement Activity ${i + 1}`]
+          }
+        ];
+
+        return createWeeklyPlan(planData, sessions);
+      });
+
+      await Promise.all(replacementRequests);
+
+      // Verify only one plan exists and it's one of the replacements
+      const finalPlan = await getWeeklyPlanByWeekNumber(testGoalId, weekNumber);
+      expect(finalPlan).toBeDefined();
+      expect(finalPlan?.focusArea).toMatch(/^Replacement \d$/);
+      expect(finalPlan?.sessions).toHaveLength(1);
+      expect(finalPlan?.sessions[0].topic).toMatch(/^Replacement Topic \d$/);
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, inArray, sql } from 'drizzle-orm';
 import { requireDb } from './index';
 import { weeklyPlans, planSessions, type DayOfWeek, type PlanSessionStatus } from './schema';
 
@@ -62,46 +62,57 @@ export interface NewPlanSession {
 /**
  * Create a new weekly plan with sessions
  * If a plan already exists for the same goal and week, it will be replaced
+ * Uses ON CONFLICT DO UPDATE (upsert) for atomic handling of concurrent requests
  */
 export async function createWeeklyPlan(planData: NewWeeklyPlan, sessions: NewPlanSession[]): Promise<WeeklyPlanWithSessions> {
   const db = requireDb();
 
-  // Check if a plan already exists for this goal and week
-  const existingPlan = await getWeeklyPlanByWeekNumber(planData.goalId, planData.weekNumber);
-  if (existingPlan) {
-    // Delete the existing plan (cascade will delete sessions)
-    await deleteWeeklyPlan(existingPlan.id);
-  }
+  return await db.transaction(async (tx) => {
+    // Use upsert to atomically handle concurrent requests
+    // ON CONFLICT updates the existing row, preventing race conditions
+    const [upsertedPlan] = await tx
+      .insert(weeklyPlans)
+      .values({
+        goalId: planData.goalId,
+        weekNumber: planData.weekNumber,
+        weekStartDate: planData.weekStartDate,
+        focusArea: planData.focusArea,
+        totalMinutes: planData.totalMinutes,
+        completionPercentage: planData.completionPercentage ?? 0
+      })
+      .onConflictDoUpdate({
+        target: [weeklyPlans.goalId, weeklyPlans.weekNumber],
+        set: {
+          weekStartDate: sql`excluded.week_start_date`,
+          focusArea: sql`excluded.focus_area`,
+          totalMinutes: sql`excluded.total_minutes`,
+          completionPercentage: sql`excluded.completion_percentage`,
+          updatedAt: new Date()
+        }
+      })
+      .returning();
 
-  const [insertedPlan] = await db
-    .insert(weeklyPlans)
-    .values({
-      goalId: planData.goalId,
-      weekNumber: planData.weekNumber,
-      weekStartDate: planData.weekStartDate,
-      focusArea: planData.focusArea,
-      totalMinutes: planData.totalMinutes,
-      completionPercentage: planData.completionPercentage ?? 0
-    })
-    .returning();
+    // Delete all existing sessions for this plan (they will be replaced)
+    await tx.delete(planSessions).where(eq(planSessions.weeklyPlanId, upsertedPlan.id));
 
-  const insertedSessions: PlanSession[] = [];
-  if (sessions.length > 0) {
-    const sessionsToInsert = sessions.map((session) => ({
-      weeklyPlanId: insertedPlan.id,
-      dayOfWeek: session.dayOfWeek,
-      startTime: session.startTime,
-      endTime: session.endTime,
-      durationMinutes: session.durationMinutes,
-      topic: session.topic,
-      activities: session.activities
-    }));
+    const insertedSessions: PlanSession[] = [];
+    if (sessions.length > 0) {
+      const sessionsToInsert = sessions.map((session) => ({
+        weeklyPlanId: upsertedPlan.id,
+        dayOfWeek: session.dayOfWeek,
+        startTime: session.startTime,
+        endTime: session.endTime,
+        durationMinutes: session.durationMinutes,
+        topic: session.topic,
+        activities: session.activities
+      }));
 
-    const results = await db.insert(planSessions).values(sessionsToInsert).returning();
-    insertedSessions.push(...results);
-  }
+      const results = await tx.insert(planSessions).values(sessionsToInsert).returning();
+      insertedSessions.push(...results);
+    }
 
-  return { ...insertedPlan, sessions: insertedSessions };
+    return { ...upsertedPlan, sessions: insertedSessions };
+  });
 }
 
 /**
@@ -128,8 +139,9 @@ export async function getWeeklyPlansByGoalId(goalId: string): Promise<WeeklyPlan
 
   if (plans.length === 0) return [];
 
+  // Fetch all sessions for all plans in a single query
   const planIds = plans.map((p) => p.id);
-  const allSessions = await db.select().from(planSessions).where(eq(planSessions.weeklyPlanId, planIds[0])); // TODO: Use inArray for multiple
+  const allSessions = await db.select().from(planSessions).where(inArray(planSessions.weeklyPlanId, planIds));
 
   // Group sessions by plan
   const sessionsByPlan = new Map<string, PlanSession[]>();
@@ -139,14 +151,11 @@ export async function getWeeklyPlansByGoalId(goalId: string): Promise<WeeklyPlan
     sessionsByPlan.set(session.weeklyPlanId, existing);
   }
 
-  // Fetch all sessions for all plans
-  const plansWithSessions: WeeklyPlanWithSessions[] = [];
-  for (const plan of plans) {
-    const sessions = await db.select().from(planSessions).where(eq(planSessions.weeklyPlanId, plan.id));
-    plansWithSessions.push({ ...plan, sessions });
-  }
-
-  return plansWithSessions;
+  // Attach sessions to each plan
+  return plans.map((plan) => ({
+    ...plan,
+    sessions: sessionsByPlan.get(plan.id) || []
+  }));
 }
 
 /**
