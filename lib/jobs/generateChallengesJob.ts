@@ -2,7 +2,7 @@ import { after } from 'next/server';
 import { getUserById } from '@/lib/db/userRepository';
 import { getGoalById } from '@/lib/db/goalRepository';
 import { getLearningResourceWithSections } from '@/lib/db/resourceRepository';
-import { getChallengesByGoalId, updateChallengeStatus } from '@/lib/db/challengeRepository';
+import { getChallengesByGoalId, claimChallengeForGeneration } from '@/lib/db/challengeRepository';
 import { generateAllChallengesForGoal } from '@/lib/agents/ChallengeGeneratorAgent';
 
 /**
@@ -48,15 +48,24 @@ async function runGenerateChallengesJob(userId: string, goalId: string): Promise
       return;
     }
 
-    console.log(`[ChallengeJob] Generating ${pendingChallenges.length} challenges for goal ${goalId}`);
-
-    // Mark all as generating
+    // Atomically claim challenges for generation (prevents race conditions)
+    const claimedChallenges = [];
     for (const challenge of pendingChallenges) {
-      await updateChallengeStatus(challenge.id, 'generating');
+      const claimed = await claimChallengeForGeneration(challenge.id);
+      if (claimed) {
+        claimedChallenges.push(claimed);
+      }
     }
 
+    if (claimedChallenges.length === 0) {
+      console.log(`[ChallengeJob] No challenges claimed for goal ${goalId} (already being processed)`);
+      return;
+    }
+
+    console.log(`[ChallengeJob] Claimed ${claimedChallenges.length} challenges for goal ${goalId}`);
+
     // Generate challenges
-    const result = await generateAllChallengesForGoal(user, goal, resource, pendingChallenges);
+    const result = await generateAllChallengesForGoal(user, goal, resource, claimedChallenges);
 
     console.log(`[ChallengeJob] Completed for goal ${goalId}: ${result.success} success, ${result.failed} failed`);
   } catch (error) {

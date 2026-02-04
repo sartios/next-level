@@ -113,6 +113,26 @@ export async function updateChallengeStatus(
   return updated;
 }
 
+/**
+ * Atomically claim a challenge for generation.
+ * Only updates if current status is 'pending', preventing race conditions.
+ * Returns the challenge if successfully claimed, undefined if already claimed.
+ */
+export async function claimChallengeForGeneration(challengeId: string): Promise<Challenge | undefined> {
+  const db = requireDb();
+
+  const [claimed] = await db
+    .update(challenges)
+    .set({
+      status: 'generating' as ChallengeStatus,
+      updatedAt: new Date()
+    })
+    .where(and(eq(challenges.id, challengeId), eq(challenges.status, 'pending')))
+    .returning();
+
+  return claimed;
+}
+
 // ============================================================================
 // Challenge Questions
 // ============================================================================
