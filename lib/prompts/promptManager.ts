@@ -23,6 +23,21 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 const CACHE_TTL_MS = FIVE_MINUTES;
 
 /**
+ * Substitute template variables in a prompt string.
+ * Replaces {{variableName}} with the corresponding value from variables.
+ */
+function substituteVariables(template: string, variables?: Record<string, unknown>): string {
+  if (!variables) {
+    return template;
+  }
+  let result = template;
+  for (const [key, value] of Object.entries(variables)) {
+    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), String(value));
+  }
+  return result;
+}
+
+/**
  * Get a prompt from Opik by name.
  * Falls back to local definition if Opik is unavailable.
  */
@@ -48,7 +63,7 @@ export async function getAgentPrompt(name: AgentPromptName, variables?: Record<s
     }
   }
 
-  return localPrompt.prompt.trim();
+  return substituteVariables(localPrompt.prompt, variables).trim();
 }
 
 /**
