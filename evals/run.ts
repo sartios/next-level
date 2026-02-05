@@ -180,25 +180,28 @@ async function runAgentEvaluation(
   let datasetItems: DatasetItem[];
 
   if (source === 'local') {
-    // Load from local JSON file and sync to Opik
+    // Load from local JSON file and insert to Opik (without clearing existing items)
     console.log('Loading from local JSON file...');
     const localItems = loadDatasetItems(config.datasetFile);
 
-    // Clear existing items and insert fresh from local
-    await dataset.clear();
-
-    // Transform items to use proper UUIDs (Opik requires UUID format for IDs)
+    // Transform items to use proper UUIDs and mark as local source
     const itemsWithUuids = localItems.map((item) => ({
       ...item,
       originalId: item.id, // Keep original ID for reference
-      id: generateId() // Generate proper UUID
+      id: generateId(), // Generate proper UUID
+      source: 'local' // Mark as local source for filtering
     }));
 
+    // Insert local items to dataset (for Opik tracking)
     await dataset.insert(itemsWithUuids);
-    datasetItems = await dataset.getItems();
-    console.log(`Loaded ${datasetItems.length} items from local file`);
+
+    // Fetch all items and filter to only local ones (exclude remote-only items)
+    const allItems = await dataset.getItems();
+    datasetItems = allItems.filter((item) => item.source === 'local');
+
+    console.log(`Loaded ${datasetItems.length} local items (${allItems.length} total in Opik)`);
   } else {
-    // Load from Opik platform (includes items created in Opik UI)
+    // Load from Opik platform (includes all items: local and remote-only)
     console.log('Loading from Opik platform...');
     datasetItems = await dataset.getItems();
     console.log(`Found ${datasetItems.length} items in Opik dataset`);
