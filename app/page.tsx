@@ -87,7 +87,7 @@ export default function Home() {
   if (showUserCreationForm) {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-20">
-        <div className="max-w-4xl mx-auto space-y-10">
+        <div className="max-w-3xl mx-auto space-y-10">
           <BackButton onBack={handleBackFromUserCreationForm} />
           <UserCreationForm onUserCreated={handleUserCreated} isLoading={!!userId} />
         </div>

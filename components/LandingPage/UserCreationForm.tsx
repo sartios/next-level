@@ -64,7 +64,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       </div>
 
       <section className="space-y-3">
-        <Label htmlFor="occupation" className="text-sm font-bold uppercase tracking-widest text-border">
+        <Label htmlFor="occupation" className="text-sm text-foreground font-bold uppercase tracking-widest">
           Your Current Occupation
         </Label>
         <Input
@@ -79,7 +79,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       </section>
 
       <section className="space-y-3">
-        <Label htmlFor="strongest-skills" className="text-sm font-bold uppercase tracking-widest text-border">
+        <Label htmlFor="strongest-skills" className="text-sm font-bold uppercase tracking-widest text-foreground">
           Your Strongest Skills
         </Label>
         <Input
@@ -94,7 +94,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       </section>
 
       <section className="space-y-3">
-        <Label htmlFor="career-goals" className="text-sm font-bold uppercase tracking-widest text-border">
+        <Label htmlFor="career-goals" className="text-sm font-bold uppercase tracking-widest text-foreground">
           Your Career Goals
         </Label>
         <Input
