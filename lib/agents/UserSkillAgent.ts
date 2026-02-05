@@ -5,23 +5,14 @@ import { OpikHandlerOptions } from '@/lib/opik';
 import { getUserById, User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
+import { getAgentPrompt } from '@/lib/prompts';
 
-const SYSTEM_PROMPT = `You are a career development assistant.
-Your goal is to suggest a list of 10 skills that will help them achieve their career goals.
-**Do NOT include skills the user already has** (from the user's skills list).
-For each suggested skill, provide a short reasoning explaining why it is important and how it helps the individual.
-Prioritize skills from most important to least important (priority: 1 is highest, 10 is lowest).
-
-IMPORTANT: You MUST output ONLY valid JSON Lines format - one JSON object per line, with NO markdown code blocks, NO extra text, and NO explanations.
-Each line must be a valid JSON object with exactly these fields: "name", "priority", "reasoning".`;
-
-function buildUserPrompt(user: User): string {
-  return `User Profile:
-- Role: ${user.role}
-- Current Skills: ${user.skills.join(', ')}
-- Career Goals: ${user.careerGoals.join(', ')}
-
-Based on this profile, suggest 10 skills that will help this professional achieve their career goals. Remember to exclude skills they already have.`;
+async function buildUserPrompt(user: User): Promise<string> {
+  return getAgentPrompt('user-skill-agent:user-prompt', {
+    userRole: user.role,
+    userSkills: user.skills.join(', '),
+    userCareerGoals: user.careerGoals.join(', ')
+  });
 }
 
 const SkillSchema = z.object({
@@ -89,18 +80,17 @@ class UserSkillAgent {
 
     const emittedSkills: SuggestedSkill[] = [];
 
-    // Create Opik handler for tracing
     const handler = createAgentOpikHandler(this.agentName, 'stream', { userId }, opikOptions);
 
     try {
       yield { type: 'token', userId, content: 'Analyzing your profile...' };
 
       const llm = createStreamingLLM('gpt-5-mini');
-      const userPrompt = buildUserPrompt(user);
+      const [systemPrompt, userPrompt] = await Promise.all([getAgentPrompt('user-skill-agent:system-prompt'), buildUserPrompt(user)]);
 
       yield { type: 'token', userId, content: 'Generating skill suggestions...' };
 
-      const stream = await llm.stream([new SystemMessage(SYSTEM_PROMPT), new HumanMessage(userPrompt)], {
+      const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
         callbacks: [handler]
       });
 
