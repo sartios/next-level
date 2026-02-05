@@ -1,11 +1,15 @@
+import 'dotenv/config';
+
 import { Opik, evaluate, type EvaluationTask, type BaseMetric, generateId, Hallucination, AnswerRelevance, Usefulness } from 'opik';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 import { skillResourceRetrieverTask } from './tasks/skillResourceRetrieverTask.js';
-
-import { StructuredOutputMetric, RAGRetrievalMetric, ResponseTimeMetric } from './metrics/index.js';
+import { userSkillAgentTask } from './tasks/userSkillAgentTask.js';
+import { challengeGeneratorAgentTask } from './tasks/challengeGeneratorAgentTask.js';
+import { seedUserSkillAgentData, seedSkillResourceRetrieverData, seedChallengeGeneratorData } from './seed.js';
+import { UserSkillDatasetItem, SkillResourceDatasetItem, ChallengeGeneratorDatasetItem } from './types.js';
 
 // Dataset item type compatible with Opik's DatasetItemData
 type DatasetItem = {
@@ -18,15 +22,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // CLI argument parsing
+type DatasetSource = 'local' | 'opik';
+
 interface CliArgs {
   agent?: string;
   all?: boolean;
   samples?: number;
   verbose?: boolean;
+  source?: DatasetSource;
 }
 
 function parseArgs(): CliArgs {
-  const args: CliArgs = {};
+  const args: CliArgs = { source: 'local' }; // Default to local
   const argv = process.argv.slice(2);
 
   for (let i = 0; i < argv.length; i++) {
@@ -39,6 +46,14 @@ function parseArgs(): CliArgs {
       args.samples = parseInt(argv[++i], 10);
     } else if (arg === '--verbose') {
       args.verbose = true;
+    } else if (arg === '--source' && argv[i + 1]) {
+      const source = argv[++i];
+      if (source === 'local' || source === 'opik') {
+        args.source = source;
+      } else {
+        console.error(`Error: Invalid source "${source}". Must be "local" or "opik".`);
+        process.exit(1);
+      }
     } else if (arg === '--help' || arg === '-h') {
       console.log(`
 Opik Evaluation Runner
@@ -50,13 +65,31 @@ Options:
   --agent <name>   Run evaluation for a specific agent
   --all            Run all evaluations
   --samples <n>    Limit the number of samples to evaluate
+  --source <src>   Dataset source: "local" (JSON files) or "opik" (Opik platform)
+                   Default: local
   --verbose        Show detailed output
   --help, -h       Show this help message
 
+Available agents:
+  user-skill-agent         Evaluates skill suggestions for career development
+  skill-resource-retriever Evaluates learning resource retrieval quality
+  challenge-generator      Evaluates quiz question generation quality
+
+Dataset Sources:
+  local  - Load from local JSON files in evals/datasets/
+  opik   - Load from Opik platform (includes items created in Opik UI)
+
+Metrics (Opik built-in):
+  - Hallucination: Checks if output is grounded in context
+  - AnswerRelevance: Checks if output is relevant to the input
+  - Usefulness: Checks if output is useful for the user
+
 Examples:
-  npx tsx evals/run.ts --agent skill-resource-retriever
+  npx tsx evals/run.ts --agent user-skill-agent
+  npx tsx evals/run.ts --agent user-skill-agent --source opik
   npx tsx evals/run.ts --agent skill-resource-retriever --verbose
-  npx tsx evals/run.ts --all --samples 2
+  npx tsx evals/run.ts --agent challenge-generator --samples 2
+  npx tsx evals/run.ts --all --samples 2 --source opik
       `);
       process.exit(0);
     }
@@ -81,6 +114,7 @@ interface AgentConfig {
   datasetName: string;
   task: EvaluationTask<DatasetItem>;
   metrics: BaseMetric[];
+  seedData: (items: DatasetItem[]) => Promise<void>;
 }
 
 // Initialize built-in metrics
@@ -90,26 +124,36 @@ const answerRelevanceMetric = new AnswerRelevance({ model: LLM_AS_A_JUDGE_MODEL 
 const usefulnessMetric = new Usefulness({ model: LLM_AS_A_JUDGE_MODEL });
 
 const agentConfigs: Record<string, AgentConfig> = {
+  'user-skill-agent': {
+    name: 'user-skill-agent',
+    datasetFile: 'user-skill-agent.json',
+    datasetName: 'user-skill-agent-evaluation',
+    task: userSkillAgentTask as unknown as EvaluationTask<DatasetItem>,
+    metrics: [hallucinationMetric, answerRelevanceMetric, usefulnessMetric],
+    seedData: (items) => seedUserSkillAgentData(items as unknown as UserSkillDatasetItem[])
+  },
   'skill-resource-retriever': {
-    name: 'skill-resource-agent-retriever',
+    name: 'skill-resource-retriever-agent',
     datasetFile: 'skill-resource-retriever-agent.json',
     datasetName: 'skill-resource-retriever-evaluation',
     task: skillResourceRetrieverTask as unknown as EvaluationTask<DatasetItem>,
-    metrics: [
-      hallucinationMetric,
-      answerRelevanceMetric,
-      usefulnessMetric,
-      new RAGRetrievalMetric(),
-      new StructuredOutputMetric(),
-      new ResponseTimeMetric()
-    ]
+    metrics: [hallucinationMetric, answerRelevanceMetric, usefulnessMetric],
+    seedData: (items) => seedSkillResourceRetrieverData(items as unknown as SkillResourceDatasetItem[])
+  },
+  'challenge-generator': {
+    name: 'challenge-generator-agent',
+    datasetFile: 'challenge-generator-agent.json',
+    datasetName: 'challenge-generator-evaluation',
+    task: challengeGeneratorAgentTask as unknown as EvaluationTask<DatasetItem>,
+    metrics: [hallucinationMetric, answerRelevanceMetric, usefulnessMetric],
+    seedData: (items) => seedChallengeGeneratorData(items as unknown as ChallengeGeneratorDatasetItem[])
   }
 };
 
 // Run evaluation for a single agent using Opik's evaluate function
 async function runAgentEvaluation(
   agentKey: string,
-  options: { samples?: number; verbose?: boolean }
+  options: { samples?: number; verbose?: boolean; source?: DatasetSource }
 ): Promise<{
   agentName: string;
   experimentId: string;
@@ -121,32 +165,68 @@ async function runAgentEvaluation(
     throw new Error(`Unknown agent: ${agentKey}`);
   }
 
+  const source = options.source || 'local';
+
   console.log(`\n${'='.repeat(60)}`);
   console.log(`Evaluating: ${config.name}`);
+  console.log(`Dataset source: ${source}`);
   console.log(`${'='.repeat(60)}`);
 
   const client = new Opik({ projectName: process.env.OPIK_PROJECT_NAME });
 
-  // Load dataset items from JSON file
-  let datasetItems = loadDatasetItems(config.datasetFile);
+  // Get or create the dataset in Opik
+  const dataset = await client.getOrCreateDataset<DatasetItem>(config.datasetName);
+
+  let datasetItems: DatasetItem[];
+
+  if (source === 'local') {
+    // Load from local JSON file
+    console.log('Loading from local JSON file...');
+    const localItems = loadDatasetItems(config.datasetFile);
+
+    // Transform items to use proper UUIDs and mark as local source
+    datasetItems = localItems.map((item) => ({
+      ...item,
+      originalId: item.id, // Keep original ID for reference
+      id: generateId(), // Generate proper UUID
+      dataSource: 'local' // Mark as local source for filtering (avoid 'source' - reserved by Opik)
+    }));
+
+    console.log(`Loaded ${datasetItems.length} local items`);
+  } else {
+    // Load from Opik platform (includes all items: local and remote-only)
+    console.log('Loading from Opik platform...');
+    datasetItems = await dataset.getItems();
+    console.log(`Found ${datasetItems.length} items in Opik dataset`);
+
+    if (datasetItems.length === 0) {
+      throw new Error(`No items found in Opik dataset "${config.datasetName}". Create items in Opik UI or use --source local.`);
+    }
+  }
+
+  // Apply samples limit if specified
   if (options.samples && options.samples < datasetItems.length) {
     datasetItems = datasetItems.slice(0, options.samples);
   }
 
-  console.log(`Dataset items: ${datasetItems.length}`);
+  console.log(`Dataset items to evaluate: ${datasetItems.length}`);
 
-  // Get or create the dataset in Opik
-  const dataset = await client.getOrCreateDataset<DatasetItem>(config.datasetName);
+  // Seed the database with test data (this mutates datasetItems with fresh UUIDs)
+  console.log('Seeding database...');
+  await config.seedData(datasetItems);
+  console.log('Database seeded successfully');
 
-  // Transform items to use proper UUIDs (Opik requires UUID format for IDs)
-  const itemsWithUuids = datasetItems.map((item) => ({
-    ...item,
-    originalId: item.id, // Keep original ID for reference
-    id: generateId() // Generate proper UUID
-  }));
-
-  // Insert items into the dataset
-  await dataset.insert(itemsWithUuids);
+  // Update Opik dataset with mutated items (after seeding, so IDs match the database)
+  // This is needed for both sources because seeding mutates the items with fresh UUIDs
+  if (source === 'local') {
+    await dataset.clear();
+    await dataset.insert(datasetItems);
+    console.log('Inserted seeded items to Opik');
+  } else {
+    // For opik source, update existing items with mutated IDs
+    await dataset.update(datasetItems);
+    console.log('Updated Opik items with seeded IDs');
+  }
 
   // Create experiment name with timestamp
   const experimentName = `${config.name}-eval-${new Date().toISOString().slice(0, 19).replace(/[:-]/g, '')}`;
@@ -158,6 +238,7 @@ async function runAgentEvaluation(
   }
 
   // Run the evaluation using Opik's evaluate function
+  // Items were inserted to Opik after seeding, so dataset now has the correct mutated IDs
   const result = await evaluate<DatasetItem>({
     dataset,
     task: config.task,
@@ -229,7 +310,8 @@ async function main() {
       try {
         const result = await runAgentEvaluation(agentKey, {
           samples: args.samples,
-          verbose: args.verbose
+          verbose: args.verbose,
+          source: args.source
         });
         allResults.push(result);
       } catch (error) {
@@ -244,7 +326,8 @@ async function main() {
       try {
         const result = await runAgentEvaluation(agentKey, {
           samples: args.samples,
-          verbose: args.verbose
+          verbose: args.verbose,
+          source: args.source
         });
         allResults.push(result);
       } catch (error) {

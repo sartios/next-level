@@ -1,0 +1,87 @@
+[
+  {
+    "id": "usa-001",
+    "name": "Skills for Frontend to Fullstack Transition",
+    "input": {
+      "user": {
+        "id": "11111111-1111-1111-1111-000000000001",
+        "role": "Frontend Developer",
+        "skills": ["JavaScript", "React", "CSS", "HTML"],
+        "careerGoals": ["Become a fullstack developer", "Learn backend technologies"]
+      }
+    },
+    "expected": {
+      "skillCount": 10,
+      "excludedSkills": ["JavaScript", "React", "CSS", "HTML"],
+      "expectedCategories": ["backend", "databases", "devops"]
+    }
+  },
+  {
+    "id": "usa-002",
+    "name": "Skills for Data Analyst to Data Scientist",
+    "input": {
+      "user": {
+        "id": "11111111-1111-1111-1111-000000000002",
+        "role": "Data Analyst",
+        "skills": ["SQL", "Excel", "Power BI", "Basic Python"],
+        "careerGoals": ["Transition to Data Scientist", "Learn machine learning"]
+      }
+    },
+    "expected": {
+      "skillCount": 10,
+      "excludedSkills": ["SQL", "Excel", "Power BI", "Basic Python"],
+      "expectedCategories": ["machine learning", "statistics", "programming"]
+    }
+  },
+  {
+    "id": "usa-003",
+    "name": "Skills for Junior to Senior Developer",
+    "input": {
+      "user": {
+        "id": "11111111-1111-1111-1111-000000000003",
+        "role": "Junior Software Engineer",
+        "skills": ["Python", "Git", "Unit Testing"],
+        "careerGoals": ["Become a senior engineer", "Lead technical projects"]
+      }
+    },
+    "expected": {
+      "skillCount": 10,
+      "excludedSkills": ["Python", "Git", "Unit Testing"],
+      "expectedCategories": ["architecture", "leadership", "system design"]
+    }
+  },
+  {
+    "id": "usa-004",
+    "name": "Skills for Designer to UX Lead",
+    "input": {
+      "user": {
+        "id": "11111111-1111-1111-1111-000000000004",
+        "role": "UI Designer",
+        "skills": ["Figma", "Sketch", "Visual Design", "Prototyping"],
+        "careerGoals": ["Become UX Lead", "Learn user research", "Manage design teams"]
+      }
+    },
+    "expected": {
+      "skillCount": 10,
+      "excludedSkills": ["Figma", "Sketch", "Visual Design", "Prototyping"],
+      "expectedCategories": ["user research", "leadership", "strategy"]
+    }
+  },
+  {
+    "id": "usa-005",
+    "name": "Skills for Backend to DevOps Engineer",
+    "input": {
+      "user": {
+        "id": "11111111-1111-1111-1111-000000000005",
+        "role": "Backend Developer",
+        "skills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"],
+        "careerGoals": ["Transition to DevOps", "Learn cloud infrastructure"]
+      }
+    },
+    "expected": {
+      "skillCount": 10,
+      "excludedSkills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"],
+      "expectedCategories": ["cloud", "ci/cd", "infrastructure"]
+    }
+  }
+]

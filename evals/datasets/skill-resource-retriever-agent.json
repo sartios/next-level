@@ -4,14 +4,14 @@
     "name": "Python Resources for Beginner Engineer",
     "input": {
       "user": {
-        "id": "eval-001",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
         "role": "Software Engineer",
         "skills": ["JavaScript", "React", "Node.js"],
         "careerGoals": ["Learn Python for data science", "Expand programming languages"]
       },
       "goal": {
-        "id": "goal-001",
-        "userId": "eval-001",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
         "name": "Python Programming",
         "reasoning": "Foundation for data science and backend development"
       }
@@ -31,14 +31,14 @@
     "name": "Machine Learning Resources for Intermediate",
     "input": {
       "user": {
-        "id": "eval-002",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
         "role": "Data Analyst",
         "skills": ["SQL", "Python", "Data Visualization"],
         "careerGoals": ["Transition to ML Engineer", "Build ML models"]
       },
       "goal": {
-        "id": "goal-002",
-        "userId": "eval-002",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000002",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
         "name": "Machine Learning",
         "reasoning": "Foundation needed for ML engineering career"
       }
@@ -58,14 +58,14 @@
     "name": "Deep Learning Resources for Expert",
     "input": {
       "user": {
-        "id": "eval-003",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000003",
         "role": "ML Engineer",
         "skills": ["Python", "Machine Learning", "TensorFlow"],
         "careerGoals": ["Specialize in deep learning", "Research applications"]
       },
       "goal": {
-        "id": "goal-003",
-        "userId": "eval-003",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000003",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000003",
         "name": "Deep Learning",
         "reasoning": "Advanced specialization for research and complex models"
       }
@@ -85,14 +85,14 @@
     "name": "Data Science Resources for Beginner",
     "input": {
       "user": {
-        "id": "eval-004",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000004",
         "role": "Business Analyst",
         "skills": ["Excel", "SQL", "Business Intelligence"],
         "careerGoals": ["Transition to Data Scientist", "Learn statistical analysis"]
       },
       "goal": {
-        "id": "goal-004",
-        "userId": "eval-004",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000004",
         "name": "Data Science Fundamentals",
         "reasoning": "Entry point for data science career transition"
       }
@@ -113,14 +113,14 @@
     "name": "React Native Resources for Mobile Developer",
     "input": {
       "user": {
-        "id": "eval-005",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000005",
         "role": "Frontend Developer",
         "skills": ["JavaScript", "React", "CSS"],
         "careerGoals": ["Build mobile apps", "Cross-platform development"]
       },
       "goal": {
-        "id": "goal-005",
-        "userId": "eval-005",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000005",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000005",
         "name": "Mobile Development with React Native",
         "reasoning": "Leverage existing React skills for mobile development"
       }
@@ -141,14 +141,14 @@
     "name": "Next.js Resources for React Developer",
     "input": {
       "user": {
-        "id": "eval-006",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000006",
         "role": "Frontend Developer",
         "skills": ["JavaScript", "React", "HTML", "CSS"],
         "careerGoals": ["Learn server-side rendering", "Build full-stack apps"]
       },
       "goal": {
-        "id": "goal-006",
-        "userId": "eval-006",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000006",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000006",
         "name": "Next.js Framework",
         "reasoning": "Advance React skills with server-side rendering and optimization"
       }
@@ -165,14 +165,14 @@
     "name": "UX Design Resources for Designer",
     "input": {
       "user": {
-        "id": "eval-007",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000007",
         "role": "Graphic Designer",
         "skills": ["Photoshop", "Illustrator", "Visual Design"],
         "careerGoals": ["Transition to UX Design", "Learn user research"]
       },
       "goal": {
-        "id": "goal-007",
-        "userId": "eval-007",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000007",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000007",
         "name": "UX Design Fundamentals",
         "reasoning": "Expand design skills into user experience"
       }
@@ -194,14 +194,14 @@
     "name": "Figma Resources for UI Designer",
     "input": {
       "user": {
-        "id": "eval-008",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000008",
         "role": "UI Designer",
         "skills": ["Sketch", "Adobe XD", "Visual Design"],
         "careerGoals": ["Master Figma", "Build design systems"]
       },
       "goal": {
-        "id": "goal-008",
-        "userId": "eval-008",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000008",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000008",
         "name": "Figma Design System Mastery",
         "reasoning": "Industry standard tool for modern UI design workflows"
       }
@@ -223,14 +223,14 @@
     "name": "Web Accessibility Resources for Developer",
     "input": {
       "user": {
-        "id": "eval-009",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000009",
         "role": "Web Developer",
         "skills": ["HTML", "CSS", "JavaScript", "React"],
         "careerGoals": ["Build accessible websites", "Learn WCAG standards"]
       },
       "goal": {
-        "id": "goal-009",
-        "userId": "eval-009",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000009",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000009",
         "name": "Web Accessibility",
         "reasoning": "Create inclusive digital experiences compliant with standards"
       }
@@ -247,14 +247,14 @@
     "name": "Blockchain Development Resources",
     "input": {
       "user": {
-        "id": "eval-010",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000010",
         "role": "Software Engineer",
         "skills": ["JavaScript", "Python", "Node.js"],
         "careerGoals": ["Learn blockchain development", "Build dApps"]
       },
       "goal": {
-        "id": "goal-010",
-        "userId": "eval-010",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000010",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000010",
         "name": "Blockchain and Ethereum Development",
         "reasoning": "Transition into Web3 and decentralized application development"
       }
@@ -271,14 +271,14 @@
     "name": "Data Visualization Resources",
     "input": {
       "user": {
-        "id": "eval-011",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000011",
         "role": "Data Analyst",
         "skills": ["Excel", "SQL", "Power BI basics"],
         "careerGoals": ["Master data visualization", "Tell compelling data stories"]
       },
       "goal": {
-        "id": "goal-011",
-        "userId": "eval-011",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000011",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000011",
         "name": "Advanced Data Visualization",
         "reasoning": "Communicate insights effectively through visualizations"
       }
@@ -298,14 +298,14 @@
     "name": "Cybersecurity Resources for IT Professional",
     "input": {
       "user": {
-        "id": "eval-012",
+        "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000012",
         "role": "IT Administrator",
         "skills": ["Networking", "Linux", "System Administration"],
         "careerGoals": ["Transition to cybersecurity", "Learn AI in security"]
       },
       "goal": {
-        "id": "goal-012",
-        "userId": "eval-012",
+        "id": "bbbbbbbb-bbbb-bbbb-bbbb-000000000012",
+        "userId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000012",
         "name": "Cybersecurity with AI",
         "reasoning": "Modern cybersecurity leverages AI for threat detection"
       }
