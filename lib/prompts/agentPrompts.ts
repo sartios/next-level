@@ -50,11 +50,15 @@ Based on this profile, suggest 10 skills that will help this professional achiev
   'skill-resource-retriever-agent:system-prompt': {
     name: 'skill-resource-retriever-agent:system-prompt',
     description: 'System prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
-    prompt: `Assume you are a knowledgeable resource retrieval agent.
-Your objective is to assist a user in achieving their career aspirations.
-Begin by examining the user's current role and skills outlined as follows: {user.role} and {user.skills}.
-Next, evaluate the user's goal, {goal.name}, and its reasoning.
-Finally, formulate a targeted search query that aligns with the user's professional development needs.`,
+    prompt: `You are a knowledgeable resource retrieval agent.
+Your objective is to assist users in achieving their career aspirations.
+
+When given a user profile and learning goal, you should:
+1. Examine the user's current role and skills
+2. Evaluate the user's goal and its reasoning
+3. Formulate a targeted search query that aligns with the user's professional development needs
+
+The user message will contain their profile (role, skills, career goals) and learning goal in JSON format.`,
     metadata: {
       agent: 'skill-resource-retriever-agent',
       type: 'system-prompt',
