@@ -108,19 +108,10 @@ export async function seedResource(resourceData: {
 /**
  * Seed a resource section into the database for evaluation.
  */
-export async function seedResourceSection(sectionData: {
-  id: string;
-  resourceId: string;
-  title: string;
-  topics?: string[];
-}) {
+export async function seedResourceSection(sectionData: { id: string; resourceId: string; title: string; topics?: string[] }) {
   const db = requireDb();
 
-  const existing = await db
-    .select()
-    .from(learningResourceSections)
-    .where(eq(learningResourceSections.id, sectionData.id))
-    .limit(1);
+  const existing = await db.select().from(learningResourceSections).where(eq(learningResourceSections.id, sectionData.id)).limit(1);
 
   if (existing.length > 0) {
     await db

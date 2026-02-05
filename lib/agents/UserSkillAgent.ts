@@ -86,10 +86,7 @@ class UserSkillAgent {
       yield { type: 'token', userId, content: 'Analyzing your profile...' };
 
       const llm = createStreamingLLM('gpt-5-mini');
-      const [systemPrompt, userPrompt] = await Promise.all([
-        getAgentPrompt('user-skill-agent:system-prompt'),
-        buildUserPrompt(user)
-      ]);
+      const [systemPrompt, userPrompt] = await Promise.all([getAgentPrompt('user-skill-agent:system-prompt'), buildUserPrompt(user)]);
 
       yield { type: 'token', userId, content: 'Generating skill suggestions...' };
 

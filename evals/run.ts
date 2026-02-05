@@ -8,11 +8,7 @@ import { fileURLToPath } from 'url';
 import { skillResourceRetrieverTask } from './tasks/skillResourceRetrieverTask.js';
 import { userSkillAgentTask } from './tasks/userSkillAgentTask.js';
 import { challengeGeneratorAgentTask } from './tasks/challengeGeneratorAgentTask.js';
-import {
-  seedUserSkillAgentData,
-  seedSkillResourceRetrieverData,
-  seedChallengeGeneratorData
-} from './seed.js';
+import { seedUserSkillAgentData, seedSkillResourceRetrieverData, seedChallengeGeneratorData } from './seed.js';
 import { UserSkillDatasetItem, SkillResourceDatasetItem, ChallengeGeneratorDatasetItem } from './types.js';
 
 // Dataset item type compatible with Opik's DatasetItemData
