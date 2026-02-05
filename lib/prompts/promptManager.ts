@@ -22,16 +22,81 @@ const promptCache: Map<string, { prompt: Prompt; timestamp: number }> = new Map(
 const FIVE_MINUTES = 5 * 60 * 1000;
 const CACHE_TTL_MS = FIVE_MINUTES;
 
+// Keys filtered as a defensive measure against prototype pollution patterns:
+// - __proto__: Special property that accesses/sets prototype chain; filtered to prevent
+//   misuse in downstream code that might do obj[key] assignments
+// - constructor: Provides access to constructor function; could be chained to reach prototype
+// - prototype: Reserved property on functions; filtered for defense in depth
+// Note: In this specific code, we only read values, but filtering these keys is a
+// security best practice to prevent misuse if the sanitized object is used elsewhere.
+const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
+/**
+ * Sanitize variables before template substitution.
+ * - Filters out dangerous keys that could cause prototype pollution
+ * - Only allows alphanumeric keys with underscores (matching template pattern)
+ * - Converts all values to strings to prevent object injection
+ * @internal Exported for testing purposes
+ */
+export function sanitizeVariables(variables?: Record<string, unknown>): Record<string, string> | undefined {
+  if (!variables) {
+    return undefined;
+  }
+
+  const sanitized: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(variables)) {
+    // Skip dangerous keys
+    if (DANGEROUS_KEYS.has(key)) {
+      continue;
+    }
+
+    // Only allow keys matching the template pattern (alphanumeric + underscore)
+    if (!/^\w+$/.test(key)) {
+      continue;
+    }
+
+    // Convert value to string safely
+    sanitized[key] = String(value);
+  }
+
+  return Object.keys(sanitized).length > 0 ? sanitized : undefined;
+}
+
+/**
+ * Substitute template variables in a prompt string.
+ * Replaces {{variableName}} with the corresponding value from variables.
+ * Uses single-pass replacement to prevent template injection attacks.
+ * @internal Exported for testing purposes
+ */
+export function substituteVariables(template: string, variables?: Record<string, unknown>): string {
+  if (!variables) {
+    return template;
+  }
+  // Single-pass replacement using callback to prevent recursive substitution
+  // This ensures values containing {{...}} are not processed as templates
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    if (Object.prototype.hasOwnProperty.call(variables, key)) {
+      return String(variables[key]);
+    }
+    return match; // Keep original placeholder if no matching variable
+  });
+}
+
 /**
  * Get a prompt from Opik by name.
  * Falls back to local definition if Opik is unavailable.
+ * Variables are sanitized before use to prevent injection attacks.
  */
 export async function getAgentPrompt(name: AgentPromptName, variables?: Record<string, unknown>): Promise<string> {
   const localPrompt = AGENT_PROMPTS[name];
 
+  // Sanitize variables before any use (protects both Opik format() and local substituteVariables)
+  const safeVariables = sanitizeVariables(variables);
+
   const cached = promptCache.get(name);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-    return variables ? cached.prompt.format(variables).trim() : cached.prompt.prompt.trim();
+    return safeVariables ? cached.prompt.format(safeVariables).trim() : cached.prompt.prompt.trim();
   }
 
   const client = getOpikClient();
@@ -41,14 +106,14 @@ export async function getAgentPrompt(name: AgentPromptName, variables?: Record<s
 
       if (prompt) {
         promptCache.set(name, { prompt, timestamp: Date.now() });
-        return variables ? prompt.format(variables).trim() : prompt.prompt.trim();
+        return safeVariables ? prompt.format(safeVariables).trim() : prompt.prompt.trim();
       }
     } catch (error) {
       console.warn(`Failed to fetch prompt "${name}" from Opik, using local fallback:`, error);
     }
   }
 
-  return localPrompt.prompt.trim();
+  return substituteVariables(localPrompt.prompt, safeVariables).trim();
 }
 
 /**
