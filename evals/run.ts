@@ -180,26 +180,19 @@ async function runAgentEvaluation(
   let datasetItems: DatasetItem[];
 
   if (source === 'local') {
-    // Load from local JSON file and insert to Opik (without clearing existing items)
+    // Load from local JSON file
     console.log('Loading from local JSON file...');
     const localItems = loadDatasetItems(config.datasetFile);
 
     // Transform items to use proper UUIDs and mark as local source
-    const itemsWithUuids = localItems.map((item) => ({
+    datasetItems = localItems.map((item) => ({
       ...item,
       originalId: item.id, // Keep original ID for reference
       id: generateId(), // Generate proper UUID
-      source: 'local' // Mark as local source for filtering
+      dataSource: 'local' // Mark as local source for filtering (avoid 'source' - reserved by Opik)
     }));
 
-    // Insert local items to dataset (for Opik tracking)
-    await dataset.insert(itemsWithUuids);
-
-    // Fetch all items and filter to only local ones (exclude remote-only items)
-    const allItems = await dataset.getItems();
-    datasetItems = allItems.filter((item) => item.source === 'local');
-
-    console.log(`Loaded ${datasetItems.length} local items (${allItems.length} total in Opik)`);
+    console.log(`Loaded ${datasetItems.length} local items`);
   } else {
     // Load from Opik platform (includes all items: local and remote-only)
     console.log('Loading from Opik platform...');
@@ -218,10 +211,17 @@ async function runAgentEvaluation(
 
   console.log(`Dataset items to evaluate: ${datasetItems.length}`);
 
-  // Seed the database with test data
+  // Seed the database with test data (this mutates datasetItems with fresh UUIDs)
   console.log('Seeding database...');
   await config.seedData(datasetItems);
   console.log('Database seeded successfully');
+
+  // For local source, clear dataset and insert mutated items (after seeding, so IDs match the database)
+  if (source === 'local') {
+    await dataset.clear();
+    await dataset.insert(datasetItems);
+    console.log('Inserted seeded items to Opik');
+  }
 
   // Create experiment name with timestamp
   const experimentName = `${config.name}-eval-${new Date().toISOString().slice(0, 19).replace(/[:-]/g, '')}`;
@@ -233,6 +233,7 @@ async function runAgentEvaluation(
   }
 
   // Run the evaluation using Opik's evaluate function
+  // Items were inserted to Opik after seeding, so dataset now has the correct mutated IDs
   const result = await evaluate<DatasetItem>({
     dataset,
     task: config.task,
