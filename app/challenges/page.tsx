@@ -244,7 +244,7 @@ export default function ChallengesPage() {
       {/* Stats Bar */}
       {stats && totalCount > 0 && (
         <div className="mb-8 py-4">
-          <div className="flex items-center gap-3 justify-baseline mb-2">
+          <div className="flex items-center gap-3 mb-2">
             <span className="font-medium">
               {completedCount} of {totalCount} challenges ready
             </span>
