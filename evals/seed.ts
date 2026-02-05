@@ -135,6 +135,8 @@ export async function seedResourceSection(sectionData: { id: string; resourceId:
 
 /**
  * Seed a challenge into the database for evaluation.
+ * Uses delete + insert to handle changing goalId/sectionId between runs
+ * and avoid unique constraint violations on (goalId, sectionId, difficulty).
  */
 export async function seedChallenge(challengeData: {
   id: string;
@@ -146,31 +148,20 @@ export async function seedChallenge(challengeData: {
 }) {
   const db = requireDb();
 
-  const existing = await db.select().from(challenges).where(eq(challenges.id, challengeData.id)).limit(1);
+  // Delete existing challenge if present (handles changing IDs between runs)
+  await db.delete(challenges).where(eq(challenges.id, challengeData.id));
 
-  if (existing.length > 0) {
-    await db
-      .update(challenges)
-      .set({
-        sectionTitle: challengeData.sectionTitle,
-        sectionTopics: challengeData.sectionTopics || [],
-        difficulty: challengeData.difficulty,
-        status: 'pending',
-        updatedAt: new Date()
-      })
-      .where(eq(challenges.id, challengeData.id));
-  } else {
-    await db.insert(challenges).values({
-      id: challengeData.id,
-      goalId: challengeData.goalId,
-      sectionId: challengeData.sectionId,
-      sectionTitle: challengeData.sectionTitle,
-      sectionTopics: challengeData.sectionTopics || [],
-      difficulty: challengeData.difficulty,
-      status: 'pending',
-      totalQuestions: 10
-    });
-  }
+  // Insert fresh challenge
+  await db.insert(challenges).values({
+    id: challengeData.id,
+    goalId: challengeData.goalId,
+    sectionId: challengeData.sectionId,
+    sectionTitle: challengeData.sectionTitle,
+    sectionTopics: challengeData.sectionTopics || [],
+    difficulty: challengeData.difficulty,
+    status: 'pending',
+    totalQuestions: 10
+  });
 }
 
 /**
@@ -248,6 +239,9 @@ export async function seedChallengeGeneratorData(items: ChallengeGeneratorDatase
 
     // Seed resource
     await seedResource(resource);
+
+    // Update challenge with new goalId
+    challenge.goalId = goalId;
 
     // Seed resource section
     await seedResourceSection({
