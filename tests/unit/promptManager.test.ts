@@ -232,25 +232,27 @@ Line 3: C`);
       expect(elapsed).toBeLessThan(100);
     });
 
-    it('should not allow prototype pollution via __proto__', () => {
-      const template = 'Value: {{value}}';
+    it('should substitute __proto__ if present as own property (sanitizeVariables filters it)', () => {
+      // substituteVariables itself doesn't filter dangerous keys - it just does substitution
+      // The protection comes from sanitizeVariables which is called in getAgentPrompt
+      const template = 'Value: {{__proto__}}';
       const obj = Object.create(null);
-      obj.value = 'safe';
-      obj.__proto__ = 'polluted';
+      obj.__proto__ = 'test';
 
       const result = substituteVariables(template, obj);
-      expect(result).toBe('Value: safe');
-      // Verify prototype wasn't polluted
-      expect(({} as Record<string, unknown>).__proto__).not.toBe('polluted');
+      // Without sanitizeVariables, the key would be substituted
+      expect(result).toBe('Value: test');
     });
 
-    it('should not allow prototype pollution via constructor', () => {
-      const template = 'Value: {{value}}';
+    it('should substitute constructor if present as own property (sanitizeVariables filters it)', () => {
+      // substituteVariables doesn't filter keys - sanitizeVariables does
+      // This test documents the behavior; getAgentPrompt calls sanitizeVariables first
+      const template = 'Value: {{value}}, Constructor: {{constructor}}';
       const result = substituteVariables(template, {
         value: 'safe',
-        constructor: 'polluted'
+        constructor: 'test'
       });
-      expect(result).toBe('Value: safe');
+      expect(result).toBe('Value: safe, Constructor: test');
     });
 
     it('should handle object values by converting to string', () => {
@@ -353,29 +355,34 @@ describe('sanitizeVariables', () => {
   });
 
   describe('security', () => {
-    it('should filter out __proto__ key', () => {
+    // These tests verify defensive filtering of keys that are commonly associated
+    // with prototype pollution patterns. While string values can't pollute prototypes,
+    // filtering these keys prevents the sanitized object from being misused in
+    // downstream code that might do unsafe property assignments.
+
+    it('should filter out __proto__ key as defensive measure', () => {
       const obj = Object.create(null);
       obj.name = 'safe';
-      obj.__proto__ = 'polluted';
+      obj.__proto__ = 'filtered';
 
       const result = sanitizeVariables(obj);
       expect(result).toEqual({ name: 'safe' });
       expect(result).not.toHaveProperty('__proto__');
     });
 
-    it('should filter out constructor key', () => {
+    it('should filter out constructor key as defensive measure', () => {
       const result = sanitizeVariables({
         name: 'safe',
-        constructor: 'polluted'
+        constructor: 'filtered'
       });
       expect(result).toEqual({ name: 'safe' });
       expect(result).not.toHaveProperty('constructor');
     });
 
-    it('should filter out prototype key', () => {
+    it('should filter out prototype key as defensive measure', () => {
       const result = sanitizeVariables({
         name: 'safe',
-        prototype: 'polluted'
+        prototype: 'filtered'
       });
       expect(result).toEqual({ name: 'safe' });
       expect(result).not.toHaveProperty('prototype');
@@ -416,9 +423,9 @@ describe('sanitizeVariables', () => {
 
     it('should return undefined if all keys are filtered out', () => {
       const result = sanitizeVariables({
-        __proto__: 'polluted',
-        constructor: 'polluted',
-        'invalid-key': 'filtered'
+        __proto__: 'value1',
+        constructor: 'value2',
+        'invalid-key': 'value3'
       });
       expect(result).toBeUndefined();
     });
@@ -426,7 +433,7 @@ describe('sanitizeVariables', () => {
     it('should not modify the original object', () => {
       const original = {
         name: 'Alice',
-        __proto__: 'polluted'
+        __proto__: 'filtered'
       };
       const originalCopy = { ...original };
 
@@ -481,42 +488,55 @@ describe('sanitizeVariables', () => {
   });
 
   describe('integration with substituteVariables', () => {
-    it('should work together to prevent all injection attacks', () => {
+    it('should prevent template injection via values', () => {
       const template = 'Hello, {{name}}! Role: {{role}}';
-      const maliciousInput = {
-        name: '{{role}}',
-        role: 'Admin',
-        __proto__: 'polluted',
-        constructor: 'polluted',
-        '{{injected}}': 'HACKED'
+      const input = {
+        name: '{{role}}', // Attempting to inject template syntax in value
+        role: 'Admin'
       };
 
-      const sanitized = sanitizeVariables(maliciousInput);
+      const sanitized = sanitizeVariables(input);
       const result = substituteVariables(template, sanitized);
 
       // name should be the literal string "{{role}}", not substituted again
+      // This proves single-pass substitution prevents recursive injection
       expect(result).toBe('Hello, {{role}}! Role: Admin');
     });
 
-    it('should safely handle user-controlled input', () => {
+    it('should filter dangerous keys while passing through values', () => {
       const template = 'Welcome {{userName}}! Your goal: {{userGoal}}';
 
-      // Simulate user input that might be malicious
       const userInput = {
-        userName: '<script>alert("xss")</script>',
-        userGoal: "'; DROP TABLE users; --",
-        __proto__: { admin: true },
-        'constructor.prototype.isAdmin': 'true'
+        userName: 'Alice',
+        userGoal: 'Learn TypeScript',
+        __proto__: 'filtered', // Filtered as defensive measure
+        constructor: 'filtered', // Filtered as defensive measure
+        'invalid-key': 'filtered' // Filtered due to invalid characters
       };
 
       const sanitized = sanitizeVariables(userInput);
       const result = substituteVariables(template, sanitized);
 
-      // Values pass through (XSS/SQL protection is caller's responsibility)
-      // But dangerous keys are filtered
-      expect(result).toBe('Welcome <script>alert("xss")</script>! Your goal: \'; DROP TABLE users; --');
-      expect(sanitized).not.toHaveProperty('__proto__');
-      expect(sanitized).not.toHaveProperty('constructor.prototype.isAdmin');
+      expect(result).toBe('Welcome Alice! Your goal: Learn TypeScript');
+      expect(sanitized).toEqual({
+        userName: 'Alice',
+        userGoal: 'Learn TypeScript'
+      });
+    });
+
+    it('should pass through XSS/SQL content (sanitization is caller responsibility)', () => {
+      const template = 'Input: {{userInput}}';
+
+      const userInput = {
+        userInput: '<script>alert("xss")</script>'
+      };
+
+      const sanitized = sanitizeVariables(userInput);
+      const result = substituteVariables(template, sanitized);
+
+      // XSS content passes through - HTML escaping is the caller's responsibility
+      // This function only handles template variable injection, not output encoding
+      expect(result).toBe('Input: <script>alert("xss")</script>');
     });
   });
 });

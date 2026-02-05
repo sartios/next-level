@@ -22,10 +22,13 @@ const promptCache: Map<string, { prompt: Prompt; timestamp: number }> = new Map(
 const FIVE_MINUTES = 5 * 60 * 1000;
 const CACHE_TTL_MS = FIVE_MINUTES;
 
-// Keys that could be used for prototype pollution attacks:
-// - __proto__: Direct access to object's prototype; allows modifying Object.prototype
-// - constructor: Access to constructor function; can modify prototype via constructor.prototype
-// - prototype: Direct prototype property; modifying it affects all instances of a class
+// Keys filtered as a defensive measure against prototype pollution patterns:
+// - __proto__: Special property that accesses/sets prototype chain; filtered to prevent
+//   misuse in downstream code that might do obj[key] assignments
+// - constructor: Provides access to constructor function; could be chained to reach prototype
+// - prototype: Reserved property on functions; filtered for defense in depth
+// Note: In this specific code, we only read values, but filtering these keys is a
+// security best practice to prevent misuse if the sanitized object is used elsewhere.
 const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 /**
