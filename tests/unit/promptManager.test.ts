@@ -236,8 +236,7 @@ Line 3: C`);
       // substituteVariables itself doesn't filter dangerous keys - it just does substitution
       // The protection comes from sanitizeVariables which is called in getAgentPrompt
       const template = 'Value: {{__proto__}}';
-      const obj = Object.create(null);
-      obj.__proto__ = 'test';
+      const obj = JSON.parse('{"name":"safe","__proto__":"test"}');
 
       const result = substituteVariables(template, obj);
       // Without sanitizeVariables, the key would be substituted
@@ -361,9 +360,7 @@ describe('sanitizeVariables', () => {
     // downstream code that might do unsafe property assignments.
 
     it('should filter out __proto__ key as defensive measure', () => {
-      const obj = Object.create(null);
-      obj.name = 'safe';
-      obj.__proto__ = 'filtered';
+      const obj = JSON.parse('{"name":"safe","__proto__":"test"}');
 
       const result = sanitizeVariables(obj);
       expect(result).toEqual({ name: 'safe' });
@@ -423,7 +420,7 @@ describe('sanitizeVariables', () => {
 
     it('should return undefined if all keys are filtered out', () => {
       const result = sanitizeVariables({
-        __proto__: 'value1',
+        ['__proto__']: 'value1',
         constructor: 'value2',
         'invalid-key': 'value3'
       });
@@ -433,7 +430,7 @@ describe('sanitizeVariables', () => {
     it('should not modify the original object', () => {
       const original = {
         name: 'Alice',
-        __proto__: 'filtered'
+        ['__proto__']: 'value1'
       };
       const originalCopy = { ...original };
 
