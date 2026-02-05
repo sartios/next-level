@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Timer, CheckCircle2, BookOpen, Loader2 } from 'lucide-react';
@@ -11,6 +12,8 @@ interface ResourcesProps {
   userId: string;
   goalId: string;
   onResourceSelected?: (resourceId: string) => void;
+  onCommit?: () => void;
+  isSaving?: boolean;
 }
 
 interface ResourceCardProps {
@@ -18,9 +21,11 @@ interface ResourceCardProps {
   index: number;
   isSelected: boolean;
   onSelect: () => void;
+  onCommit?: () => void;
+  isSaving?: boolean;
 }
 
-function ResourceCard({ resource, index, isSelected, onSelect }: ResourceCardProps) {
+function ResourceCard({ resource, index, isSelected, onSelect, onCommit, isSaving }: ResourceCardProps) {
   return (
     <Card
       onClick={onSelect}
@@ -28,7 +33,7 @@ function ResourceCard({ resource, index, isSelected, onSelect }: ResourceCardPro
         isSelected ? 'border-accent ring-2 ring-accent/20' : 'border-border hover:border-accent/50 shadow-sm'
       }`}
     >
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col">
         <div className="flex-1 p-6 md:p-8">
           <div className="flex items-center justify-between gap-4 mb-4">
             <span className="text-border font-bold text-sm uppercase tracking-tight">{resource.provider}</span>
@@ -83,12 +88,27 @@ function ResourceCard({ resource, index, isSelected, onSelect }: ResourceCardPro
             </AccordionItem>
           </Accordion>
         </div>
+
+        {isSelected && onCommit && (
+          <div className="p-6 md:p-8 pt-0">
+            <Button
+              className="w-full h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+              disabled={isSaving}
+              onClick={(e) => {
+                e.stopPropagation();
+                onCommit();
+              }}
+            >
+              {isSaving ? 'Saving...' : 'Confirm & Set your weekly availability'}
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );
 }
 
-export default function Resources({ userId, goalId, onResourceSelected }: ResourcesProps) {
+export default function Resources({ userId, goalId, onResourceSelected, onCommit, isSaving }: ResourcesProps) {
   const { resources, isLoading, status, startStream } = useResourceStream();
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
 
@@ -120,6 +140,8 @@ export default function Resources({ userId, goalId, onResourceSelected }: Resour
             index={index}
             isSelected={selectedResourceId === resource.id}
             onSelect={() => handleSelect(resource.id)}
+            onCommit={onCommit}
+            isSaving={isSaving}
           />
         ))}
       </div>
