@@ -1,6 +1,5 @@
 import { generateChallengeQuestions } from '@/lib/agents/ChallengeGeneratorAgent';
-import { getAgentPrompt } from '@/lib/prompts';
-import { QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts/agentPrompts';
+import { getAgentPrompt, QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts';
 import { ChallengeGeneratorDatasetItem } from '../types';
 import type { Challenge } from '@/lib/db/challengeRepository';
 
