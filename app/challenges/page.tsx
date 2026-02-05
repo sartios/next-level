@@ -264,7 +264,6 @@ export default function ChallengesPage() {
               </Button>
             )}
             <div className="flex gap-4 text-muted-foreground">
-              {/* {stats.complete > 0 && <span className="text-green-600">{stats.complete} ready</span>} */}
               {stats.generating > 0 && <span className="text-blue-600">{stats.generating} generating</span>}
               {stats.pending > 0 && <span>{stats.pending} pending</span>}
               {stats.locked > 0 && <span>{stats.locked} locked</span>}
