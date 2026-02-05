@@ -2,8 +2,7 @@ import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
-import { getAgentPrompt } from '@/lib/prompts';
-import { QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts/agentPrompts';
+import { getAgentPrompt, QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts';
 import type { User } from '@/lib/db/userRepository';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';
