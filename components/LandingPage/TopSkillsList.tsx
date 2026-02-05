@@ -127,7 +127,7 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
       <section className="space-y-8" id="top-skills">
         <div className="space-y-4">
           <h1 className="text-4xl md:text-6xl font-black tracking-tight">
-            Top Skills for <span className="text-accent">{occupation}</span>
+            The Top Skills for <span className="text-accent">{occupation}</span>
           </h1>
           <p className="text-xl text-muted-foreground font-medium leading-relaxed">Select the one skill you will master this year.</p>
         </div>
