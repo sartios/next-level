@@ -1,11 +1,19 @@
+import 'dotenv/config';
+
 import { Opik, evaluate, type EvaluationTask, type BaseMetric, generateId, Hallucination, AnswerRelevance, Usefulness } from 'opik';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 import { skillResourceRetrieverTask } from './tasks/skillResourceRetrieverTask.js';
-
-import { StructuredOutputMetric, RAGRetrievalMetric, ResponseTimeMetric } from './metrics/index.js';
+import { userSkillAgentTask } from './tasks/userSkillAgentTask.js';
+import { challengeGeneratorAgentTask } from './tasks/challengeGeneratorAgentTask.js';
+import {
+  seedUserSkillAgentData,
+  seedSkillResourceRetrieverData,
+  seedChallengeGeneratorData
+} from './seed.js';
+import { UserSkillDatasetItem, SkillResourceDatasetItem, ChallengeGeneratorDatasetItem } from './types.js';
 
 // Dataset item type compatible with Opik's DatasetItemData
 type DatasetItem = {
@@ -53,9 +61,20 @@ Options:
   --verbose        Show detailed output
   --help, -h       Show this help message
 
+Available agents:
+  user-skill-agent         Evaluates skill suggestions for career development
+  skill-resource-retriever Evaluates learning resource retrieval quality
+  challenge-generator      Evaluates quiz question generation quality
+
+Metrics (Opik built-in):
+  - Hallucination: Checks if output is grounded in context
+  - AnswerRelevance: Checks if output is relevant to the input
+  - Usefulness: Checks if output is useful for the user
+
 Examples:
-  npx tsx evals/run.ts --agent skill-resource-retriever
+  npx tsx evals/run.ts --agent user-skill-agent
   npx tsx evals/run.ts --agent skill-resource-retriever --verbose
+  npx tsx evals/run.ts --agent challenge-generator --samples 2
   npx tsx evals/run.ts --all --samples 2
       `);
       process.exit(0);
@@ -81,6 +100,7 @@ interface AgentConfig {
   datasetName: string;
   task: EvaluationTask<DatasetItem>;
   metrics: BaseMetric[];
+  seedData: (items: DatasetItem[]) => Promise<void>;
 }
 
 // Initialize built-in metrics
@@ -90,19 +110,29 @@ const answerRelevanceMetric = new AnswerRelevance({ model: LLM_AS_A_JUDGE_MODEL 
 const usefulnessMetric = new Usefulness({ model: LLM_AS_A_JUDGE_MODEL });
 
 const agentConfigs: Record<string, AgentConfig> = {
+  'user-skill-agent': {
+    name: 'user-skill-agent',
+    datasetFile: 'user-skill-agent.json',
+    datasetName: 'user-skill-agent-evaluation',
+    task: userSkillAgentTask as unknown as EvaluationTask<DatasetItem>,
+    metrics: [hallucinationMetric, answerRelevanceMetric, usefulnessMetric],
+    seedData: (items) => seedUserSkillAgentData(items as unknown as UserSkillDatasetItem[])
+  },
   'skill-resource-retriever': {
-    name: 'skill-resource-agent-retriever',
+    name: 'skill-resource-retriever-agent',
     datasetFile: 'skill-resource-retriever-agent.json',
     datasetName: 'skill-resource-retriever-evaluation',
     task: skillResourceRetrieverTask as unknown as EvaluationTask<DatasetItem>,
-    metrics: [
-      hallucinationMetric,
-      answerRelevanceMetric,
-      usefulnessMetric,
-      new RAGRetrievalMetric(),
-      new StructuredOutputMetric(),
-      new ResponseTimeMetric()
-    ]
+    metrics: [hallucinationMetric, answerRelevanceMetric, usefulnessMetric],
+    seedData: (items) => seedSkillResourceRetrieverData(items as unknown as SkillResourceDatasetItem[])
+  },
+  'challenge-generator': {
+    name: 'challenge-generator-agent',
+    datasetFile: 'challenge-generator-agent.json',
+    datasetName: 'challenge-generator-evaluation',
+    task: challengeGeneratorAgentTask as unknown as EvaluationTask<DatasetItem>,
+    metrics: [hallucinationMetric, answerRelevanceMetric, usefulnessMetric],
+    seedData: (items) => seedChallengeGeneratorData(items as unknown as ChallengeGeneratorDatasetItem[])
   }
 };
 
@@ -134,6 +164,11 @@ async function runAgentEvaluation(
   }
 
   console.log(`Dataset items: ${datasetItems.length}`);
+
+  // Seed the database with test data
+  console.log('Seeding database...');
+  await config.seedData(datasetItems);
+  console.log('Database seeded successfully');
 
   // Get or create the dataset in Opik
   const dataset = await client.getOrCreateDataset<DatasetItem>(config.datasetName);

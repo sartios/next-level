@@ -1,0 +1,217 @@
+[
+  {
+    "id": "cga-001",
+    "name": "Python Basics Quiz - Easy",
+    "input": {
+      "user": {
+        "id": "22222222-2222-2222-2222-000000000001",
+        "role": "Software Engineer",
+        "skills": ["JavaScript", "React"],
+        "careerGoals": ["Learn Python", "Data Science"]
+      },
+      "goal": {
+        "id": "33333333-3333-3333-3333-000000000001",
+        "userId": "22222222-2222-2222-2222-000000000001",
+        "name": "Python Programming",
+        "reasoning": "Foundation for data science career"
+      },
+      "resource": {
+        "id": "44444444-4444-4444-4444-000000000001",
+        "title": "Python for Beginners",
+        "provider": "udemy",
+        "resourceType": "course",
+        "description": "Complete Python bootcamp for beginners",
+        "learningObjectives": ["Variables", "Data types", "Control flow", "Functions"]
+      },
+      "challenge": {
+        "id": "55555555-5555-5555-5555-000000000001",
+        "goalId": "33333333-3333-3333-3333-000000000001",
+        "sectionId": "66666666-6666-6666-6666-000000000001",
+        "sectionTitle": "Variables and Data Types",
+        "sectionTopics": ["variables", "integers", "strings", "booleans", "type conversion"],
+        "difficulty": "easy",
+        "status": "pending",
+        "totalQuestions": 10,
+        "errorMessage": null,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    "expected": {
+      "questionCount": 10,
+      "difficulty": "easy"
+    }
+  },
+  {
+    "id": "cga-002",
+    "name": "React Hooks Quiz - Medium",
+    "input": {
+      "user": {
+        "id": "22222222-2222-2222-2222-000000000002",
+        "role": "Frontend Developer",
+        "skills": ["JavaScript", "HTML", "CSS"],
+        "careerGoals": ["Master React", "Build modern web apps"]
+      },
+      "goal": {
+        "id": "33333333-3333-3333-3333-000000000002",
+        "userId": "22222222-2222-2222-2222-000000000002",
+        "name": "React Development",
+        "reasoning": "Modern frontend framework expertise"
+      },
+      "resource": {
+        "id": "44444444-4444-4444-4444-000000000002",
+        "title": "Advanced React Patterns",
+        "provider": "coursera",
+        "resourceType": "course",
+        "description": "Deep dive into React hooks and patterns",
+        "learningObjectives": ["useState", "useEffect", "useContext", "Custom hooks"]
+      },
+      "challenge": {
+        "id": "55555555-5555-5555-5555-000000000002",
+        "goalId": "33333333-3333-3333-3333-000000000002",
+        "sectionId": "66666666-6666-6666-6666-000000000002",
+        "sectionTitle": "React Hooks",
+        "sectionTopics": ["useState", "useEffect", "dependency arrays", "cleanup functions"],
+        "difficulty": "medium",
+        "status": "pending",
+        "totalQuestions": 10,
+        "errorMessage": null,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    "expected": {
+      "questionCount": 10,
+      "difficulty": "medium"
+    }
+  },
+  {
+    "id": "cga-003",
+    "name": "Machine Learning Algorithms Quiz - Hard",
+    "input": {
+      "user": {
+        "id": "22222222-2222-2222-2222-000000000003",
+        "role": "Data Scientist",
+        "skills": ["Python", "Statistics", "Data Analysis"],
+        "careerGoals": ["ML Engineer", "Deep Learning specialist"]
+      },
+      "goal": {
+        "id": "33333333-3333-3333-3333-000000000003",
+        "userId": "22222222-2222-2222-2222-000000000003",
+        "name": "Machine Learning",
+        "reasoning": "Core ML algorithms for production systems"
+      },
+      "resource": {
+        "id": "44444444-4444-4444-4444-000000000003",
+        "title": "Machine Learning Specialization",
+        "provider": "coursera",
+        "resourceType": "course",
+        "description": "Comprehensive ML algorithms course",
+        "learningObjectives": ["Supervised learning", "Neural networks", "Model evaluation"]
+      },
+      "challenge": {
+        "id": "55555555-5555-5555-5555-000000000003",
+        "goalId": "33333333-3333-3333-3333-000000000003",
+        "sectionId": "66666666-6666-6666-6666-000000000003",
+        "sectionTitle": "Neural Networks and Deep Learning",
+        "sectionTopics": ["backpropagation", "activation functions", "gradient descent", "regularization"],
+        "difficulty": "hard",
+        "status": "pending",
+        "totalQuestions": 10,
+        "errorMessage": null,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    "expected": {
+      "questionCount": 10,
+      "difficulty": "hard"
+    }
+  },
+  {
+    "id": "cga-004",
+    "name": "SQL Fundamentals Quiz - Easy",
+    "input": {
+      "user": {
+        "id": "22222222-2222-2222-2222-000000000004",
+        "role": "Business Analyst",
+        "skills": ["Excel", "Data Analysis"],
+        "careerGoals": ["Learn SQL", "Database management"]
+      },
+      "goal": {
+        "id": "33333333-3333-3333-3333-000000000004",
+        "userId": "22222222-2222-2222-2222-000000000004",
+        "name": "SQL for Data Analysis",
+        "reasoning": "Essential skill for data work"
+      },
+      "resource": {
+        "id": "44444444-4444-4444-4444-000000000004",
+        "title": "SQL Bootcamp",
+        "provider": "udemy",
+        "resourceType": "course",
+        "description": "Complete SQL course from scratch",
+        "learningObjectives": ["SELECT statements", "Filtering", "Joins", "Aggregations"]
+      },
+      "challenge": {
+        "id": "55555555-5555-5555-5555-000000000004",
+        "goalId": "33333333-3333-3333-3333-000000000004",
+        "sectionId": "66666666-6666-6666-6666-000000000004",
+        "sectionTitle": "SELECT and Basic Queries",
+        "sectionTopics": ["SELECT", "WHERE", "ORDER BY", "LIMIT", "basic filtering"],
+        "difficulty": "easy",
+        "status": "pending",
+        "totalQuestions": 10,
+        "errorMessage": null,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    "expected": {
+      "questionCount": 10,
+      "difficulty": "easy"
+    }
+  },
+  {
+    "id": "cga-005",
+    "name": "System Design Quiz - Hard",
+    "input": {
+      "user": {
+        "id": "22222222-2222-2222-2222-000000000005",
+        "role": "Senior Software Engineer",
+        "skills": ["Java", "Microservices", "AWS"],
+        "careerGoals": ["Staff Engineer", "Architecture leadership"]
+      },
+      "goal": {
+        "id": "33333333-3333-3333-3333-000000000005",
+        "userId": "22222222-2222-2222-2222-000000000005",
+        "name": "System Design",
+        "reasoning": "Essential for senior engineering roles"
+      },
+      "resource": {
+        "id": "44444444-4444-4444-4444-000000000005",
+        "title": "System Design Interview",
+        "provider": "educative",
+        "resourceType": "course",
+        "description": "Comprehensive system design patterns",
+        "learningObjectives": ["Scalability", "Load balancing", "Caching", "Database sharding"]
+      },
+      "challenge": {
+        "id": "55555555-5555-5555-5555-000000000005",
+        "goalId": "33333333-3333-3333-3333-000000000005",
+        "sectionId": "66666666-6666-6666-6666-000000000005",
+        "sectionTitle": "Distributed Systems and Scalability",
+        "sectionTopics": ["horizontal scaling", "CAP theorem", "consistency models", "partitioning"],
+        "difficulty": "hard",
+        "status": "pending",
+        "totalQuestions": 10,
+        "errorMessage": null,
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+      }
+    },
+    "expected": {
+      "questionCount": 10,
+      "difficulty": "hard"
+    }
+  }
+]
