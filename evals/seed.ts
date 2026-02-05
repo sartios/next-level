@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { randomUUID } from 'crypto';
 import { requireDb } from '@/lib/db';
 import { users, goals, learningResources, learningResourceSections, challenges } from '@/lib/db/schema';
 import { UserSkillDatasetItem, SkillResourceDatasetItem, ChallengeGeneratorDatasetItem } from './types';
@@ -174,11 +175,16 @@ export async function seedChallenge(challengeData: {
 
 /**
  * Seed all data for UserSkillAgent evaluation items.
+ * Generates fresh UUIDs and updates the items for use in tasks.
  */
 export async function seedUserSkillAgentData(items: UserSkillDatasetItem[]) {
   console.log(`  Seeding ${items.length} users for user-skill-agent evaluation...`);
 
   for (const item of items) {
+    // Generate fresh UUID for user
+    const userId = randomUUID();
+    item.input.user.id = userId;
+
     await seedUser(item.input.user);
   }
 
@@ -187,11 +193,21 @@ export async function seedUserSkillAgentData(items: UserSkillDatasetItem[]) {
 
 /**
  * Seed all data for SkillResourceRetriever evaluation items.
+ * Generates fresh UUIDs and updates the items for use in tasks.
  */
 export async function seedSkillResourceRetrieverData(items: SkillResourceDatasetItem[]) {
   console.log(`  Seeding ${items.length} users and goals for skill-resource-retriever evaluation...`);
 
   for (const item of items) {
+    // Generate fresh UUIDs
+    const userId = randomUUID();
+    const goalId = randomUUID();
+
+    // Update item with new UUIDs
+    item.input.user.id = userId;
+    item.input.goal.id = goalId;
+    item.input.goal.userId = userId;
+
     await seedUser(item.input.user);
     await seedGoal(item.input.goal);
   }
@@ -201,12 +217,28 @@ export async function seedSkillResourceRetrieverData(items: SkillResourceDataset
 
 /**
  * Seed all data for ChallengeGenerator evaluation items.
+ * Generates fresh UUIDs and updates the items for use in tasks.
  */
 export async function seedChallengeGeneratorData(items: ChallengeGeneratorDatasetItem[]) {
   console.log(`  Seeding data for challenge-generator evaluation...`);
 
   for (const item of items) {
     const { user, goal, resource, challenge } = item.input;
+
+    // Generate fresh UUIDs
+    const userId = randomUUID();
+    const goalId = randomUUID();
+    const resourceId = randomUUID();
+    const sectionId = randomUUID();
+    const challengeId = randomUUID();
+
+    // Update item with new UUIDs
+    user.id = userId;
+    goal.id = goalId;
+    goal.userId = userId;
+    resource.id = resourceId;
+    challenge.id = challengeId;
+    challenge.sectionId = sectionId;
 
     // Seed user
     await seedUser(user);
@@ -219,17 +251,17 @@ export async function seedChallengeGeneratorData(items: ChallengeGeneratorDatase
 
     // Seed resource section
     await seedResourceSection({
-      id: challenge.sectionId,
-      resourceId: resource.id,
+      id: sectionId,
+      resourceId: resourceId,
       title: challenge.sectionTitle,
       topics: challenge.sectionTopics || undefined
     });
 
     // Seed challenge
     await seedChallenge({
-      id: challenge.id,
-      goalId: goal.id,
-      sectionId: challenge.sectionId,
+      id: challengeId,
+      goalId: goalId,
+      sectionId: sectionId,
       sectionTitle: challenge.sectionTitle,
       sectionTopics: challenge.sectionTopics,
       difficulty: challenge.difficulty
