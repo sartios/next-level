@@ -5,9 +5,7 @@ config({ path: '.env' });
 // Detect integration tests via:
 // 1. Explicit environment variable (most reliable)
 // 2. Test file path containing 'integration' (fallback)
-const isIntegrationTest =
-  process.env.INTEGRATION_TEST === 'true' ||
-  process.argv.some((arg) => arg.includes('integration'));
+const isIntegrationTest = process.env.INTEGRATION_TEST === 'true' || process.argv.some((arg) => arg.includes('integration'));
 
 // Only require DATABASE_URL for integration tests
 if (isIntegrationTest && !process.env.DATABASE_URL) {
