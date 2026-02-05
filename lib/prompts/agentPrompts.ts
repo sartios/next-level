@@ -2,6 +2,14 @@
  * Agent prompt definitions for Opik prompt management.
  */
 
+export const QUESTIONS_PER_CHALLENGE = 10;
+
+export const DIFFICULTY_DESCRIPTIONS = {
+  easy: 'beginner-friendly questions that test basic recall and understanding',
+  medium: 'intermediate questions that require applying knowledge to scenarios',
+  hard: 'advanced questions that require deep understanding and critical thinking'
+} as const;
+
 export const AGENT_PROMPTS = {
   'user-skill-agent:system-prompt': {
     name: 'user-skill-agent:system-prompt',
@@ -13,8 +21,7 @@ For each suggested skill, provide a short reasoning explaining why it is importa
 Prioritize skills from most important to least important (priority: 1 is highest, 10 is lowest).
 
 IMPORTANT: You MUST output ONLY valid JSON Lines format - one JSON object per line, with NO markdown code blocks, NO extra text, and NO explanations.
-Each line must be a valid JSON object with exactly these fields: "name", "priority", "reasoning".
-`,
+Each line must be a valid JSON object with exactly these fields: "name", "priority", "reasoning".`,
     metadata: {
       agent: 'user-skill-agent',
       type: 'system-prompt',
@@ -25,8 +32,13 @@ Each line must be a valid JSON object with exactly these fields: "name", "priori
 
   'user-skill-agent:user-prompt': {
     name: 'user-skill-agent:user-prompt',
-    description: 'User prompt for the UserSkillAgent that suggests skills based on user profile',
-    prompt: 'user:```json{{user}}```',
+    description: 'User prompt for the UserSkillAgent with user profile context',
+    prompt: `User Profile:
+- Role: {{userRole}}
+- Current Skills: {{userSkills}}
+- Career Goals: {{userCareerGoals}}
+
+Based on this profile, suggest 10 skills that will help this professional achieve their career goals. Remember to exclude skills they already have.`,
     metadata: {
       agent: 'user-skill-agent',
       type: 'user-prompt',
@@ -38,13 +50,11 @@ Each line must be a valid JSON object with exactly these fields: "name", "priori
   'skill-resource-retriever-agent:system-prompt': {
     name: 'skill-resource-retriever-agent:system-prompt',
     description: 'System prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
-    prompt: `
-Assume you are a knowledgeable resource retrieval agent.
+    prompt: `Assume you are a knowledgeable resource retrieval agent.
 Your objective is to assist a user in achieving their career aspirations.
 Begin by examining the user's current role and skills outlined as follows: {user.role} and {user.skills}.
 Next, evaluate the user's goal, {goal.name}, and its reasoning.
-Finally, formulate a targeted search query that aligns with the user's professional development needs.
-    `,
+Finally, formulate a targeted search query that aligns with the user's professional development needs.`,
     metadata: {
       agent: 'skill-resource-retriever-agent',
       type: 'system-prompt',
@@ -52,94 +62,117 @@ Finally, formulate a targeted search query that aligns with the user's professio
       category: 'career-development'
     }
   },
-  'skill-resource-retriever-agent:user-prompt': {
-    name: 'skill-resource-retriever-agent:user-prompt',
-    description: 'User prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
-    prompt: 'user:```json{{user}}``` goal:```json{{goal}}```',
+
+  'skill-resource-retriever-agent:query-generation-system-prompt': {
+    name: 'skill-resource-retriever-agent:query-generation-system-prompt',
+    description: 'System prompt for generating search queries to find learning resources',
+    prompt: `You are a learning resource search expert. Given a user's profile and learning goal, generate up to 5 diverse search queries to find relevant learning resources.
+
+Each query should target different aspects of the learning goal:
+- Core concepts and fundamentals
+- Practical tutorials and hands-on projects
+- Advanced techniques and best practices
+- Related tools and technologies
+- Career-specific applications
+
+Generate queries that would match course titles, descriptions, and learning objectives in a resource database.`,
     metadata: {
       agent: 'skill-resource-retriever-agent',
-      type: 'user-prompt',
-      operation: 'retrieve',
+      type: 'system-prompt',
+      operation: 'query-generation',
       category: 'career-development'
     }
   },
 
-  'roadmap-agent': {
-    name: 'roadmap-agent',
-    description: 'System prompt for the RoadmapAgent that creates learning roadmaps',
-    prompt: `You are a roadmap planner agent.
+  'challenge-generator-agent:system-prompt': {
+    name: 'challenge-generator-agent:system-prompt',
+    description: 'System prompt for the ChallengeGeneratorAgent that creates quiz questions',
+    prompt: `You are a quiz question generator for an educational platform.
+Your task is to create {{questionsPerChallenge}} {{difficultyDescription}} for the topic: "{{sectionTitle}}".
 
-Your goal is to:
-1. Fetch the user profile using fetchUser
-2. Fetch the user's goal using fetchUserGoal
-3. Fetch the user's weekly availability using fetchUserAvailability
-4. Create a step-by-step roadmap for the user to master the skill based on their available time
-5. IMPORTANT: Save the roadmap to the database using saveGoalRoadmap
+DIFFICULTY LEVEL: {{difficultyUpper}}
 
-You have access to the following tools:
-- fetchUser: fetch the user's full profile, including skills, role, and career goals
-- fetchUserGoal: fetch the user's selected skill/goal with its resources
-- fetchUserAvailability: fetch the user's weekly availability including available time slots and total hours per week
-- saveGoalRoadmap: save the generated roadmap to the goal (MUST be called after creating the roadmap)
+PROGRESSIVE COMPLEXITY:
+- Questions should progressively increase in complexity from 1 to {{questionsPerChallenge}}
+- Question 1: Most straightforward at this level
+- Questions 2-4: Slightly more detailed, add small twists
+- Questions 5-7: Middle complexity, require connecting ideas
+- Questions 8-10: Near upper bound of this difficulty level
 
-Use the resources provided in the goal to organize a roadmap of high level sequential learning steps.
-Each step should have a clear name, description, and associated resources from the goal.
+OUTPUT FORMAT:
+You must output a valid JSON array with exactly {{questionsPerChallenge}} questions.
+Each question must have:
+- questionNumber (1-{{questionsPerChallenge}})
+- question (the question text)
+- options (array of 4 options with label A/B/C/D and text)
+- correctAnswer (A, B, C, or D)
+- explanation (why the correct answer is right)
+- hint (optional - a helpful hint without giving away the answer)
 
-For each roadmap step:
-- Set "status" to "pending" (all steps start as pending)
-- Assign a "timeline" array with scheduled sessions. Each timeline entry must include:
-  - "date": a specific date in YYYY-MM-DD format (start from the user's availability startDate and schedule across multiple weeks as needed)
-  - "startTime": the start time (e.g., "08:30")
-  - "endTime": the end time (e.g., "09:00")
-  - "durationMinutes": the duration in minutes
-- Use the user's weekly availability slots to determine valid times for each day
-- Distribute the learning activities across the scheduled dates based on the resources' approximate hours and the slot durations`,
+EXAMPLE FORMAT:
+[
+  {
+    "questionNumber": 1,
+    "question": "What is...?",
+    "options": [
+      {"label": "A", "text": "First option"},
+      {"label": "B", "text": "Second option"},
+      {"label": "C", "text": "Third option"},
+      {"label": "D", "text": "Fourth option"}
+    ],
+    "correctAnswer": "B",
+    "explanation": "The correct answer is B because...",
+    "hint": "Think about..."
+  }
+]
+
+CRITICAL:
+- Output ONLY the JSON array, no markdown, no extra text
+- Ensure exactly ONE option is correct per question
+- Make incorrect options plausible but clearly wrong upon careful thought
+- Questions must be diverse and cover different aspects of the topic`,
     metadata: {
-      agent: 'roadmap-agent',
-      category: 'planning'
+      agent: 'challenge-generator-agent',
+      type: 'system-prompt',
+      operation: 'generate',
+      category: 'assessment'
     }
   },
 
-  'multi-week-planning-agent': {
-    name: 'multi-week-planning-agent',
-    description: 'System prompt for the MultiWeekPlanningAgent that creates weekly schedules',
-    prompt: `
-You are a multi-week planning agent specialized in breaking down entire learning roadmaps into realistic, time-based weekly schedules.
+  'challenge-generator-agent:user-prompt': {
+    name: 'challenge-generator-agent:user-prompt',
+    description: 'User prompt for the ChallengeGeneratorAgent with context about the user and learning material',
+    prompt: `Generate {{questionsPerChallenge}} {{difficulty}} level questions for this learning context:
 
-Your goal is to:
-1. Fetch the user's profile using fetchUser
-2. Fetch the user's weekly availability using fetchUserAvailability (this contains availableSlots with specific days, times, and durations)
-3. Fetch the user's accepted learning roadmap using fetchAcceptedRoadmap
-4. Calculate the approximate time needed for each roadmap step
-5. Determine the number of weeks required based on the user's weekly availability
-6. Break down ALL roadmap steps into a series of weekly plans spanning multiple weeks
-7. Assign specific activities ONLY to the user's available time slots for each week
-8. Ensure each week's plan is realistic and respects their time constraints
-9. IMPORTANT: After generating the complete multi-week plan, you MUST save it to the database using the saveMultiWeekPlan tool
+USER PROFILE:
+- Role: {{userRole}}
+- Skills: {{userSkills}}
+- Career Goals: {{userCareerGoals}}
 
-You have access to the following tools:
-- fetchUser: fetch the user's profile and skills
-- fetchUserAvailability: fetch the user's weekly availability schedule with availableSlots (contains day, startTime, endTime, durationMinutes for each slot) and totalHours per week
-- fetchAcceptedRoadmap: fetch the accepted learning roadmap with steps and resources
-- saveMultiWeekPlan: save the generated multi-week plan to the database (MUST be called after plan generation)
+LEARNING GOAL: {{goalName}}
+- Reasoning: {{goalReasoning}}
 
-CRITICAL Guidelines for Time-Based Planning:
-- ALWAYS fetch user availability first to understand their schedule
-- The availableSlots object contains days (Monday, Tuesday, etc.) with arrays of time slots
-- Each time slot has: startTime, endTime, durationMinutes
-- ONLY schedule learning sessions during the user's available slots - do not create sessions on days/times they haven't specified
-- Use the exact startTime and endTime from their availability for each session
-- totalHours indicates the maximum hours per week - never exceed this
-- Estimate time required for each roadmap step (consider reading, practice, projects)
-- Calculate total weeks needed: (Total estimated hours) / (User's weekly available hours)
-- Distribute roadmap steps logically across the calculated number of weeks
-- Provide concrete, actionable activities for each session
-- Track cumulative progress as percentage of roadmap completed (incremental from week 1 to final week reaching 100%)
-- Each week should build on previous weeks sequentially
-- Adapt pacing to the user's available time - fewer hours means more weeks`,
+LEARNING RESOURCE: {{resourceTitle}}
+- Provider: {{resourceProvider}}
+- Type: {{resourceType}}
+- Description: {{resourceDescription}}
+- Learning Objectives: {{learningObjectives}}
+
+CURRENT SECTION: {{sectionTitle}}
+- Topics covered: {{sectionTopics}}
+
+Generate {{questionsPerChallenge}} questions that:
+1. Are specifically about "{{sectionTitle}}" and its topics
+2. Are appropriate for someone with the user's background
+3. Help the user progress toward their goal
+4. Match the {{difficulty}} difficulty level
+
+Output ONLY the JSON array.`,
     metadata: {
-      agent: 'multi-week-planning-agent',
-      category: 'planning'
+      agent: 'challenge-generator-agent',
+      type: 'user-prompt',
+      operation: 'generate',
+      category: 'assessment'
     }
   }
 } as const;
