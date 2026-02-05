@@ -216,11 +216,16 @@ async function runAgentEvaluation(
   await config.seedData(datasetItems);
   console.log('Database seeded successfully');
 
-  // For local source, clear dataset and insert mutated items (after seeding, so IDs match the database)
+  // Update Opik dataset with mutated items (after seeding, so IDs match the database)
+  // This is needed for both sources because seeding mutates the items with fresh UUIDs
   if (source === 'local') {
     await dataset.clear();
     await dataset.insert(datasetItems);
     console.log('Inserted seeded items to Opik');
+  } else {
+    // For opik source, update existing items with mutated IDs
+    await dataset.update(datasetItems);
+    console.log('Updated Opik items with seeded IDs');
   }
 
   // Create experiment name with timestamp
