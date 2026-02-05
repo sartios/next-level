@@ -9,31 +9,15 @@ import { LearningResourceWithSections } from '../types';
 import { BaseAgent } from './BaseAgent';
 import { createLLM } from '@/lib/utils/llm';
 import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
+import { getAgentPrompt } from '@/lib/prompts';
+import { User } from '../db/userRepository';
+import { Goal } from '../db/goalRepository';
 
-const SYSTEM_PROMPT = `Assume you are a knowledgeable resource retrieval agent.
-Your objective is to assist a user in achieving their career aspirations.
-Begin by examining the user's current role and skills outlined as follows: {user.role} and {user.skills}.
-Next, evaluate the user's goal, {goal.name}, and its reasoning.
-Finally, formulate a targeted search query that aligns with the user's professional development needs.`;
-
-const QUERY_GENERATION_SYSTEM_PROMPT = `You are a learning resource search expert. Given a user's profile and learning goal, generate up to 5 diverse search queries to find relevant learning resources.
-
-Each query should target different aspects of the learning goal:
-- Core concepts and fundamentals
-- Practical tutorials and hands-on projects
-- Advanced techniques and best practices
-- Related tools and technologies
-- Career-specific applications
-
-Generate queries that would match course titles, descriptions, and learning objectives in a resource database.`;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildUserPrompt(user: any, goal: any): string {
+function buildUserPrompt(user: User, goal: Goal): string {
   return `user:\`\`\`json${JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') })}\`\`\` goal:\`\`\`json${JSON.stringify({ name: goal.name, reasoning: goal.reasoning })}\`\`\``;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildQueryGenerationUserPrompt(user: any, goal: any): string {
+function buildQueryGenerationUserPrompt(user: User, goal: Goal): string {
   return `User Profile:
 - Role: ${user.role}
 - Current Skills: ${user.skills.join(', ')}
@@ -65,10 +49,11 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
   protected readonly agentName = 'skill-resource-retriever-agent';
 
   protected async createAgent(): Promise<RetrieverAgentType> {
+    const systemPrompt = await getAgentPrompt('skill-resource-retriever-agent:system-prompt');
     return createAgent({
       model: createLLM('gpt-5-nano'),
       tools: [searchCuratedResourcesTool],
-      systemPrompt: new SystemMessage(SYSTEM_PROMPT),
+      systemPrompt: new SystemMessage(systemPrompt),
       responseFormat: providerStrategy(RetrieveOperationOutputSchema)
     });
   }
@@ -117,8 +102,9 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
 
       const queryLLM = createLLM('gpt-4o-mini');
       const queryUserPrompt = buildQueryGenerationUserPrompt(user, goal);
+      const queryGenerationSystemPrompt = await getAgentPrompt('skill-resource-retriever-agent:query-generation-system-prompt');
 
-      const queryResponse = await queryLLM.invoke([new SystemMessage(QUERY_GENERATION_SYSTEM_PROMPT), new HumanMessage(queryUserPrompt)], {
+      const queryResponse = await queryLLM.invoke([new SystemMessage(queryGenerationSystemPrompt), new HumanMessage(queryUserPrompt)], {
         callbacks: [handler],
         response_format: {
           type: 'json_schema',
