@@ -1,12 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Check, X, MoreVertical, Trophy } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircle2, Check, X, MoreVertical } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import type { Goal } from '@/lib/db/goalRepository';
@@ -278,12 +276,13 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
 
   return (
     <div>
+      <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11">This week&apos;s Plan</h1>
       <div className="flex flex-col xl:flex-row justify-between gap-8">
         <div className="space-y-8">
           <section className="space-y-4 mb-8 xl:mb-11">
             <div className="flex justify-between items-end">
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Overall Progress</h2>
+                <h2 className="text-2xl font-bold text-foreground">Progress</h2>
                 <p className="text-muted-foreground font-medium">
                   {completedSteps} of {totalSteps} topics completed{startedSteps > 0 && `, ${startedSteps} in progress`}
                 </p>
@@ -297,7 +296,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
           <section className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-1">
               <div>
-                <h2 className="text-2xl font-bold text-foreground">This Week&apos;s Plan</h2>
+                <h2 className="text-2xl font-bold text-foreground">Schedule</h2>
                 <p className="text-muted-foreground font-medium">Track your commitment and stay accountable</p>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -400,15 +399,6 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                 </div>
               </CardContent>
             </Card>
-
-            <div className="flex justify-end">
-              <Button asChild variant="outline" className="min-h-11 px-6 font-bold">
-                <Link href="/challenges">
-                  <Trophy className="h-4 w-4 mr-2" />
-                  Challenges
-                </Link>
-              </Button>
-            </div>
           </section>
         </div>
         <aside className="space-y-6 xl:w-250">
@@ -540,11 +530,6 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                       </div>
                     ) : null;
                   })()}
-                  {displayStatus === 'completed' && (
-                    <Button className="text-lg bg-foreground text-background min-h-11 px-6 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold hover:bg-foreground/90">
-                      Start Challenge
-                    </Button>
-                  )}
                 </div>
               </div>
             );

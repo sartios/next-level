@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import ActiveRoadmap from '@/components/GoalPage/ActiveRoadmap';
-import MotivationalHeader from '@/components/GoalPage/MotivationalHeader';
 import { getGoalId, getUserId } from '@/lib/storage';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { WeeklyPlanWithSessions } from '@/lib/db/weeklyPlanRepository';
@@ -66,16 +65,16 @@ export default function GoalPage() {
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-10 md:py-16">
+      <div className="max-w-6xl mx-auto py-10 md:py-16">
         <p className="text-red-500">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 md:py-16">
+    <div className="max-w-6xl mx-auto py-10 xl:py-12 md:py-16">
       {loading && (
-        <div className="max-w-6xl mx-auto px-6 py-10 md:py-16">
+        <div className="max-w-6xl mx-auto py-10 md:py-16">
           <p className="text-muted-foreground">Loading...</p>
         </div>
       )}
