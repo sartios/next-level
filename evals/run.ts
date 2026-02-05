@@ -190,7 +190,8 @@ async function runAgentEvaluation(
     // Transform items to use proper UUIDs (Opik requires UUID format for IDs)
     const itemsWithUuids = localItems.map((item) => ({
       ...item,
-      id: generateId()
+      originalId: item.id, // Keep original ID for reference
+      id: generateId() // Generate proper UUID
     }));
 
     await dataset.insert(itemsWithUuids);
