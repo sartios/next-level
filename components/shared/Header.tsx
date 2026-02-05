@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#fff0ef]/90 backdrop-blur px-6 py-4">
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
         <Link
           href="/"
           className="text-foreground font-black text-2xl focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 rounded hover:opacity-80 transition-opacity cursor-pointer bg-transparent border-0 p-0"
