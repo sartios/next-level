@@ -108,7 +108,7 @@ export default function Home() {
 
   if (showResources && goalId) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-12 md:py-16 space-y-10">
+      <div className="max-w-6xl mx-auto py-12 md:py-16 space-y-10">
         <BackButton onBack={handleBackFromResources} />
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8 pb-8">
           <div className="space-y-2">
