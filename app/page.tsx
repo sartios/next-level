@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 
 import HeroSection from '@/components/LandingPage/HeroSection';
 import FeaturesSection from '@/components/LandingPage/FeaturesSection';
@@ -88,7 +87,7 @@ export default function Home() {
   if (showUserCreationForm) {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-20">
-        <div className="max-w-4xl mx-auto space-y-10">
+        <div className="max-w-3xl mx-auto space-y-10">
           <BackButton onBack={handleBackFromUserCreationForm} />
           <UserCreationForm onUserCreated={handleUserCreated} isLoading={!!userId} />
         </div>
@@ -99,7 +98,7 @@ export default function Home() {
   if (showTopSkills) {
     return (
       <div className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-20">
-        <div className="max-w-4xl mx-auto space-y-10">
+        <div className="max-w-6xl mx-auto space-y-10">
           <BackButton onBack={handleBackFromTopSkillsForm} />
           <TopSkillsList userId={userId} occupation={occupation} onGoalCreated={handleGoalCreated} />
         </div>
@@ -109,7 +108,7 @@ export default function Home() {
 
   if (showResources && goalId) {
     return (
-      <div className="max-w-5xl mx-auto px-6 py-12 md:py-16 space-y-10">
+      <div className="max-w-6xl mx-auto py-12 md:py-16 space-y-10">
         <BackButton onBack={handleBackFromResources} />
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-8 pb-8">
           <div className="space-y-2">
@@ -119,14 +118,13 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <Resources userId={userId!} goalId={goalId!} onResourceSelected={handleResourceSelected} />
-        <Button
-          className="w-full h-20 text-2xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
-          disabled={!selectedResourceId || isSaving}
-          onClick={handleResourceCommitment}
-        >
-          {isSaving ? 'Saving...' : 'Set your weekly availability'}
-        </Button>
+        <Resources
+          userId={userId!}
+          goalId={goalId!}
+          onResourceSelected={handleResourceSelected}
+          onCommit={handleResourceCommitment}
+          isSaving={isSaving}
+        />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,14 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
   const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleProfileCreation = useCallback(async () => {
     if (isSubmitted) return;
@@ -64,13 +72,13 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       </div>
 
       <section className="space-y-3">
-        <Label htmlFor="occupation" className="text-sm font-bold uppercase tracking-widest text-border">
+        <Label htmlFor="occupation" className="text-sm text-foreground font-bold uppercase tracking-widest">
           Your Current Occupation
         </Label>
         <Input
           id="occupation"
           type="text"
-          placeholder="e.g., Software Engineer, Product Manager, Data Analyst"
+          placeholder={isMobile ? 'e.g., Software Engineer' : 'e.g., Software Engineer, Product Manager, Data Analyst'}
           value={occupation}
           onChange={(e) => setOccupation(e.target.value)}
           disabled={isFormDisabled}
@@ -79,13 +87,13 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       </section>
 
       <section className="space-y-3">
-        <Label htmlFor="strongest-skills" className="text-sm font-bold uppercase tracking-widest text-border">
+        <Label htmlFor="strongest-skills" className="text-sm font-bold uppercase tracking-widest text-foreground">
           Your Strongest Skills
         </Label>
         <Input
           id="strongest-skills"
           type="text"
-          placeholder="e.g., JavaScript, Team Leadership, Data Analysis"
+          placeholder={isMobile ? 'e.g., JavaScript, Leadership' : 'e.g., JavaScript, Team Leadership, Data Analysis'}
           value={userSkills}
           onChange={(e) => setUserSkills(e.target.value)}
           disabled={isFormDisabled}
@@ -94,13 +102,13 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       </section>
 
       <section className="space-y-3">
-        <Label htmlFor="career-goals" className="text-sm font-bold uppercase tracking-widest text-border">
+        <Label htmlFor="career-goals" className="text-sm font-bold uppercase tracking-widest text-foreground">
           Your Career Goals
         </Label>
         <Input
           id="career-goals"
           type="text"
-          placeholder="e.g., Transition to senior role, Lead technical projects"
+          placeholder={isMobile ? 'e.g., Senior role, Lead projects' : 'e.g., Transition to senior role, Lead technical projects'}
           value={careerGoals}
           onChange={(e) => setCareerGoals(e.target.value)}
           disabled={isFormDisabled}

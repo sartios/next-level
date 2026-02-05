@@ -297,9 +297,13 @@ function ChallengeContent() {
     return (
       <div className="max-w-3xl mx-auto px-6 py-10">
         <p className="text-red-500 mb-4">{error}</p>
-        <Button asChild variant="outline">
+        <Button
+          asChild
+          variant="ghost"
+          className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+        >
           <Link href="/challenges">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-5 w-5 mr-2" />
             Back to Challenges
           </Link>
         </Button>
@@ -362,14 +366,18 @@ function ChallengeContent() {
             )}
 
             <div className="flex justify-center gap-4 pt-4">
-              <Button variant="outline" asChild>
+              <Button
+                asChild
+                variant="ghost"
+                className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+              >
                 <Link href="/challenges">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  <ArrowLeft className="h-5 w-5 mr-2" />
                   All Challenges
                 </Link>
               </Button>
               <Button onClick={handleTryAgain}>
-                <RotateCcw className="h-4 w-4 mr-2" />
+                <RotateCcw className="h-5 w-5 mr-2" />
                 Try Again
               </Button>
             </div>
@@ -387,10 +395,16 @@ function ChallengeContent() {
     <div className="max-w-3xl mx-auto px-6 py-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <Link href="/challenges" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Challenges
-        </Link>
+        <Button
+          asChild
+          variant="ghost"
+          className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+        >
+          <Link href="/challenges">
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back to Challenges
+          </Link>
+        </Button>
         <Badge variant="outline" className={config.color}>
           {config.label}
         </Badge>
@@ -477,7 +491,7 @@ function ChallengeContent() {
               {showHint ? (
                 <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                   <p className="text-sm text-yellow-800">
-                    <Lightbulb className="inline h-4 w-4 mr-2" />
+                    <Lightbulb className="inline h-5 w-5 mr-2" />
                     {currentQuestion.hint}
                   </p>
                 </div>
@@ -525,7 +539,7 @@ function ChallengeContent() {
                 {currentQuestionIndex < totalQuestions - 1 ? (
                   <>
                     Next Question
-                    <ArrowRight className="h-4 w-4 ml-2" />
+                    <ArrowRight className="h-5 w-5 ml-2" />
                   </>
                 ) : (
                   'Finish Challenge'
@@ -538,7 +552,7 @@ function ChallengeContent() {
                   setSelectedAnswer(null);
                 }}
               >
-                <RotateCcw className="h-4 w-4 mr-2" />
+                <RotateCcw className="h-5 w-5 mr-2" />
                 Try Again
               </Button>
             )}

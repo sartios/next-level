@@ -188,7 +188,11 @@ export default function ChallengesPage() {
     return (
       <div className="max-w-6xl mx-auto px-6 py-10">
         <p className="text-red-500 mb-4">{error}</p>
-        <Button asChild variant="outline">
+        <Button
+          asChild
+          variant="ghost"
+          className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+        >
           <Link href="/goal">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Goal
@@ -224,30 +228,24 @@ export default function ChallengesPage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      {/* Back Link */}
-      <Link href="/goal" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6">
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Goal
-      </Link>
-
+    <div className="max-w-6xl mx-auto py-10 xl:py-12">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-3">Challenges</h1>
+      <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11">Challenges</h1>
+      <div>
         {resource && (
-          <p className="text-muted-foreground">
-            Based on: <span className="font-medium text-foreground">{resource.title}</span>
+          <p className="text-foreground xl:text-lg">
+            Based on: <span className="font-bold">{resource.title}</span>
             <span className="mx-2">•</span>
-            <span>{resource.provider}</span>
+            <span className="font-bold">{resource.provider}</span>
           </p>
         )}
       </div>
 
       {/* Stats Bar */}
       {stats && totalCount > 0 && (
-        <div className="mb-8 p-4 bg-muted/50 rounded-lg border">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">
+        <div className="mb-8 py-4">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="font-medium">
               {completedCount} of {totalCount} challenges ready
             </span>
             {stats.pending > 0 && (
@@ -265,15 +263,14 @@ export default function ChallengesPage() {
                 )}
               </Button>
             )}
+            <div className="flex gap-4 text-muted-foreground">
+              {stats.generating > 0 && <span className="text-blue-600">{stats.generating} generating</span>}
+              {stats.pending > 0 && <span>{stats.pending} pending</span>}
+              {stats.locked > 0 && <span>{stats.locked} locked</span>}
+              {stats.failed > 0 && <span className="text-red-600">{stats.failed} failed</span>}
+            </div>
           </div>
-          <Progress value={progressPercentage} className="h-2" />
-          <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
-            {stats.complete > 0 && <span className="text-green-600">{stats.complete} ready</span>}
-            {stats.generating > 0 && <span className="text-blue-600">{stats.generating} generating</span>}
-            {stats.pending > 0 && <span>{stats.pending} pending</span>}
-            {stats.locked > 0 && <span>{stats.locked} locked</span>}
-            {stats.failed > 0 && <span className="text-red-600">{stats.failed} failed</span>}
-          </div>
+          <Progress value={progressPercentage} className="h-4 bg-muted *:data-[slot='progress-indicator']:bg-accent" />
         </div>
       )}
 
@@ -311,13 +308,13 @@ export default function ChallengesPage() {
                       <div className="flex items-center justify-between mb-4">
                         <Badge variant="outline" className={isLocked ? 'bg-muted text-muted-foreground border-muted' : diffConfig.color}>
                           {isLocked ? (
-                            <Lock className="h-3 w-3 mr-1" />
+                            <Lock className="h-4 w-4 mr-1" />
                           ) : challenge.difficulty === 'easy' ? (
-                            <CheckCircle2 className={`h-3 w-3 mr-1 ${diffConfig.iconColor}`} />
+                            <CheckCircle2 className={`h-4 w-4 mr-1 ${diffConfig.iconColor}`} />
                           ) : challenge.difficulty === 'medium' ? (
-                            <Sparkles className={`h-3 w-3 mr-1 ${diffConfig.iconColor}`} />
+                            <Sparkles className={`h-4 w-4 mr-1 ${diffConfig.iconColor}`} />
                           ) : (
-                            <Trophy className={`h-3 w-3 mr-1 ${diffConfig.iconColor}`} />
+                            <Trophy className={`h-4 w-4 mr-1 ${diffConfig.iconColor}`} />
                           )}
                           {diffConfig.label}
                         </Badge>
