@@ -21,7 +21,33 @@
         "provider": "udemy",
         "resourceType": "course",
         "description": "Complete Python bootcamp for beginners",
-        "learningObjectives": ["Variables", "Data types", "Control flow", "Functions"]
+        "learningObjectives": ["Variables", "Data types", "Control flow", "Functions"],
+        "sections": [
+          {
+            "id": "66666666-6666-6666-6666-000000000001",
+            "resourceId": "44444444-4444-4444-4444-000000000001",
+            "title": "Variables and Data Types",
+            "estimatedMinutes": 45,
+            "orderIndex": 0,
+            "topics": ["variables", "integers", "strings", "booleans", "type conversion"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000011",
+            "resourceId": "44444444-4444-4444-4444-000000000001",
+            "title": "Control Flow",
+            "estimatedMinutes": 60,
+            "orderIndex": 1,
+            "topics": ["if statements", "loops", "while", "for", "break", "continue"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000012",
+            "resourceId": "44444444-4444-4444-4444-000000000001",
+            "title": "Functions and Modules",
+            "estimatedMinutes": 50,
+            "orderIndex": 2,
+            "topics": ["function definitions", "parameters", "return values", "imports"]
+          }
+        ]
       },
       "challenge": {
         "id": "55555555-5555-5555-5555-000000000001",
@@ -64,7 +90,33 @@
         "provider": "coursera",
         "resourceType": "course",
         "description": "Deep dive into React hooks and patterns",
-        "learningObjectives": ["useState", "useEffect", "useContext", "Custom hooks"]
+        "learningObjectives": ["useState", "useEffect", "useContext", "Custom hooks"],
+        "sections": [
+          {
+            "id": "66666666-6666-6666-6666-000000000002",
+            "resourceId": "44444444-4444-4444-4444-000000000002",
+            "title": "React Hooks",
+            "estimatedMinutes": 90,
+            "orderIndex": 0,
+            "topics": ["useState", "useEffect", "dependency arrays", "cleanup functions"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000021",
+            "resourceId": "44444444-4444-4444-4444-000000000002",
+            "title": "Context and State Management",
+            "estimatedMinutes": 75,
+            "orderIndex": 1,
+            "topics": ["useContext", "createContext", "provider pattern", "global state"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000022",
+            "resourceId": "44444444-4444-4444-4444-000000000002",
+            "title": "Custom Hooks",
+            "estimatedMinutes": 60,
+            "orderIndex": 2,
+            "topics": ["hook composition", "reusable logic", "useFetch", "useLocalStorage"]
+          }
+        ]
       },
       "challenge": {
         "id": "55555555-5555-5555-5555-000000000002",
@@ -107,7 +159,33 @@
         "provider": "coursera",
         "resourceType": "course",
         "description": "Comprehensive ML algorithms course",
-        "learningObjectives": ["Supervised learning", "Neural networks", "Model evaluation"]
+        "learningObjectives": ["Supervised learning", "Neural networks", "Model evaluation"],
+        "sections": [
+          {
+            "id": "66666666-6666-6666-6666-000000000003",
+            "resourceId": "44444444-4444-4444-4444-000000000003",
+            "title": "Neural Networks and Deep Learning",
+            "estimatedMinutes": 120,
+            "orderIndex": 0,
+            "topics": ["backpropagation", "activation functions", "gradient descent", "regularization"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000031",
+            "resourceId": "44444444-4444-4444-4444-000000000003",
+            "title": "Supervised Learning Algorithms",
+            "estimatedMinutes": 90,
+            "orderIndex": 1,
+            "topics": ["linear regression", "logistic regression", "decision trees", "SVM"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000032",
+            "resourceId": "44444444-4444-4444-4444-000000000003",
+            "title": "Model Evaluation and Tuning",
+            "estimatedMinutes": 75,
+            "orderIndex": 2,
+            "topics": ["cross-validation", "hyperparameter tuning", "bias-variance tradeoff", "metrics"]
+          }
+        ]
       },
       "challenge": {
         "id": "55555555-5555-5555-5555-000000000003",
@@ -150,7 +228,33 @@
         "provider": "udemy",
         "resourceType": "course",
         "description": "Complete SQL course from scratch",
-        "learningObjectives": ["SELECT statements", "Filtering", "Joins", "Aggregations"]
+        "learningObjectives": ["SELECT statements", "Filtering", "Joins", "Aggregations"],
+        "sections": [
+          {
+            "id": "66666666-6666-6666-6666-000000000004",
+            "resourceId": "44444444-4444-4444-4444-000000000004",
+            "title": "SELECT and Basic Queries",
+            "estimatedMinutes": 45,
+            "orderIndex": 0,
+            "topics": ["SELECT", "WHERE", "ORDER BY", "LIMIT", "basic filtering"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000041",
+            "resourceId": "44444444-4444-4444-4444-000000000004",
+            "title": "Joins and Relationships",
+            "estimatedMinutes": 60,
+            "orderIndex": 1,
+            "topics": ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "foreign keys", "table relationships"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000042",
+            "resourceId": "44444444-4444-4444-4444-000000000004",
+            "title": "Aggregations and Grouping",
+            "estimatedMinutes": 50,
+            "orderIndex": 2,
+            "topics": ["COUNT", "SUM", "AVG", "GROUP BY", "HAVING"]
+          }
+        ]
       },
       "challenge": {
         "id": "55555555-5555-5555-5555-000000000004",
@@ -193,7 +297,33 @@
         "provider": "educative",
         "resourceType": "course",
         "description": "Comprehensive system design patterns",
-        "learningObjectives": ["Scalability", "Load balancing", "Caching", "Database sharding"]
+        "learningObjectives": ["Scalability", "Load balancing", "Caching", "Database sharding"],
+        "sections": [
+          {
+            "id": "66666666-6666-6666-6666-000000000005",
+            "resourceId": "44444444-4444-4444-4444-000000000005",
+            "title": "Distributed Systems and Scalability",
+            "estimatedMinutes": 90,
+            "orderIndex": 0,
+            "topics": ["horizontal scaling", "CAP theorem", "consistency models", "partitioning"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000051",
+            "resourceId": "44444444-4444-4444-4444-000000000005",
+            "title": "Caching Strategies",
+            "estimatedMinutes": 60,
+            "orderIndex": 1,
+            "topics": ["Redis", "Memcached", "cache invalidation", "CDN", "write-through vs write-back"]
+          },
+          {
+            "id": "66666666-6666-6666-6666-000000000052",
+            "resourceId": "44444444-4444-4444-4444-000000000005",
+            "title": "Database Design and Sharding",
+            "estimatedMinutes": 75,
+            "orderIndex": 2,
+            "topics": ["database sharding", "replication", "SQL vs NoSQL", "indexing strategies"]
+          }
+        ]
       },
       "challenge": {
         "id": "55555555-5555-5555-5555-000000000005",
