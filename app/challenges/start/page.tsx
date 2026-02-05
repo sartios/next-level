@@ -497,7 +497,7 @@ function ChallengeContent() {
                 </div>
               ) : (
                 <Button variant="ghost" size="sm" onClick={() => setShowHint(true)}>
-                  <Lightbulb className="h-5 w-4 mr-2" />
+                  <Lightbulb className="h-4 w-4 mr-2" />
                   Show Hint
                 </Button>
               )}
