@@ -221,7 +221,7 @@ async function processChallengeGeneration(
 
     // Mark as complete
     await updateChallengeStatus(challenge.id, 'complete');
-    processSpan?.update({ output: { status: 'complete', questionCount: questions.length }, endTime: new Date() });
+    processSpan?.update({ output: { status: 'complete', questionCount: questions.length } });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     await updateChallengeStatus(challenge.id, 'failed', errorMessage);
@@ -230,10 +230,11 @@ async function processChallengeGeneration(
         exceptionType: error instanceof Error ? error.constructor.name : 'Error',
         message: errorMessage,
         traceback: error instanceof Error ? error.stack || '' : ''
-      },
-      endTime: new Date()
+      }
     });
     throw error;
+  } finally {
+    processSpan?.update({ endTime: new Date() });
   }
 }
 
@@ -279,8 +280,7 @@ export async function generateAllChallengesForGoal(
         failed,
         total: challenges.length,
         challenges: challenges.map((c) => ({ id: c.id, sectionTitle: c.sectionTitle, difficulty: c.difficulty }))
-      },
-      endTime: new Date()
+      }
     });
 
     return { success, failed };
@@ -290,11 +290,11 @@ export async function generateAllChallengesForGoal(
         exceptionType: err instanceof Error ? err.constructor.name : 'Error',
         message: err instanceof Error ? err.message : String(err),
         traceback: err instanceof Error ? err.stack || '' : ''
-      },
-      endTime: new Date()
+      }
     });
     throw err;
   } finally {
+    trace?.update({ endTime: new Date() });
     await getOpikClient()?.flush();
   }
 }

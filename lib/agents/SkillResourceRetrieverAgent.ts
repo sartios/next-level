@@ -160,7 +160,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
           input: { query }
         });
 
-        let resources: LearningResourceWithSections[];
+        let resources: LearningResourceWithSections[] | null = null;
         try {
           // Execute the search
           resources = await searchCuratedResources(query, 3);
@@ -168,8 +168,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
             output: {
               resultCount: resources.length,
               resources: resources.map((r) => ({ id: r.id, title: r.title, provider: r.provider }))
-            },
-            endTime: new Date()
+            }
           });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
@@ -178,11 +177,13 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
               exceptionType: error instanceof Error ? error.constructor.name : 'Error',
               message: errorMessage,
               traceback: error instanceof Error ? error.stack || '' : ''
-            },
-            endTime: new Date()
+            }
           });
-          throw error;
+        } finally {
+          toolSpan?.update({ endTime: new Date() });
         }
+
+        if (!resources) continue;
 
         // Stream each resource one-by-one
         for (const resource of resources) {
@@ -202,8 +203,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         output: {
           resourceCount: emittedResources.length,
           resources: emittedResources.map((r) => ({ id: r.id, title: r.title, provider: r.provider }))
-        },
-        endTime: new Date()
+        }
       });
 
       yield {
@@ -219,12 +219,12 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
           exceptionType: err instanceof Error ? err.constructor.name : 'Error',
           message,
           traceback: err instanceof Error ? err.stack || '' : ''
-        },
-        endTime: new Date()
+        }
       });
       yield { type: 'token', userId, goalId, content: `__stream_error__: ${message}` };
       throw err;
     } finally {
+      trace?.update({ endTime: new Date() });
       await getOpikClient()?.flush();
     }
   }
