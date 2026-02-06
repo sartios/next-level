@@ -2,7 +2,7 @@ import { createAgent, providerStrategy } from 'langchain';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { OpikHandlerOptions, createAgentTrace, getOpikClient, LLMUsageCapture } from '@/lib/opik';
+import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
 import { searchCuratedResourcesTool, searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
 import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
 import { LearningResourceWithSections } from '../types';
@@ -12,6 +12,7 @@ import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
 import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
 import { Goal } from '../db/goalRepository';
+import { NextLevelOpikCallbackHandler } from '../trace/handler';
 
 function buildUserPrompt(user: User, goal: Goal): string {
   return `user:\`\`\`json${JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') })}\`\`\` goal:\`\`\`json${JSON.stringify({ name: goal.name, reasoning: goal.reasoning })}\`\`\``;
@@ -108,13 +109,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
       const queryUserPrompt = buildQueryGenerationUserPrompt(user, goal);
       const queryGenerationSystemPrompt = await getAgentPrompt('skill-resource-retriever-agent:query-generation-system-prompt');
 
-      const llmSpan = trace?.span({
-        name: 'query-generation',
-        type: 'llm',
-        input: { userPrompt: queryUserPrompt }
-      });
-
-      const usageCapture = new LLMUsageCapture();
+      const usageCapture = new NextLevelOpikCallbackHandler({ parent: trace });
       const queryResponse = await queryLLM.invoke([new SystemMessage(queryGenerationSystemPrompt), new HumanMessage(queryUserPrompt)], {
         callbacks: [usageCapture],
         response_format: {
@@ -141,16 +136,6 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
       const parsedQueries = SearchQueriesSchema.safeParse(
         JSON.parse(typeof queryResponse.content === 'string' ? queryResponse.content : '')
       );
-
-      llmSpan?.update({
-        input: { prompts: usageCapture.prompts },
-        output: { queries: parsedQueries.data?.queries ?? null, generations: usageCapture.generations },
-        metadata: { invocationParams: usageCapture.invocationParams },
-        model: usageCapture.model,
-        provider: usageCapture.provider,
-        usage: usageCapture.usage,
-        endTime: new Date()
-      });
 
       if (!parsedQueries.success) {
         throw new Error('Failed to generate search queries');
@@ -179,7 +164,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         // Execute the search
         const resources = await searchCuratedResources(query, 3);
 
-        toolSpan?.update({ output: { resultCount: resources.length }, endTime: new Date() });
+        toolSpan?.update({ output: { resultCount: resources.length, resources }, endTime: new Date() });
 
         // Stream each resource one-by-one
         for (const resource of resources) {
@@ -195,7 +180,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         }
       }
 
-      trace?.update({ output: { resourceCount: emittedResources.length }, endTime: new Date() });
+      trace?.update({ output: { resourceCount: emittedResources.length, resources: emittedResources }, endTime: new Date() });
 
       yield {
         type: 'complete',
