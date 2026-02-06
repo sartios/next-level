@@ -164,7 +164,13 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         try {
           // Execute the search
           resources = await searchCuratedResources(query, 3);
-          toolSpan?.update({ output: { resultCount: resources.length, resources }, endTime: new Date() });
+          toolSpan?.update({
+            output: {
+              resultCount: resources.length,
+              resources: resources.map((r) => ({ id: r.id, title: r.title, provider: r.provider }))
+            },
+            endTime: new Date()
+          });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
           toolSpan?.update({
@@ -192,7 +198,13 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         }
       }
 
-      trace?.update({ output: { resourceCount: emittedResources.length, resources: emittedResources }, endTime: new Date() });
+      trace?.update({
+        output: {
+          resourceCount: emittedResources.length,
+          resources: emittedResources.map((r) => ({ id: r.id, title: r.title, provider: r.provider }))
+        },
+        endTime: new Date()
+      });
 
       yield {
         type: 'complete',

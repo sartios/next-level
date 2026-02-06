@@ -171,7 +171,13 @@ export async function generateChallengeQuestions(
   }
 
   llmSpan?.update({ endTime: new Date() });
-  ownTrace?.update({ output: { questionCount: parsed.length, questions: parsed }, endTime: new Date() });
+  ownTrace?.update({
+    output: {
+      questionCount: parsed.length,
+      questions: parsed.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
+    },
+    endTime: new Date()
+  });
   if (ownTrace) await getOpikClient()?.flush();
 
   return parsed;
@@ -267,7 +273,15 @@ export async function generateAllChallengesForGoal(
       }
     }
 
-    trace?.update({ output: { success, failed, total: challenges.length, challenges }, endTime: new Date() });
+    trace?.update({
+      output: {
+        success,
+        failed,
+        total: challenges.length,
+        challenges: challenges.map((c) => ({ id: c.id, sectionTitle: c.sectionTitle, difficulty: c.difficulty }))
+      },
+      endTime: new Date()
+    });
   } catch (err) {
     trace?.update({
       errorInfo: {
