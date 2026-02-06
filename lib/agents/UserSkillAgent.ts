@@ -1,10 +1,10 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { OpikHandlerOptions } from '@/lib/opik';
+import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
+import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
 import { getUserById, User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
-import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
 import { getAgentPrompt } from '@/lib/prompts';
 
 async function buildUserPrompt(user: User): Promise<string> {
@@ -80,7 +80,12 @@ class UserSkillAgent {
 
     const emittedSkills: SuggestedSkill[] = [];
 
-    const handler = createAgentOpikHandler(this.agentName, 'stream', { userId }, opikOptions);
+    const trace = createAgentTrace(this.agentName, 'stream', {
+      input: { role: user.role, skills: user.skills, careerGoals: user.careerGoals },
+      metadata: { userId, ...opikOptions?.metadata },
+      tags: opikOptions?.tags,
+      threadId: opikOptions?.threadId
+    });
 
     try {
       yield { type: 'token', userId, content: 'Analyzing your profile...' };
@@ -90,8 +95,10 @@ class UserSkillAgent {
 
       yield { type: 'token', userId, content: 'Generating skill suggestions...' };
 
+      const traceHandler = new NextLevelOpikCallbackHandler({ parent: trace });
       const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-        callbacks: [handler]
+        callbacks: [traceHandler],
+        runName: `${this.agentName}:stream`
       });
 
       let skillIndex = 0;
@@ -118,6 +125,7 @@ class UserSkillAgent {
               reasoning: parsed.reasoning
             };
             emittedSkills.push(skill);
+
             yield { type: 'skill', userId, skill };
           }
         }
@@ -144,8 +152,18 @@ class UserSkillAgent {
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
+      trace?.update({
+        errorInfo: {
+          exceptionType: err instanceof Error ? err.constructor.name : 'Error',
+          message,
+          traceback: err instanceof Error ? err.stack || '' : ''
+        }
+      });
       yield { type: 'token', userId, content: `__stream_error__: ${message}` };
       throw err;
+    } finally {
+      trace?.update({endTime: new Date()});
+      await getOpikClient()?.flush();
     }
   }
 }

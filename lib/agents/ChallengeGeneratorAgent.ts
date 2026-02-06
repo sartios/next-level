@@ -1,12 +1,13 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 
 import { createStreamingLLM } from '@/lib/utils/llm';
-import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
+import { createAgentTrace, getOpikClient, type Trace, type Span } from '@/lib/opik';
 import { getAgentPrompt, QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts';
 import type { User } from '@/lib/db/userRepository';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';
 import { updateChallengeStatus, addChallengeQuestions, type Challenge, type NewChallengeQuestion } from '@/lib/db/challengeRepository';
+import { NextLevelOpikCallbackHandler } from '../trace/handler';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -91,14 +92,17 @@ export async function generateChallengeQuestions(
   user: User,
   goal: Goal,
   resource: LearningResourceWithSections,
-  challenge: Challenge
+  challenge: Challenge,
+  parentSpan?: Trace | Span | null
 ): Promise<GeneratedQuestion[]> {
-  const handler = createAgentOpikHandler('challenge-generator-agent', 'generate-section', {
-    goalId: goal.id,
-    challengeId: challenge.id,
-    sectionId: challenge.sectionId,
-    difficulty: challenge.difficulty
-  });
+  const ownTrace = !parentSpan
+    ? createAgentTrace('challenge-generator-agent', 'generate-section', {
+        input: { goalId: goal.id, challengeId: challenge.id, sectionTitle: challenge.sectionTitle, difficulty: challenge.difficulty },
+        metadata: { goalId: goal.id, challengeId: challenge.id, sectionId: challenge.sectionId, difficulty: challenge.difficulty }
+      })
+    : null;
+
+  const spanParent = parentSpan || ownTrace;
 
   const llm = createStreamingLLM('gpt-5-mini');
 
@@ -112,22 +116,69 @@ export async function generateChallengeQuestions(
     challenge.difficulty
   );
 
-  let responseContent = '';
-  const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-    callbacks: [handler]
+  const llmSpan = spanParent?.span({
+    name: `generate-questions:${challenge.sectionTitle}`,
+    type: 'llm',
+    input: { sectionTitle: challenge.sectionTitle, difficulty: challenge.difficulty, userPrompt }
   });
 
-  for await (const chunk of stream) {
-    const content = chunk.content;
-    if (typeof content === 'string') {
-      responseContent += content;
+  let responseContent = '';
+  const traceHandler = new NextLevelOpikCallbackHandler({ parent: llmSpan });
+
+  try {
+    const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
+      callbacks: [traceHandler]
+    });
+
+    for await (const chunk of stream) {
+      const content = chunk.content;
+      if (typeof content === 'string') {
+        responseContent += content;
+      }
     }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    llmSpan?.update({
+      errorInfo: {
+        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
+        message: errorMessage,
+        traceback: error instanceof Error ? error.stack || '' : ''
+      },
+      endTime: new Date()
+    });
+    ownTrace?.update({
+      errorInfo: {
+        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
+        message: errorMessage,
+        traceback: error instanceof Error ? error.stack || '' : ''
+      },
+      endTime: new Date()
+    });
+    if (ownTrace) await getOpikClient()?.flush();
+    throw error;
   }
 
   const parsed = parseJsonResponse(responseContent);
+
   if (!parsed || parsed.length !== QUESTIONS_PER_CHALLENGE) {
+    llmSpan?.update({ endTime: new Date() });
+    ownTrace?.update({
+      errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
+      endTime: new Date()
+    });
+    if (ownTrace) await getOpikClient()?.flush();
     throw new Error(`Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`);
   }
+
+  llmSpan?.update({ endTime: new Date() });
+  ownTrace?.update({
+    output: {
+      questionCount: parsed.length,
+      questions: parsed.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
+    },
+    endTime: new Date()
+  });
+  if (ownTrace) await getOpikClient()?.flush();
 
   return parsed;
 }
@@ -135,18 +186,25 @@ export async function generateChallengeQuestions(
 /**
  * Process a single challenge: generate questions and save to database
  */
-export async function processChallengeGeneration(
+async function processChallengeGeneration(
   user: User,
   goal: Goal,
   resource: LearningResourceWithSections,
-  challenge: Challenge
+  challenge: Challenge,
+  parentTrace?: Trace | null
 ): Promise<void> {
+  const processSpan = parentTrace?.span({
+    name: `process-challenge:${challenge.sectionTitle}:${challenge.difficulty}`,
+    type: 'general',
+    input: { challengeId: challenge.id, sectionTitle: challenge.sectionTitle, difficulty: challenge.difficulty }
+  });
+
   // Mark as generating
   await updateChallengeStatus(challenge.id, 'generating');
 
   try {
     // Generate questions
-    const questions = await generateChallengeQuestions(user, goal, resource, challenge);
+    const questions = await generateChallengeQuestions(user, goal, resource, challenge, processSpan);
 
     // Transform to database format
     const dbQuestions: NewChallengeQuestion[] = questions.map((q) => ({
@@ -163,10 +221,20 @@ export async function processChallengeGeneration(
 
     // Mark as complete
     await updateChallengeStatus(challenge.id, 'complete');
+    processSpan?.update({ output: { status: 'complete', questionCount: questions.length } });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     await updateChallengeStatus(challenge.id, 'failed', errorMessage);
+    processSpan?.update({
+      errorInfo: {
+        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
+        message: errorMessage,
+        traceback: error instanceof Error ? error.stack || '' : ''
+      }
+    });
     throw error;
+  } finally {
+    processSpan?.update({ endTime: new Date() });
   }
 }
 
@@ -180,18 +248,53 @@ export async function generateAllChallengesForGoal(
   resource: LearningResourceWithSections,
   challenges: Challenge[]
 ): Promise<{ success: number; failed: number }> {
+  const trace = createAgentTrace('challenge-generator-agent', 'generate-all', {
+    input: {
+      role: user.role,
+      skills: user.skills,
+      careerGoals: user.careerGoals,
+      goalName: goal.name,
+      reasoning: goal.reasoning,
+      resourceTitle: resource.title
+    },
+    metadata: { goalId: goal.id, userId: user.id, resourceId: resource.id }
+  });
+
   let success = 0;
   let failed = 0;
 
-  for (const challenge of challenges) {
-    try {
-      await processChallengeGeneration(user, goal, resource, challenge);
-      success++;
-    } catch (error) {
-      console.error(`Failed to generate challenge for section ${challenge.sectionTitle}:`, error);
-      failed++;
+  try {
+    for (const challenge of challenges) {
+      try {
+        await processChallengeGeneration(user, goal, resource, challenge, trace);
+        success++;
+      } catch (error) {
+        console.error(`Failed to generate challenge for section ${challenge.sectionTitle}:`, error);
+        failed++;
+      }
     }
-  }
 
-  return { success, failed };
+    trace?.update({
+      output: {
+        success,
+        failed,
+        total: challenges.length,
+        challenges: challenges.map((c) => ({ id: c.id, sectionTitle: c.sectionTitle, difficulty: c.difficulty }))
+      }
+    });
+
+    return { success, failed };
+  } catch (err) {
+    trace?.update({
+      errorInfo: {
+        exceptionType: err instanceof Error ? err.constructor.name : 'Error',
+        message: err instanceof Error ? err.message : String(err),
+        traceback: err instanceof Error ? err.stack || '' : ''
+      }
+    });
+    throw err;
+  } finally {
+    trace?.update({ endTime: new Date() });
+    await getOpikClient()?.flush();
+  }
 }

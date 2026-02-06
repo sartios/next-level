@@ -140,10 +140,7 @@ export async function claimChallengeForGeneration(challengeId: string): Promise<
 /**
  * Get a specific question by challenge ID and question number
  */
-export async function getChallengeQuestion(
-  challengeId: string,
-  questionNumber: number
-): Promise<ChallengeQuestion | undefined> {
+export async function getChallengeQuestion(challengeId: string, questionNumber: number): Promise<ChallengeQuestion | undefined> {
   const db = requireDb();
 
   const results = await db

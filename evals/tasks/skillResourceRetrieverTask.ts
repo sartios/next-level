@@ -32,23 +32,38 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   const systemPrompt = await getAgentPrompt('skill-resource-retriever-agent:system-prompt');
 
   // Build context for grounding the evaluation
-  // Include the actual output schema that the agent returns
+  // Include retrieved resources as context so the Hallucination metric can verify
+  // the output faithfully represents what was fetched from the database
   const context = [
-    `User ID: ${item.input.user.id}`,
     `User role: ${item.input.user.role}`,
     `User current skills: ${item.input.user.skills.join(', ')}`,
     `User career goals: ${item.input.user.careerGoals.join(', ')}`,
-    `Goal ID: ${item.input.goal.id}`,
     `Goal: ${item.input.goal.name}`,
     `Goal reasoning: ${item.input.goal.reasoning}`,
     `Expected minimum resources: ${item.expected.minResourceCount}`,
     `Expected providers: ${item.expected.expectedProviders?.join(', ') || 'any'}`,
-    `Output format: Array of LearningResourceWithSections objects containing: id, url, title, description, provider, resourceType, learningObjectives, targetAudience, totalHours, sections (array of section objects)`
+    `Output format: Array of learning resources, each with: title, description, provider, resourceType, learningObjectives, targetAudience, totalHours, sections`,
+    ...resources.map(
+      (r) =>
+        `Retrieved resource: "${r.title}" by ${r.provider} (${r.resourceType}). Description: ${r.description || 'N/A'}. Learning objectives: ${r.learningObjectives?.join('; ') || 'N/A'}. Target audience: ${r.targetAudience || 'N/A'}. Total hours: ${r.totalHours ?? 'N/A'}. Sections: ${r.sections?.map((s) => s.title).join(', ') || 'N/A'}.`
+    )
   ];
+
+  // Strip internal IDs — only include fields relevant to the judge
+  const output = resources.map((r) => ({
+    title: r.title,
+    description: r.description,
+    provider: r.provider,
+    resourceType: r.resourceType,
+    learningObjectives: r.learningObjectives,
+    targetAudience: r.targetAudience,
+    totalHours: r.totalHours,
+    sections: r.sections?.map((s) => ({ title: s.title, topics: s.topics }))
+  }));
 
   return {
     input: systemPrompt,
-    output: JSON.stringify(resources),
+    output: JSON.stringify(output),
     context
   };
 }
