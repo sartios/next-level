@@ -124,15 +124,37 @@ export async function generateChallengeQuestions(
   let responseContent = '';
   const usageCapture = new LLMUsageCapture();
 
-  const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-    callbacks: [usageCapture]
-  });
+  try {
+    const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
+      callbacks: [usageCapture]
+    });
 
-  for await (const chunk of stream) {
-    const content = chunk.content;
-    if (typeof content === 'string') {
-      responseContent += content;
+    for await (const chunk of stream) {
+      const content = chunk.content;
+      if (typeof content === 'string') {
+        responseContent += content;
+      }
     }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    llmSpan?.update({
+      errorInfo: {
+        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
+        message: errorMessage,
+        traceback: error instanceof Error ? error.stack || '' : ''
+      },
+      endTime: new Date()
+    });
+    ownTrace?.update({
+      errorInfo: {
+        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
+        message: errorMessage,
+        traceback: error instanceof Error ? error.stack || '' : ''
+      },
+      endTime: new Date()
+    });
+    if (ownTrace) await getOpikClient()?.flush();
+    throw error;
   }
 
   const parsed = parseJsonResponse(responseContent);
