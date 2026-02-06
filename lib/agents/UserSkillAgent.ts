@@ -1,7 +1,8 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { OpikHandlerOptions, createAgentTrace, getOpikClient, LLMUsageCapture } from '@/lib/opik';
+import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
+import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
 import { getUserById, User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
@@ -80,7 +81,7 @@ class UserSkillAgent {
     const emittedSkills: SuggestedSkill[] = [];
 
     const trace = createAgentTrace(this.agentName, 'stream', {
-      input: { userId, role: user.role, skills: user.skills, careerGoals: user.careerGoals },
+      input: { role: user.role, skills: user.skills, careerGoals: user.careerGoals },
       metadata: { userId, ...opikOptions?.metadata },
       tags: opikOptions?.tags,
       threadId: opikOptions?.threadId
@@ -94,15 +95,10 @@ class UserSkillAgent {
 
       yield { type: 'token', userId, content: 'Generating skill suggestions...' };
 
-      const llmSpan = trace?.span({
-        name: 'skill-suggestion-llm',
-        type: 'llm',
-        input: { userPrompt }
-      });
-
-      const usageCapture = new LLMUsageCapture();
+      const traceHandler = new NextLevelOpikCallbackHandler({ parent: trace });
       const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-        callbacks: [usageCapture]
+        callbacks: [traceHandler],
+        runName: `${this.agentName}:stream`
       });
 
       let skillIndex = 0;
@@ -129,6 +125,7 @@ class UserSkillAgent {
               reasoning: parsed.reasoning
             };
             emittedSkills.push(skill);
+            
             yield { type: 'skill', userId, skill };
           }
         }
@@ -147,21 +144,6 @@ class UserSkillAgent {
         emittedSkills.push(skill);
         yield { type: 'skill', userId, skill };
       }
-
-      const outputData = {
-        skillNames: emittedSkills.map((s) => s.name),
-        skillCount: emittedSkills.length
-      };
-      llmSpan?.update({
-        input: { prompts: usageCapture.prompts },
-        output: { ...outputData, generations: usageCapture.generations },
-        metadata: { invocationParams: usageCapture.invocationParams },
-        model: usageCapture.model,
-        provider: usageCapture.provider,
-        usage: usageCapture.usage,
-        endTime: new Date()
-      });
-      trace?.update({ output: outputData, endTime: new Date() });
 
       yield {
         type: 'complete',

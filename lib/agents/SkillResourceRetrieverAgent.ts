@@ -3,6 +3,7 @@ import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
 import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
+import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
 import { searchCuratedResourcesTool, searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
 import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
 import { LearningResourceWithSections } from '../types';
@@ -12,7 +13,6 @@ import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
 import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
 import { Goal } from '../db/goalRepository';
-import { NextLevelOpikCallbackHandler } from '../trace/handler';
 
 function buildUserPrompt(user: User, goal: Goal): string {
   return `user:\`\`\`json${JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') })}\`\`\` goal:\`\`\`json${JSON.stringify({ name: goal.name, reasoning: goal.reasoning })}\`\`\``;
@@ -79,8 +79,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
     return { resources: result.structuredResponse.resources };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async *streamResources(user: any, goal: any, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
+  public async *streamResources(user: User, goal: Goal, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
     if (!user) {
       throw new Error('User is required');
     }
@@ -95,7 +94,7 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
     const seenResourceIds = new Set<string>();
 
     const trace = createAgentTrace(this.agentName, 'stream', {
-      input: { userId, goalId },
+      input: { role: user.role, skills: user.skills, careerGoals: user.careerGoals, goalName: goal.name, reasoning: goal.reasoning },
       metadata: { userId, goalId, ...opikOptions?.metadata },
       tags: opikOptions?.tags,
       threadId: opikOptions?.threadId
