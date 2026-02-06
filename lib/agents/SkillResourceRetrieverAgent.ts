@@ -160,10 +160,23 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
           input: { query }
         });
 
-        // Execute the search
-        const resources = await searchCuratedResources(query, 3);
-
-        toolSpan?.update({ output: { resultCount: resources.length, resources }, endTime: new Date() });
+        let resources: LearningResourceWithSections[];
+        try {
+          // Execute the search
+          resources = await searchCuratedResources(query, 3);
+          toolSpan?.update({ output: { resultCount: resources.length, resources }, endTime: new Date() });
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          toolSpan?.update({
+            errorInfo: {
+              exceptionType: error instanceof Error ? error.constructor.name : 'Error',
+              message: errorMessage,
+              traceback: error instanceof Error ? error.stack || '' : ''
+            },
+            endTime: new Date()
+          });
+          throw error;
+        }
 
         // Stream each resource one-by-one
         for (const resource of resources) {
