@@ -46,7 +46,10 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
           <div className="grid grid-cols-8 gap-2 pb-2">
             <div className="h-10"></div> {/* Spacer for time column */}
             {days.map((day) => (
-              <div key={day} className="text-center font-black text-sm text-border pb-2 uppercase tracking-tighter">
+              <div
+                key={day}
+                className="flex items-center justify-center font-black text-sm text-border pb-2 uppercase tracking-tighter pr-4"
+              >
                 {day.slice(0, 3)}
               </div>
             ))}
@@ -61,7 +64,7 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
             <div className="grid grid-cols-8 gap-2 pr-4">
               {generateTimeSlots().map((time) => (
                 <div key={time} className="contents">
-                  <div className="text-right pr-4 text-xs font-bold text-border self-center">{time}</div>
+                  <div className="text-right pr-4 text-xs lg:text-sm font-bold text-border self-center">{time}</div>
                   {days.map((day) => {
                     const id = `${day}-${time}`;
                     const isSelected = selectedSlots.includes(id);
