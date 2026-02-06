@@ -13,8 +13,8 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-background max-w-6xl mx-auto">
-      <div className="container mx-auto py-12 md:py-16 px-4 xl:px-0">
+    <footer className="bg-background max-w-6xl mx-auto mt-10 md:mt-20 xl:mt-28">
+      <div className="container mx-auto py-12 px-4 xl:px-0 border-t-2 border-muted">
         <div className="flex flex-col lg:flex-row justify-between mb-4">
           <h3 className="text-2xl font-extrabold text-foreground mb-4">
             Next<span className="text-accent">Level</span>

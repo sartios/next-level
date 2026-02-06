@@ -22,11 +22,11 @@ export default function ControlsSidebar({ weeksToComplete, onClick, disabled }: 
 
   return (
     <aside className="space-y-6">
-      <div className="p-6 rounded-xl border-2 border-muted bg-muted space-y-6">
+      <div className="p-6 rounded-xl border-2 border-muted space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <p className="font-black text-foreground">Recurring</p>
-            <p className="text-xs text-border font-bold">Apply to all weeks</p>
+            <p className="text-sm text-border font-medium">Apply to all weeks</p>
           </div>
           <Switch checked={true} className="data-[state=checked]:bg-accent" disabled />
         </div>
