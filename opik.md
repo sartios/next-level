@@ -4,7 +4,7 @@ Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observabil
 
 ## What We Trace
 
-Every LLM call captures: **prompts**, **generations**, **model**, **provider**, **token usage**, and **invocation params** — all fed into hierarchical Opik traces via a custom `LLMUsageCapture` callback handler.
+Every LLM call captures: **prompts**, **generations**, **model**, **provider**, **token usage**, and **invocation params** — all fed into hierarchical Opik traces via `NextLevelOpikCallbackHandler`.
 
 ## Environment Variables
 
@@ -16,37 +16,32 @@ Every LLM call captures: **prompts**, **generations**, **model**, **provider**, 
 
 ## Tracing Architecture
 
-Manual traces via the `opik` SDK give us hierarchical parent→child visibility. A custom `LLMUsageCapture` handler hooks into LangChain's callback system to capture LLM metadata without creating duplicate traces (unlike `OpikCallbackHandler` which creates its own).
+### `NextLevelOpikCallbackHandler` (`lib/trace/handler.ts`)
+
+Custom LangChain `BaseCallbackHandler` (forked from `opik-langchain`) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces that the built-in `OpikCallbackHandler` creates.
 
 ```typescript
 const trace = createAgentTrace('agent-name', 'operation', { input, metadata, tags });
 const llmSpan = trace?.span({ name: 'llm-call', type: 'llm' });
 
-const usageCapture = new LLMUsageCapture();
-const stream = await llm.stream(messages, { callbacks: [usageCapture] });
-// ... process stream ...
+const traceHandler = new NextLevelOpikCallbackHandler({ parent: llmSpan });
 
-llmSpan?.update({
-  input: { prompts: usageCapture.prompts },
-  output: { generations: usageCapture.generations },
-  metadata: { invocationParams: usageCapture.invocationParams },
-  model: usageCapture.model,
-  provider: usageCapture.provider,
-  usage: usageCapture.usage,
-  endTime: new Date()
-});
+try {
+  const stream = await llm.stream(messages, { callbacks: [traceHandler] });
+  // ... process stream ...
+} catch (error) {
+  llmSpan?.update({ errorInfo: { ... }, endTime: new Date() });
+  throw error;
+}
+
+llmSpan?.update({ output: { ... }, endTime: new Date() });
 ```
 
-### `LLMUsageCapture` captures
+Handles all LangChain lifecycle events: `handleChatModelStart`, `handleLLMEnd`, `handleChainStart/End`, `handleToolStart/End`, `handleRetrieverStart/End`, `handleAgentAction/End`.
 
-| Field              | Source                             | Example                         |
-| ------------------ | ---------------------------------- | ------------------------------- |
-| `model`            | `handleChatModelStart` metadata    | `gpt-5-mini`                    |
-| `provider`         | `handleChatModelStart` metadata    | `openai`                        |
-| `prompts`          | `handleChatModelStart` messages    | `[{ role: 'system', content }]` |
-| `invocationParams` | `handleChatModelStart` extraParams | `{ temperature, stream, ... }`  |
-| `usage`            | `handleLLMEnd` llmOutput           | `{ prompt_tokens: 215, ... }`   |
-| `generations`      | `handleLLMEnd` generations         | `["raw LLM output text"]`       |
+### `createOpikHandler` (`lib/opik.ts`)
+
+Factory for the **built-in** `OpikCallbackHandler` from `opik-langchain`. Only used for standalone LangChain agent calls where auto-created traces are acceptable. Do not mix with manual parent traces.
 
 ## Trace Hierarchies
 
@@ -90,16 +85,53 @@ const prompt = await getAgentPrompt('agent-name:prompt-key', { variableName: 'va
 npm run prompts:sync  # Push local prompts to Opik
 ```
 
-## Evaluations
+## Evaluations (LLM-as-Judge)
 
-```bash
-npm run evals
+Runs agents against test datasets and scores output quality using Opik's built-in LLM-as-judge metrics. Judge model: **`gpt-5-mini`**.
+
+### Metrics
+
+| Metric              | What it checks                                      |
+| ------------------- | --------------------------------------------------- |
+| **Hallucination**   | Is the output grounded in context (not fabricated)? |
+| **AnswerRelevance** | Is the output relevant to the input prompt?         |
+| **Usefulness**      | Is the output practically useful for the user?      |
+
+### Evaluated Agents
+
+| CLI key                    | Agent                       | Dataset                                              |
+| -------------------------- | --------------------------- | ---------------------------------------------------- |
+| `user-skill-agent`         | UserSkillAgent              | `evals/datasets/user-skill-agent.json`               |
+| `skill-resource-retriever` | SkillResourceRetrieverAgent | `evals/datasets/skill-resource-retriever-agent.json` |
+| `challenge-generator`      | ChallengeGeneratorAgent     | `evals/datasets/challenge-generator-agent.json`      |
+
+### How it works
+
+1. **Dataset loading** — Test fixtures from local JSON or the Opik platform (`--source opik`).
+2. **DB seeding** — `evals/seed.ts` populates the database with test data so agents can run against real records.
+3. **Task execution** — Each task function (`evals/tasks/*.ts`) calls the real agent and returns `{ input, output, context }` for the judges.
+4. **Scoring** — Opik's `evaluate()` runs the three judge metrics against each task result.
+5. **Results** — Stored as Opik experiments linked to their datasets, viewable in the Opik dashboard.
+
+### Task function contract
+
+Each task must return:
+
+```typescript
+{ input: string, output: string, context: string[] }
 ```
 
-Runs agents against test datasets and scores with LLM-as-a-judge metrics:
+- `input` — The system prompt or instruction given to the agent.
+- `output` — The agent's actual output (JSON stringified).
+- `context` — Grounding facts for the Hallucination metric (user info, goal, resource details).
 
-- **Hallucination** — Is the output grounded in context?
-- **AnswerRelevance** — Is the output relevant to the input?
-- **Usefulness** — Is the output useful for the user?
+### CLI usage
+
+```bash
+npx tsx evals/run.ts --agent user-skill-agent                    # single agent
+npx tsx evals/run.ts --all --samples 2                            # all agents, limit samples
+npx tsx evals/run.ts --agent challenge-generator --source opik    # load from Opik platform
+npx tsx evals/run.ts --all --verbose                              # detailed per-test output
+```
 
 Results are stored as Opik experiments linked to their datasets.

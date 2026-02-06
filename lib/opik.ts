@@ -1,51 +1,7 @@
 import { Opik, Trace, Span } from 'opik';
 import { OpikCallbackHandler } from 'opik-langchain';
-import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
-import type { LLMResult } from '@langchain/core/outputs';
-import type { Serialized } from '@langchain/core/load/serializable';
-import type { BaseMessage } from '@langchain/core/messages';
 
 export type { Trace, Span };
-
-export class LLMUsageCapture extends BaseCallbackHandler {
-  name = 'llm-usage-capture';
-  awaitHandlers = true;
-  usage?: Record<string, number>;
-  model?: string;
-  provider?: string;
-  prompts?: Array<{ role: string; content: string }>;
-  invocationParams?: Record<string, unknown>;
-  generations?: string[];
-
-  handleChatModelStart(
-    _llm: Serialized,
-    _messages: BaseMessage[][],
-    _runId: string,
-    _parentRunId?: string,
-    extraParams?: Record<string, unknown>,
-    _tags?: string[],
-    metadata?: Record<string, unknown>
-  ) {
-    if (metadata?.ls_model_name) this.model = metadata.ls_model_name as string;
-    if (metadata?.ls_provider) this.provider = metadata.ls_provider as string;
-    this.prompts = _messages.flat().map((m) => ({
-      role: m.type,
-      content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
-    }));
-    this.invocationParams = extraParams?.invocation_params as Record<string, unknown>;
-  }
-
-  handleLLMEnd(output: LLMResult) {
-    const tokenUsage =
-      (output.llmOutput?.tokenUsage as Record<string, number>) || (output.llmOutput?.estimatedTokenUsage as Record<string, number>) || {};
-    this.usage = {
-      prompt_tokens: tokenUsage.promptTokens,
-      completion_tokens: tokenUsage.completionTokens,
-      total_tokens: tokenUsage.totalTokens
-    };
-    this.generations = output.generations?.flat().map((g) => g.text);
-  }
-}
 
 export interface OpikHandlerOptions {
   tags?: string[];

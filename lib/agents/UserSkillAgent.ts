@@ -125,7 +125,7 @@ class UserSkillAgent {
               reasoning: parsed.reasoning
             };
             emittedSkills.push(skill);
-            
+
             yield { type: 'skill', userId, skill };
           }
         }

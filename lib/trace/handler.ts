@@ -24,7 +24,7 @@ export interface OpikCallbackHandlerOptions {
   client?: Opik;
   clientConfig?: OpikConfig;
   threadId?: string;
-  // @> Attach all spans under this existing trace or span 
+  // @> Attach all spans under this existing trace or span
   parent?: Trace | Span | null;
 }
 

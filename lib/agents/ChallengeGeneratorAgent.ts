@@ -1,12 +1,13 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 
 import { createStreamingLLM } from '@/lib/utils/llm';
-import { createAgentTrace, getOpikClient, LLMUsageCapture, type Trace, type Span } from '@/lib/opik';
+import { createAgentTrace, getOpikClient, type Trace, type Span } from '@/lib/opik';
 import { getAgentPrompt, QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts';
 import type { User } from '@/lib/db/userRepository';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';
 import { updateChallengeStatus, addChallengeQuestions, type Challenge, type NewChallengeQuestion } from '@/lib/db/challengeRepository';
+import { NextLevelOpikCallbackHandler } from '../trace/handler';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -122,11 +123,11 @@ export async function generateChallengeQuestions(
   });
 
   let responseContent = '';
-  const usageCapture = new LLMUsageCapture();
+  const traceHandler = new NextLevelOpikCallbackHandler({ parent: llmSpan });
 
   try {
     const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-      callbacks: [usageCapture]
+      callbacks: [traceHandler]
     });
 
     for await (const chunk of stream) {
@@ -159,17 +160,11 @@ export async function generateChallengeQuestions(
 
   const parsed = parseJsonResponse(responseContent);
 
-  llmSpan?.update({
-    input: { prompts: usageCapture.prompts },
-    output: { questionCount: parsed?.length ?? 0, generations: usageCapture.generations },
-    metadata: { invocationParams: usageCapture.invocationParams },
-    model: usageCapture.model,
-    provider: usageCapture.provider,
-    usage: usageCapture.usage,
-    endTime: new Date()
-  });
-
   if (!parsed || parsed.length !== QUESTIONS_PER_CHALLENGE) {
+    llmSpan?.update({
+      errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
+      endTime: new Date()
+    });
     ownTrace?.update({
       errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
       endTime: new Date()
@@ -178,7 +173,8 @@ export async function generateChallengeQuestions(
     throw new Error(`Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`);
   }
 
-  ownTrace?.update({ output: { questionCount: parsed.length }, endTime: new Date() });
+  llmSpan?.update({ output: { questionCount: parsed.length, questions: parsed }, endTime: new Date() });
+  ownTrace?.update({ output: { questionCount: parsed.length, questions: parsed }, endTime: new Date() });
   if (ownTrace) await getOpikClient()?.flush();
 
   return parsed;
@@ -187,7 +183,7 @@ export async function generateChallengeQuestions(
 /**
  * Process a single challenge: generate questions and save to database
  */
-export async function processChallengeGeneration(
+async function processChallengeGeneration(
   user: User,
   goal: Goal,
   resource: LearningResourceWithSections,
@@ -249,7 +245,14 @@ export async function generateAllChallengesForGoal(
   challenges: Challenge[]
 ): Promise<{ success: number; failed: number }> {
   const trace = createAgentTrace('challenge-generator-agent', 'generate-all', {
-    input: { goalId: goal.id, resourceTitle: resource.title, challengeCount: challenges.length },
+    input: {
+      role: user.role,
+      skills: user.skills,
+      careerGoals: user.careerGoals,
+      goalName: goal.name,
+      reasoning: goal.reasoning,
+      resourceTime: resource.title
+    },
     metadata: { goalId: goal.id, userId: user.id, resourceId: resource.id }
   });
 
@@ -267,7 +270,7 @@ export async function generateAllChallengesForGoal(
       }
     }
 
-    trace?.update({ output: { success, failed, total: challenges.length }, endTime: new Date() });
+    trace?.update({ output: { success, failed, total: challenges.length, challenges }, endTime: new Date() });
   } catch (err) {
     trace?.update({
       errorInfo: {
@@ -277,7 +280,9 @@ export async function generateAllChallengesForGoal(
       },
       endTime: new Date()
     });
-    throw err;
+
+    // Commenting out for now - needs retry
+    // throw err;
   } finally {
     await getOpikClient()?.flush();
   }
