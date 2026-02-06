@@ -282,6 +282,8 @@ export async function generateAllChallengesForGoal(
       },
       endTime: new Date()
     });
+
+    return { success, failed };
   } catch (err) {
     trace?.update({
       errorInfo: {
@@ -291,12 +293,8 @@ export async function generateAllChallengesForGoal(
       },
       endTime: new Date()
     });
-
-    // Commenting out for now - needs retry
-    // throw err;
+    throw err;
   } finally {
     await getOpikClient()?.flush();
   }
-
-  return { success, failed };
 }
