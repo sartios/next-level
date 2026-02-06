@@ -1,10 +1,9 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { OpikHandlerOptions } from '@/lib/opik';
+import { OpikHandlerOptions, createAgentTrace, getOpikClient, LLMUsageCapture } from '@/lib/opik';
 import { getUserById, User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
-import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
 import { getAgentPrompt } from '@/lib/prompts';
 
 async function buildUserPrompt(user: User): Promise<string> {
@@ -80,7 +79,12 @@ class UserSkillAgent {
 
     const emittedSkills: SuggestedSkill[] = [];
 
-    const handler = createAgentOpikHandler(this.agentName, 'stream', { userId }, opikOptions);
+    const trace = createAgentTrace(this.agentName, 'stream', {
+      input: { userId, role: user.role, skills: user.skills, careerGoals: user.careerGoals },
+      metadata: { userId, ...opikOptions?.metadata },
+      tags: opikOptions?.tags,
+      threadId: opikOptions?.threadId
+    });
 
     try {
       yield { type: 'token', userId, content: 'Analyzing your profile...' };
@@ -90,8 +94,15 @@ class UserSkillAgent {
 
       yield { type: 'token', userId, content: 'Generating skill suggestions...' };
 
+      const llmSpan = trace?.span({
+        name: 'skill-suggestion-llm',
+        type: 'llm',
+        input: { userPrompt }
+      });
+
+      const usageCapture = new LLMUsageCapture();
       const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-        callbacks: [handler]
+        callbacks: [usageCapture]
       });
 
       let skillIndex = 0;
@@ -137,6 +148,21 @@ class UserSkillAgent {
         yield { type: 'skill', userId, skill };
       }
 
+      const outputData = {
+        skillNames: emittedSkills.map((s) => s.name),
+        skillCount: emittedSkills.length
+      };
+      llmSpan?.update({
+        input: { prompts: usageCapture.prompts },
+        output: { ...outputData, generations: usageCapture.generations },
+        metadata: { invocationParams: usageCapture.invocationParams },
+        model: usageCapture.model,
+        provider: usageCapture.provider,
+        usage: usageCapture.usage,
+        endTime: new Date()
+      });
+      trace?.update({ output: outputData, endTime: new Date() });
+
       yield {
         type: 'complete',
         userId,
@@ -144,8 +170,18 @@ class UserSkillAgent {
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
+      trace?.update({
+        errorInfo: {
+          exceptionType: err instanceof Error ? err.constructor.name : 'Error',
+          message,
+          traceback: err instanceof Error ? err.stack || '' : ''
+        },
+        endTime: new Date()
+      });
       yield { type: 'token', userId, content: `__stream_error__: ${message}` };
       throw err;
+    } finally {
+      await getOpikClient()?.flush();
     }
   }
 }

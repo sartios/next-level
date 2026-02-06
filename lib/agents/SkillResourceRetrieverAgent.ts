@@ -2,7 +2,7 @@ import { createAgent, providerStrategy } from 'langchain';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
-import { OpikHandlerOptions } from '@/lib/opik';
+import { OpikHandlerOptions, createAgentTrace, getOpikClient, LLMUsageCapture } from '@/lib/opik';
 import { searchCuratedResourcesTool, searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
 import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
 import { LearningResourceWithSections } from '../types';
@@ -93,8 +93,12 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
     const emittedResources: LearningResourceWithSections[] = [];
     const seenResourceIds = new Set<string>();
 
-    // Create Opik handler for tracing
-    const handler = createAgentOpikHandler(this.agentName, 'stream', { userId, goalId }, opikOptions);
+    const trace = createAgentTrace(this.agentName, 'stream', {
+      input: { userId, goalId },
+      metadata: { userId, goalId, ...opikOptions?.metadata },
+      tags: opikOptions?.tags,
+      threadId: opikOptions?.threadId
+    });
 
     try {
       // Step 1: Generate search queries using LLM
@@ -104,8 +108,15 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
       const queryUserPrompt = buildQueryGenerationUserPrompt(user, goal);
       const queryGenerationSystemPrompt = await getAgentPrompt('skill-resource-retriever-agent:query-generation-system-prompt');
 
+      const llmSpan = trace?.span({
+        name: 'query-generation',
+        type: 'llm',
+        input: { userPrompt: queryUserPrompt }
+      });
+
+      const usageCapture = new LLMUsageCapture();
       const queryResponse = await queryLLM.invoke([new SystemMessage(queryGenerationSystemPrompt), new HumanMessage(queryUserPrompt)], {
-        callbacks: [handler],
+        callbacks: [usageCapture],
         response_format: {
           type: 'json_schema',
           json_schema: {
@@ -131,6 +142,16 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         JSON.parse(typeof queryResponse.content === 'string' ? queryResponse.content : '')
       );
 
+      llmSpan?.update({
+        input: { prompts: usageCapture.prompts },
+        output: { queries: parsedQueries.data?.queries ?? null, generations: usageCapture.generations },
+        metadata: { invocationParams: usageCapture.invocationParams },
+        model: usageCapture.model,
+        provider: usageCapture.provider,
+        usage: usageCapture.usage,
+        endTime: new Date()
+      });
+
       if (!parsedQueries.success) {
         throw new Error('Failed to generate search queries');
       }
@@ -149,8 +170,16 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
           input: { query }
         };
 
+        const toolSpan = trace?.span({
+          name: 'search-curated-resources',
+          type: 'tool',
+          input: { query }
+        });
+
         // Execute the search
         const resources = await searchCuratedResources(query, 3);
+
+        toolSpan?.update({ output: { resultCount: resources.length }, endTime: new Date() });
 
         // Stream each resource one-by-one
         for (const resource of resources) {
@@ -166,6 +195,8 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
         }
       }
 
+      trace?.update({ output: { resourceCount: emittedResources.length }, endTime: new Date() });
+
       yield {
         type: 'complete',
         userId,
@@ -174,8 +205,18 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
+      trace?.update({
+        errorInfo: {
+          exceptionType: err instanceof Error ? err.constructor.name : 'Error',
+          message,
+          traceback: err instanceof Error ? err.stack || '' : ''
+        },
+        endTime: new Date()
+      });
       yield { type: 'token', userId, goalId, content: `__stream_error__: ${message}` };
       throw err;
+    } finally {
+      await getOpikClient()?.flush();
     }
   }
 }
