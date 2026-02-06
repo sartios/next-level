@@ -251,7 +251,7 @@ export async function generateAllChallengesForGoal(
       careerGoals: user.careerGoals,
       goalName: goal.name,
       reasoning: goal.reasoning,
-      resourceTime: resource.title
+      resourceTitle: resource.title
     },
     metadata: { goalId: goal.id, userId: user.id, resourceId: resource.id }
   });
