@@ -161,10 +161,7 @@ export async function generateChallengeQuestions(
   const parsed = parseJsonResponse(responseContent);
 
   if (!parsed || parsed.length !== QUESTIONS_PER_CHALLENGE) {
-    llmSpan?.update({
-      errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
-      endTime: new Date()
-    });
+    llmSpan?.update({ endTime: new Date() });
     ownTrace?.update({
       errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
       endTime: new Date()
@@ -173,7 +170,7 @@ export async function generateChallengeQuestions(
     throw new Error(`Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`);
   }
 
-  llmSpan?.update({ output: { questionCount: parsed.length, questions: parsed }, endTime: new Date() });
+  llmSpan?.update({ endTime: new Date() });
   ownTrace?.update({ output: { questionCount: parsed.length, questions: parsed }, endTime: new Date() });
   if (ownTrace) await getOpikClient()?.flush();
 
