@@ -19,7 +19,7 @@ user_prompt = client.get_prompt("challenge-generator-agent:user-prompt")
 
 # Get the dataset to evaluate the prompt on
 dataset = client.get_dataset(name="challenge-generator-evaluation")
-items = [dataset.get_items()[0]]
+items = dataset.get_items()
 
 DIFFICULTY_DESCRIPTIONS = {
     "easy": "beginner-friendly questions that test basic recall and understanding",
