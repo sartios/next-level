@@ -348,9 +348,9 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                     {slot.time}-{slot.endTime}
                                   </span>
                                   {slot.status === 'completed' ? (
-                                    <Check className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <Check className={`h-3 w-3 mt-0.5 stroke-[1.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : slot.status === 'missed' ? (
-                                    <X className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <X className={`h-3 w-3 mt-0.5stroke-[1.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : null}
                                 </button>
                               );
@@ -391,9 +391,9 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                     {slot.time}-{slot.endTime}
                                   </span>
                                   {slot.status === 'completed' ? (
-                                    <Check className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <Check className={`h-3 w-3 mt-0.5 stroke-[2.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : slot.status === 'missed' ? (
-                                    <X className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <X className={`h-3 w-3 mt-0.5 stroke-[2.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : null}
                                 </button>
                               );
