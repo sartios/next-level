@@ -126,23 +126,20 @@ function ScheduleContent() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-10 xl:py-12">
+  const renderContent = () => {
+    if (isLoading) {
+      return (
         <Card className="p-8 text-center border-2 border-muted shadow-none">
           <Loader2 className="h-12 w-12 mx-auto text-accent mb-4 animate-spin" />
           <h3 className="text-2xl xl:text-3xl font-bold text-foreground">Loading your schedule...</h3>
           <p className="xl:text-xl text-muted-foreground">Please wait while we fetch your schedule</p>
         </Card>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (!goal) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-10 xl:py-12">
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11 px-4 xl:px-0">Architect your week</h1>
-        <Card className="p-8 text-center border-2 border-muted shadow-none mx-4 xl:mx-0">
+    if (!goal) {
+      return (
+        <Card className="p-8 text-center border-2 border-muted shadow-none">
           <Target className="h-12 w-12 mx-auto text-accent mb-4" />
           <h3 className="text-2xl xl:text-3xl font-bold text-foreground">Set your goal to begin</h3>
           <p className="xl:text-xl text-muted-foreground mb-4">Define your aspirations and build your schedule.</p>
@@ -153,9 +150,16 @@ function ScheduleContent() {
             <Link href="/">Define your goal</Link>
           </Button>
         </Card>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+        <Calendar isLoading={isLoading} selectedSlots={selectedSlots} toggleSlot={toggleSlot} />
+        <ControlsSidebar weeksToComplete={weeksToComplete} onClick={handleSave} disabled={isSaving || selectedSlots.length === 0} />
       </div>
     );
-  }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 xl:px-0 py-10 xl:py-12">
@@ -177,10 +181,7 @@ function ScheduleContent() {
         </Card>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
-        <Calendar isLoading={isLoading} selectedSlots={selectedSlots} toggleSlot={toggleSlot} />
-        <ControlsSidebar weeksToComplete={weeksToComplete} onClick={handleSave} disabled={isSaving || selectedSlots.length === 0} />
-      </div>
+      {renderContent()}
     </div>
   );
 }
