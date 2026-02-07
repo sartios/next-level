@@ -113,13 +113,15 @@ export default function ChallengesPage() {
   const [stats, setStats] = useState<ChallengeStats | null>(null);
   const [resource, setResource] = useState<ResourceInfo | null>(null);
   const [progress, setProgress] = useState<Record<string, ChallengeProgressInfo>>({});
-  const [loading, setLoading] = useState(true);
+  const [initializing, setInitializing] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setUserId(getUserId());
     setGoalId(getGoalId());
+    setInitializing(false);
   }, []);
 
   const fetchChallenges = useCallback(async () => {
@@ -203,7 +205,7 @@ export default function ChallengesPage() {
   });
 
   const renderContent = () => {
-    if (loading) {
+    if (initializing || loading) {
       return (
         <Card className="p-8 text-center border-2 border-muted shadow-none mx-4 xl:mx-0 h-120 flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 mx-auto text-accent mb-4 animate-spin" />
@@ -406,13 +408,11 @@ export default function ChallengesPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 xl:px-0 py-10 xl:py-12">
       <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11 px-4 xl:px-0">Challenges</h1>
-      {resource && (
-        <p className="text-foreground xl:text-lg px-4 xl:px-0 mb-8">
-          Based on: <span className="font-bold">{resource.title}</span>
-          <span className="mx-2">•</span>
-          <span className="font-bold">{resource.provider}</span>
-        </p>
-      )}
+      <p className="text-foreground xl:text-lg px-4 xl:px-0 mb-8">
+        Based on: <span className="font-bold">{resource?.title ?? 'your selected resource'}</span>
+        <span className="mx-2">{resource ? '•' : ''}</span>
+        <span className="font-bold">{resource?.provider ?? ''}</span>
+      </p>
       {renderContent()}
     </div>
   );
