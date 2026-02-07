@@ -129,7 +129,6 @@ export default function ChallengesPage() {
       return;
     }
 
-    setLoading(true);
     try {
       const response = await fetch(`/api/users/${userId}/goals/${goalId}/challenges`);
       if (!response.ok) throw new Error('Failed to fetch challenges');
