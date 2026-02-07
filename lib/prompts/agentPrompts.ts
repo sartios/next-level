@@ -2,6 +2,8 @@
  * Agent prompt definitions for Opik prompt management.
  */
 
+export const SKILLS_PER_USER = 4;
+
 export const QUESTIONS_PER_CHALLENGE = 10;
 
 export const DIFFICULTY_DESCRIPTIONS = {
@@ -14,14 +16,13 @@ export const AGENT_PROMPTS = {
   'user-skill-agent:system-prompt': {
     name: 'user-skill-agent:system-prompt',
     description: 'System prompt for the UserSkillAgent that suggests skills based on user profile',
-    prompt: `You are a career development assistant.
-Your goal is to suggest a list of 10 skills that will help them achieve their career goals.
-**Do NOT include skills the user already has** (from the user's skills list).
-For each suggested skill, provide a short reasoning explaining why it is important and how it helps the individual.
-Prioritize skills from most important to least important (priority: 1 is highest, 10 is lowest).
-
-IMPORTANT: You MUST output ONLY valid JSON Lines format - one JSON object per line, with NO markdown code blocks, NO extra text, and NO explanations.
-Each line must be a valid JSON object with exactly these fields: "name", "priority", "reasoning".`,
+    prompt: `
+As a career development assistant, your mission is to help the user transition from a {{userRole}} to a {{userCareerGoals}}.
+Identify {{skillsPerUser}} critical skills that the user needs to acquire, ensuring that none of these skills overlap with their current expertise.
+For each skill, provide a brief explanation of its relevance to the user's career goals, particularly focusing on how it will support their transition.
+Rank these skills from 1 to {{skillsPerUser}} based on their importance.
+Present your findings in JSON Lines format, ensuring each line includes 'name', 'priority', and 'reasoning'.    
+`,
     metadata: {
       agent: 'user-skill-agent',
       type: 'system-prompt',
@@ -33,12 +34,16 @@ Each line must be a valid JSON object with exactly these fields: "name", "priori
   'user-skill-agent:user-prompt': {
     name: 'user-skill-agent:user-prompt',
     description: 'User prompt for the UserSkillAgent with user profile context',
-    prompt: `User Profile:
+    prompt: `
+User Profile:
+
 - Role: {{userRole}}
 - Current Skills: {{userSkills}}
 - Career Goals: {{userCareerGoals}}
 
-Based on this profile, suggest 10 skills that will help this professional achieve their career goals. Remember to exclude skills they already have.`,
+Based on this profile, suggest {{skillsPerUser}} skills that will help this professional achieve their career goals.
+Remember to exclude skills they already have.
+    `,
     metadata: {
       agent: 'user-skill-agent',
       type: 'user-prompt',
@@ -91,50 +96,13 @@ Generate queries that would match course titles, descriptions, and learning obje
   'challenge-generator-agent:system-prompt': {
     name: 'challenge-generator-agent:system-prompt',
     description: 'System prompt for the ChallengeGeneratorAgent that creates quiz questions',
-    prompt: `You are a quiz question generator for an educational platform.
-Your task is to create {{questionsPerChallenge}} {{difficultyDescription}} for the topic: "{{sectionTitle}}".
-
-DIFFICULTY LEVEL: {{difficultyUpper}}
-
-PROGRESSIVE COMPLEXITY:
-- Questions should progressively increase in complexity from 1 to {{questionsPerChallenge}}
-- Question 1: Most straightforward at this level
-- Questions 2-4: Slightly more detailed, add small twists
-- Questions 5-7: Middle complexity, require connecting ideas
-- Questions 8-10: Near upper bound of this difficulty level
-
-OUTPUT FORMAT:
-You must output a valid JSON array with exactly {{questionsPerChallenge}} questions.
-Each question must have:
-- questionNumber (1-{{questionsPerChallenge}})
-- question (the question text)
-- options (array of 4 options with label A/B/C/D and text)
-- correctAnswer (A, B, C, or D)
-- explanation (why the correct answer is right)
-- hint (optional - a helpful hint without giving away the answer)
-
-EXAMPLE FORMAT:
-[
-  {
-    "questionNumber": 1,
-    "question": "What is...?",
-    "options": [
-      {"label": "A", "text": "First option"},
-      {"label": "B", "text": "Second option"},
-      {"label": "C", "text": "Third option"},
-      {"label": "D", "text": "Fourth option"}
-    ],
-    "correctAnswer": "B",
-    "explanation": "The correct answer is B because...",
-    "hint": "Think about..."
-  }
-]
-
-CRITICAL:
-- Output ONLY the JSON array, no markdown, no extra text
-- Ensure exactly ONE option is correct per question
-- Make incorrect options plausible but clearly wrong upon careful thought
-- Questions must be diverse and cover different aspects of the topic`,
+    prompt: `
+You are a quiz question generator tasked with creating {{questionsPerChallenge}} {{difficultyDescription}} questions on {{sectionTitle}}.
+Each question should progressively increase in complexity.
+Format each question as a JSON object with the following fields: questionNumber, question, options (A, B, C, D), correctAnswer, explanation, and an optional hint.
+Ensure that only one option is correct and that the incorrect options are plausible yet clearly wrong.
+Output only the JSON array.
+`,
     metadata: {
       agent: 'challenge-generator-agent',
       type: 'system-prompt',
@@ -146,13 +114,13 @@ CRITICAL:
   'challenge-generator-agent:user-prompt': {
     name: 'challenge-generator-agent:user-prompt',
     description: 'User prompt for the ChallengeGeneratorAgent with context about the user and learning material',
-    prompt: `Generate {{questionsPerChallenge}} {{difficulty}} level questions for this learning context:
+    prompt: `
+Generate {{questionsPerChallenge}} {{difficulty}} questions for this learning context:
 
 USER PROFILE:
 - Role: {{userRole}}
 - Skills: {{userSkills}}
 - Career Goals: {{userCareerGoals}}
-
 LEARNING GOAL: {{goalName}}
 - Reasoning: {{goalReasoning}}
 
@@ -161,7 +129,6 @@ LEARNING RESOURCE: {{resourceTitle}}
 - Type: {{resourceType}}
 - Description: {{resourceDescription}}
 - Learning Objectives: {{learningObjectives}}
-
 CURRENT SECTION: {{sectionTitle}}
 - Topics covered: {{sectionTopics}}
 
@@ -170,8 +137,8 @@ Generate {{questionsPerChallenge}} questions that:
 2. Are appropriate for someone with the user's background
 3. Help the user progress toward their goal
 4. Match the {{difficulty}} difficulty level
-
-Output ONLY the JSON array.`,
+Output ONLY the JSON array.
+`,
     metadata: {
       agent: 'challenge-generator-agent',
       type: 'user-prompt',

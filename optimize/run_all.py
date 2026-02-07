@@ -8,7 +8,6 @@ OPTIMIZERS = [
     "meta_optimizers/challenge_generator.py",
 ]
 
-
 def main():
     root = Path(__file__).parent
     failed = []

@@ -6,9 +6,20 @@ import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
 import { getUserById, User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
+import { SKILLS_PER_USER } from '../prompts/agentPrompts';
 
 async function buildUserPrompt(user: User): Promise<string> {
   return getAgentPrompt('user-skill-agent:user-prompt', {
+    skillsPerUser: SKILLS_PER_USER,
+    userRole: user.role,
+    userSkills: user.skills.join(', '),
+    userCareerGoals: user.careerGoals.join(', ')
+  });
+}
+
+async function buildSystemPrompt(user: User): Promise<string> {
+  return getAgentPrompt('user-skill-agent:system-prompt', {
+    skillsPerUser: SKILLS_PER_USER,
     userRole: user.role,
     userSkills: user.skills.join(', '),
     userCareerGoals: user.careerGoals.join(', ')
@@ -91,7 +102,7 @@ class UserSkillAgent {
       yield { type: 'token', userId, content: 'Analyzing your profile...' };
 
       const llm = createStreamingLLM('gpt-5-mini');
-      const [systemPrompt, userPrompt] = await Promise.all([getAgentPrompt('user-skill-agent:system-prompt'), buildUserPrompt(user)]);
+      const [systemPrompt, userPrompt] = await Promise.all([buildSystemPrompt(user), buildUserPrompt(user)]);
 
       yield { type: 'token', userId, content: 'Generating skill suggestions...' };
 

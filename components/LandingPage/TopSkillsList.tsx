@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSkillStream, StreamedSkill } from '@/hooks/useSkillStream';
+import { SKILLS_PER_USER } from '@/lib/prompts/agentPrompts';
 
 function SkillCardSkeleton() {
   return (
@@ -28,7 +29,7 @@ function TopSkillsListSkeleton({ occupation }: { occupation: string }) {
       </div>
 
       <div className="grid xl:grid-cols-2 grid-col-1 gap-3">
-        {Array.from({ length: 2 }).map((_, index) => (
+        {Array.from({ length: SKILLS_PER_USER }).map((_, index) => (
           <SkillCardSkeleton key={index} />
         ))}
       </div>
