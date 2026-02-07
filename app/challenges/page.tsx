@@ -306,11 +306,10 @@ export default function ChallengesPage() {
                   const challengeProgress = progress[challenge.id];
                   const hasProgress = challengeProgress?.hasProgress && challengeProgress?.status !== 'completed';
 
-                  return (
+                  const cardContent = (
                     <Card
-                      key={challenge.id}
-                      className={`p-5 border transition-all flex flex-col ${
-                        isReady ? 'hover:border-accent/50 hover:shadow-md' : isLocked ? 'opacity-60 bg-muted/30' : 'opacity-80'
+                      className={`p-5 border transition-all flex flex-col h-full ${
+                        isReady ? 'hover:border-accent/50 hover:shadow-md cursor-pointer' : isLocked ? 'opacity-60 bg-muted/30' : 'opacity-80'
                       }`}
                     >
                       {/* Header with Badge and Time */}
@@ -364,13 +363,10 @@ export default function ChallengesPage() {
                           {diffConfig.points} pts
                         </span>
                         {isReady ? (
-                          <Link
-                            href={`/challenges/start?challengeId=${challenge.id}`}
-                            className="text-sm font-medium text-accent hover:text-accent/80 flex items-center"
-                          >
+                          <span className="text-sm font-medium text-accent flex items-center">
                             {hasProgress ? 'Continue' : 'Start'}
                             <ArrowRight className="h-4 w-4 ml-1" />
-                          </Link>
+                          </span>
                         ) : isLocked ? (
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Lock className="h-3 w-3" />
@@ -385,6 +381,14 @@ export default function ChallengesPage() {
                         )}
                       </div>
                     </Card>
+                  );
+
+                  return isReady ? (
+                    <Link key={challenge.id} href={`/challenges/start?challengeId=${challenge.id}`} className="block">
+                      {cardContent}
+                    </Link>
+                  ) : (
+                    <div key={challenge.id}>{cardContent}</div>
                   );
                 })}
               </div>
