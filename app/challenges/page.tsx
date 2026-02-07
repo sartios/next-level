@@ -425,7 +425,11 @@ export default function ChallengesPage() {
                   );
 
                   return isReady ? (
-                    <Link key={challenge.id} href={`/challenges/start?challengeId=${challenge.id}`} className="block">
+                    <Link
+                      key={challenge.id}
+                      href={`/challenges/start?challengeId=${challenge.id}`}
+                      className="block touch-manipulation active:opacity-80"
+                    >
                       {cardContent}
                     </Link>
                   ) : (
