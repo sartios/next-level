@@ -455,7 +455,7 @@ function ChallengeContent() {
                   key={label}
                   onClick={() => isInteractive && setSelectedAnswer(label)}
                   disabled={!isInteractive}
-                  className={`w-full p-4 rounded-lg border-2 text-left xl:text-lg transition-all flex items-start gap-3 ${
+                  className={`w-full p-4 rounded-lg border-2 text-left xl:text-lg transition-all flex items-center gap-3 ${
                     showCorrectHighlight
                       ? 'border-green-500 bg-green-50'
                       : showIncorrectHighlight
