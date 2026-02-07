@@ -42,6 +42,7 @@ function ScheduleContent() {
           return;
         }
 
+        setIsLoading(true);
         // Fetch goal with selected resource
         if (userId && goalId) {
           const goalResponse = await fetch(`/api/users/${userId}/goals/${goalId}`);
@@ -137,7 +138,7 @@ function ScheduleContent() {
       );
     }
 
-    if (!goal) {
+    if (!goalId) {
       return (
         <Card className="p-8 text-center border-2 border-muted shadow-none">
           <Target className="h-12 w-12 mx-auto text-accent mb-4" />
