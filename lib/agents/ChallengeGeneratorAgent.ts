@@ -221,7 +221,7 @@ async function processChallengeGeneration(
 
     // Mark as complete
     await updateChallengeStatus(challenge.id, 'complete');
-    processSpan?.update({ output: { status: 'complete', questionCount: questions.length } });
+    processSpan?.update({ output: { status: 'complete', questionCount: questions.length }, endTime: new Date() });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     await updateChallengeStatus(challenge.id, 'failed', errorMessage);
