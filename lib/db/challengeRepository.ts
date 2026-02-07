@@ -135,27 +135,31 @@ export async function claimChallengeForGeneration(challengeId: string): Promise<
 
 /**
  * Reset a failed challenge back to pending so it can be regenerated.
- * Deletes any partial questions and clears the error message.
- * Only acts if current status is 'failed' (atomic guard).
+ * Performs a status-guarded update first, then deletes partial questions.
+ * Wrapped in a transaction for atomicity.
  */
 export async function resetFailedChallenge(challengeId: string): Promise<Challenge | undefined> {
   const db = requireDb();
 
-  // Delete any partial questions
-  await db.delete(challengeQuestions).where(eq(challengeQuestions.challengeId, challengeId));
+  return db.transaction(async (tx) => {
+    // Guard: only update if status is 'failed'
+    const [updated] = await tx
+      .update(challenges)
+      .set({
+        status: 'pending' as ChallengeStatus,
+        errorMessage: null,
+        updatedAt: new Date()
+      })
+      .where(and(eq(challenges.id, challengeId), eq(challenges.status, 'failed')))
+      .returning();
 
-  // Reset status from failed → pending, clear error
-  const [updated] = await db
-    .update(challenges)
-    .set({
-      status: 'pending' as ChallengeStatus,
-      errorMessage: null,
-      updatedAt: new Date()
-    })
-    .where(and(eq(challenges.id, challengeId), eq(challenges.status, 'failed')))
-    .returning();
+    if (!updated) return undefined;
 
-  return updated;
+    // Safe to delete questions now that we've confirmed the challenge was failed
+    await tx.delete(challengeQuestions).where(eq(challengeQuestions.challengeId, challengeId));
+
+    return updated;
+  });
 }
 
 // ============================================================================
