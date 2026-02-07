@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { createAgentTrace, getOpikClient, type Trace, type Span } from '@/lib/opik';
 import { getAgentPrompt, QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts';
+import { generatedQuestionSchema, generatedQuestionsSchema } from '@/lib/schemas';
 import type { User } from '@/lib/db/userRepository';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';
@@ -12,25 +13,6 @@ import { NextLevelOpikCallbackHandler } from '../trace/handler';
 import { OpikSpanType } from 'opik';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
-
-const optionLabelSchema = z.enum(['A', 'B', 'C', 'D']);
-
-const questionOptionSchema = z.object({
-  label: optionLabelSchema,
-  text: z.string().min(1)
-});
-
-const generatedQuestionSchema = z.object({
-  questionNumber: z.number().int().positive(),
-  question: z.string().min(1),
-  options: z.array(questionOptionSchema).length(4),
-  correctAnswer: optionLabelSchema,
-  explanation: z.string().min(1),
-  hint: z.string().optional()
-});
-
-const generatedQuestionsSchema = z.array(generatedQuestionSchema);
-
 type GeneratedQuestion = z.infer<typeof generatedQuestionSchema>;
 
 // ============================================================================

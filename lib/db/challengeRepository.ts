@@ -1,6 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 import { requireDb } from './index';
 import { challenges, challengeQuestions, type ChallengeDifficulty, type ChallengeStatus } from './schema';
+import { optionsNormalizationSchema } from '@/lib/schemas';
 
 // ============================================================================
 // Types
@@ -181,20 +182,8 @@ export async function getChallengeQuestion(challengeId: string, questionNumber: 
   return results[0];
 }
 
-/**
- * Normalize options to array format.
- * LLM may produce { A: "text", B: "text" } instead of [{ label: "A", text: "text" }].
- * Zod schema validation in ChallengeGeneratorAgent catches this at generation time;
- * this serves as a defensive fallback for any data already persisted.
- */
 function normalizeOptions(options: unknown): { label: string; text: string }[] {
-  if (Array.isArray(options)) {
-    return options.map((o) => ({ label: String(o.label), text: String(o.text) }));
-  }
-  if (typeof options === 'object' && options !== null) {
-    return Object.entries(options).map(([label, text]) => ({ label, text: String(text) }));
-  }
-  return [];
+  return optionsNormalizationSchema.parse(options);
 }
 
 /**
