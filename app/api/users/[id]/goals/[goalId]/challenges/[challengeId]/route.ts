@@ -71,7 +71,7 @@ export async function GET(_req: NextRequest, { params }: RouteParams) {
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
   const { id: userId, goalId, challengeId } = await params;
 
-  let body: { action: string };
+  let body: unknown;
   try {
     body = await req.json();
   } catch {
@@ -81,8 +81,8 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     });
   }
 
-  if (body.action !== 'regenerate') {
-    return new Response(JSON.stringify({ errorMessage: 'Unknown action' }), {
+  if (typeof body !== 'object' || body === null || !('action' in body) || (body as { action: unknown }).action !== 'regenerate') {
+    return new Response(JSON.stringify({ errorMessage: 'Invalid or unknown action. Expected { action: "regenerate" }' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     });
