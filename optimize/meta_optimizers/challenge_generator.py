@@ -6,10 +6,8 @@ import opik
 from opik_optimizer import (
     ChatPrompt,
     MetaPromptOptimizer,
-    MultiMetricObjective,
 )
 from opik.evaluation.metrics import AnswerRelevance
-from opik_optimizer.metrics import TotalSpanCost, SpanDuration
 
 # Load environment variables
 load_dotenv()
@@ -54,25 +52,6 @@ def answer_relevance(dataset_item, llm_output):
         context=context,
         output=llm_output,
     )
-
-
-def cost_in_cents(dataset_item, llm_output, task_span):
-    cost_metric = TotalSpanCost()
-    result = cost_metric.score(task_span=task_span)
-    return result.value * 100
-
-
-def duration_seconds(dataset_item, llm_output, task_span):
-    duration_metric = SpanDuration()
-    result = duration_metric.score(task_span=task_span)
-    return result.value
-
-
-metric = MultiMetricObjective(
-    weights=[1.0, -0.25, -0.25],
-    metrics=[answer_relevance, cost_in_cents, duration_seconds],
-    name="relevance_cost_duration",
-)
 
 
 # Run the optimization for each dataset item
