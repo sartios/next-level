@@ -8,6 +8,7 @@ import type { Goal } from '@/lib/db/goalRepository';
 import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';
 import { updateChallengeStatus, addChallengeQuestions, type Challenge, type NewChallengeQuestion } from '@/lib/db/challengeRepository';
 import { NextLevelOpikCallbackHandler } from '../trace/handler';
+import { OpikSpanType } from 'opik';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -116,14 +117,14 @@ export async function generateChallengeQuestions(
     challenge.difficulty
   );
 
-  const llmSpan = spanParent?.span({
-    name: `generate-questions:${challenge.sectionTitle}`,
-    type: 'llm',
-    input: { sectionTitle: challenge.sectionTitle, difficulty: challenge.difficulty, userPrompt }
+  const generateQuestionsSpan = spanParent?.span({
+    name: `generate-questions`,
+    type: OpikSpanType.General,
+    input: { sectionTitle: challenge.sectionTitle, difficulty: challenge.difficulty }
   });
 
   let responseContent = '';
-  const traceHandler = new NextLevelOpikCallbackHandler({ parent: llmSpan });
+  const traceHandler = new NextLevelOpikCallbackHandler({ parent: generateQuestionsSpan });
 
   try {
     const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
@@ -137,23 +138,9 @@ export async function generateChallengeQuestions(
       }
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    llmSpan?.update({
-      errorInfo: {
-        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
-        message: errorMessage,
-        traceback: error instanceof Error ? error.stack || '' : ''
-      },
-      endTime: new Date()
-    });
-    ownTrace?.update({
-      errorInfo: {
-        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
-        message: errorMessage,
-        traceback: error instanceof Error ? error.stack || '' : ''
-      },
-      endTime: new Date()
-    });
+    const errorInfo = parseErrorInfo(error);
+    generateQuestionsSpan?.update({ errorInfo, endTime: new Date() });
+    ownTrace?.update({ errorInfo, endTime: new Date() });
     if (ownTrace) await getOpikClient()?.flush();
     throw error;
   }
@@ -161,23 +148,25 @@ export async function generateChallengeQuestions(
   const parsed = parseJsonResponse(responseContent);
 
   if (!parsed || parsed.length !== QUESTIONS_PER_CHALLENGE) {
-    llmSpan?.update({ endTime: new Date() });
+    const actualCount = parsed?.length ?? 0;
+    const reason = `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${actualCount}`;
+    generateQuestionsSpan?.score({ name: 'needs_review', value: 0, reason, categoryName: 'question_count_mismatch' });
+    generateQuestionsSpan?.update({ endTime: new Date() });
     ownTrace?.update({
-      errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
+      tags: ['review', 'question-count-mismatch'],
+      errorInfo: { exceptionType: 'Error', message: reason, traceback: '' },
       endTime: new Date()
     });
     if (ownTrace) await getOpikClient()?.flush();
-    throw new Error(`Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`);
+    throw new Error(reason);
   }
 
-  llmSpan?.update({ endTime: new Date() });
-  ownTrace?.update({
-    output: {
-      questionCount: parsed.length,
-      questions: parsed.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
-    },
-    endTime: new Date()
-  });
+  const output = {
+    questionCount: parsed.length,
+    questions: parsed.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
+  };
+  generateQuestionsSpan?.update({ output, endTime: new Date() });
+  ownTrace?.update({ output, endTime: new Date() });
   if (ownTrace) await getOpikClient()?.flush();
 
   return parsed;
@@ -225,16 +214,9 @@ async function processChallengeGeneration(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     await updateChallengeStatus(challenge.id, 'failed', errorMessage);
-    processSpan?.update({
-      errorInfo: {
-        exceptionType: error instanceof Error ? error.constructor.name : 'Error',
-        message: errorMessage,
-        traceback: error instanceof Error ? error.stack || '' : ''
-      }
-    });
+    processSpan?.update({ errorInfo: parseErrorInfo(error), endTime: new Date() });
+
     throw error;
-  } finally {
-    processSpan?.update({ endTime: new Date() });
   }
 }
 
@@ -246,9 +228,10 @@ export async function generateAllChallengesForGoal(
   user: User,
   goal: Goal,
   resource: LearningResourceWithSections,
-  challenges: Challenge[]
+  challenges: Challenge[],
+  operation: string = 'generate-all'
 ): Promise<{ success: number; failed: number }> {
-  const trace = createAgentTrace('challenge-generator-agent', 'generate-all', {
+  const trace = createAgentTrace('challenge-generator-agent', operation, {
     input: {
       role: user.role,
       skills: user.skills,
@@ -274,27 +257,19 @@ export async function generateAllChallengesForGoal(
       }
     }
 
-    trace?.update({
-      output: {
-        success,
-        failed,
-        total: challenges.length,
-        challenges: challenges.map((c) => ({ id: c.id, sectionTitle: c.sectionTitle, difficulty: c.difficulty }))
-      }
-    });
+    trace?.update({ output: { success, failed, total: challenges.length }, endTime: new Date() });
 
     return { success, failed };
   } catch (err) {
-    trace?.update({
-      errorInfo: {
-        exceptionType: err instanceof Error ? err.constructor.name : 'Error',
-        message: err instanceof Error ? err.message : String(err),
-        traceback: err instanceof Error ? err.stack || '' : ''
-      }
-    });
+    trace?.update({ errorInfo: parseErrorInfo(err), endTime: new Date() });
     throw err;
   } finally {
-    trace?.update({ endTime: new Date() });
     await getOpikClient()?.flush();
   }
 }
+
+const parseErrorInfo = (err: unknown) => ({
+  exceptionType: err instanceof Error ? err.constructor.name : 'Error',
+  message: err instanceof Error ? err.message : String(err),
+  traceback: err instanceof Error ? err.stack || '' : ''
+});
