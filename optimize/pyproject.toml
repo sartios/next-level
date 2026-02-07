@@ -1,0 +1,14 @@
+[project]
+name = "optimize"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "opik-optimizer>=3.0.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.0",
+]
