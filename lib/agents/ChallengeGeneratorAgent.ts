@@ -161,13 +161,24 @@ export async function generateChallengeQuestions(
   const parsed = parseJsonResponse(responseContent);
 
   if (!parsed || parsed.length !== QUESTIONS_PER_CHALLENGE) {
+    const actualCount = parsed?.length ?? 0;
     llmSpan?.update({ endTime: new Date() });
+    const traceRef = ownTrace || parentSpan;
+    if (traceRef && 'score' in traceRef) {
+      traceRef.score({
+        name: 'needs_review',
+        value: 0,
+        reason: `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${actualCount}`,
+        categoryName: 'question_count_mismatch'
+      });
+    }
     ownTrace?.update({
-      errorInfo: { exceptionType: 'Error', message: `Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`, traceback: '' },
+      tags: ['review', 'question-count-mismatch'],
+      errorInfo: { exceptionType: 'Error', message: `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${actualCount}`, traceback: '' },
       endTime: new Date()
     });
     if (ownTrace) await getOpikClient()?.flush();
-    throw new Error(`Failed to generate ${QUESTIONS_PER_CHALLENGE} questions`);
+    throw new Error(`Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${actualCount}`);
   }
 
   llmSpan?.update({ endTime: new Date() });
