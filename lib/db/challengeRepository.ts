@@ -1,6 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 import { requireDb } from './index';
 import { challenges, challengeQuestions, type ChallengeDifficulty, type ChallengeStatus } from './schema';
+import { optionsNormalizationSchema } from '@/lib/schemas';
 
 // ============================================================================
 // Types
@@ -133,6 +134,35 @@ export async function claimChallengeForGeneration(challengeId: string): Promise<
   return claimed;
 }
 
+/**
+ * Reset a failed challenge back to pending so it can be regenerated.
+ * Performs a status-guarded update first, then deletes partial questions.
+ * Wrapped in a transaction for atomicity.
+ */
+export async function resetFailedChallenge(challengeId: string): Promise<Challenge | undefined> {
+  const db = requireDb();
+
+  return db.transaction(async (tx) => {
+    // Guard: only update if status is 'failed'
+    const [updated] = await tx
+      .update(challenges)
+      .set({
+        status: 'pending' as ChallengeStatus,
+        errorMessage: null,
+        updatedAt: new Date()
+      })
+      .where(and(eq(challenges.id, challengeId), eq(challenges.status, 'failed')))
+      .returning();
+
+    if (!updated) return undefined;
+
+    // Safe to delete questions now that we've confirmed the challenge was failed
+    await tx.delete(challengeQuestions).where(eq(challengeQuestions.challengeId, challengeId));
+
+    return updated;
+  });
+}
+
 // ============================================================================
 // Challenge Questions
 // ============================================================================
@@ -152,6 +182,10 @@ export async function getChallengeQuestion(challengeId: string, questionNumber: 
   return results[0];
 }
 
+function normalizeOptions(options: unknown): { label: string; text: string }[] {
+  return optionsNormalizationSchema.parse(options);
+}
+
 /**
  * Add questions to a challenge
  */
@@ -162,7 +196,7 @@ export async function addChallengeQuestions(challengeId: string, questions: NewC
     challengeId,
     questionNumber: q.questionNumber,
     question: q.question,
-    options: q.options,
+    options: normalizeOptions(q.options),
     correctAnswer: q.correctAnswer,
     explanation: q.explanation,
     hint: q.hint || null
