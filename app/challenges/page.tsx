@@ -345,7 +345,7 @@ export default function ChallengesPage() {
                       </h3>
 
                       {/* Description */}
-                      <p className="text-sm text-muted-foreground mb-4 grow line-clamp-3">
+                      <p className="text-sm xl:text-base text-muted-foreground mb-4 grow line-clamp-3">
                         {isLocked
                           ? challenge.difficulty === 'medium'
                             ? 'Complete 50% of the Easy challenge to unlock this level.'
@@ -358,7 +358,7 @@ export default function ChallengesPage() {
                       </p>
 
                       {/* Footer */}
-                      <div className="flex items-center justify-between pt-3 border-t">
+                      <div className="flex items-center justify-between pt-3 border-t border-muted">
                         <span className={`text-sm font-medium flex items-center gap-1 ${isLocked ? 'text-muted-foreground' : ''}`}>
                           <Trophy className={`h-4 w-4 ${isLocked ? 'text-muted-foreground' : 'text-accent'}`} />
                           {diffConfig.points} pts
@@ -394,7 +394,7 @@ export default function ChallengesPage() {
 
         {/* Pro Tip */}
         {challenges.length > 0 && (
-          <div className="mt-10 p-4 bg-muted/50 rounded-lg border">
+          <div className="mt-10 p-4 bg-muted/20 rounded-lg border">
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">Pro Tip:</span> Each challenge is based on a section from your learning
               resource. Complete them as you progress through the material to reinforce your understanding.
