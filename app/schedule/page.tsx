@@ -146,7 +146,7 @@ function ScheduleContent() {
           <p className="xl:text-xl text-muted-foreground mb-4">Define your aspirations and build your schedule.</p>
           <Button
             asChild
-            className="w-full lg:w-1/3 h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold mx-auto"
+            className="w-full lg:w-1/3 min-h-14 text-base xl:text-lg bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-medium mx-auto"
           >
             <Link href="/">Define your goal</Link>
           </Button>

@@ -154,7 +154,7 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
                 </div>
                 {isSelected && !skillStream.isLoading && (
                   <Button
-                    className="w-full h-12 mt-4 text-lg bg-foreground text-background hover:opacity-90 rounded-lg shadow-md"
+                    className="w-full min-h-14 mt-4 text-base xl:text-lg bg-foreground text-background hover:opacity-90 rounded-lg shadow-md"
                     disabled={isConfirming}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -176,7 +176,7 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
         <div className="pt-6">
           <Button
             variant="ghost"
-            className="w-full h-14 text-lg font-bold min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="w-full min-h-14 text-base xl:text-lg font-medium focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2"
             onClick={handleRegenerate}
           >
             Regenerate New Skills

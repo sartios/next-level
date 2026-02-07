@@ -121,7 +121,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
       {!isSubmitted && !isLoading && (
         <div className="pt-6">
           <Button
-            className="w-full h-20 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold"
+            className="w-full min-h-14 text-base xl:text-lg bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-medium"
             onClick={handleProfileCreation}
             disabled={!occupation.trim() || !userSkills.trim() || !careerGoals.trim() || isCreatingUser}
           >
