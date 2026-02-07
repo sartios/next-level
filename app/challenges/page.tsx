@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Trophy, ArrowRight, Sparkles, CheckCircle2, XCircle, Loader2, Lock } from 'lucide-react';
+import { ArrowLeft, Trophy, ArrowRight, Sparkles, CheckCircle2, XCircle, Loader2, Lock, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
 interface Challenge {
@@ -116,6 +116,7 @@ export default function ChallengesPage() {
   const [initializing, setInitializing] = useState(true);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [retrying, setRetrying] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -175,6 +176,27 @@ export default function ChallengesPage() {
       setError(err instanceof Error ? err.message : 'Failed to generate challenges');
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const retryChallengeGeneration = async (challengeId: string) => {
+    if (!userId || !goalId) return;
+
+    setRetrying(challengeId);
+    try {
+      const response = await fetch(`/api/users/${userId}/goals/${goalId}/challenges/${challengeId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'regenerate' })
+      });
+
+      if (!response.ok) throw new Error('Failed to retry challenge');
+
+      await fetchChallenges();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to retry challenge');
+    } finally {
+      setRetrying(null);
     }
   };
 
@@ -378,7 +400,23 @@ export default function ChallengesPage() {
                         ) : isGenerating ? (
                           <span className="text-xs text-blue-600">Generating...</span>
                         ) : challenge.status === 'failed' ? (
-                          <span className="text-xs text-red-500">Failed</span>
+                          <button
+                            onClick={() => retryChallengeGeneration(challenge.id)}
+                            disabled={retrying === challenge.id}
+                            className="text-xs text-red-500 hover:text-red-700 flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                          >
+                            {retrying === challenge.id ? (
+                              <>
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                Retrying...
+                              </>
+                            ) : (
+                              <>
+                                <RotateCcw className="h-3 w-3" />
+                                Retry
+                              </>
+                            )}
+                          </button>
                         ) : (
                           <span className="text-xs text-muted-foreground">Pending</span>
                         )}

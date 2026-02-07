@@ -9,7 +9,7 @@ import { generateAllChallengesForGoal } from '@/lib/agents/ChallengeGeneratorAge
  * Background job to generate all challenges for a goal.
  * This function runs independently of the request lifecycle.
  */
-async function runGenerateChallengesJob(userId: string, goalId: string): Promise<void> {
+async function runGenerateChallengesJob(userId: string, goalId: string, operation?: string): Promise<void> {
   console.log(`[ChallengeJob] Starting challenge generation for goal ${goalId}`);
 
   try {
@@ -65,7 +65,7 @@ async function runGenerateChallengesJob(userId: string, goalId: string): Promise
     console.log(`[ChallengeJob] Claimed ${claimedChallenges.length} challenges for goal ${goalId}`);
 
     // Generate challenges
-    const result = await generateAllChallengesForGoal(user, goal, resource, claimedChallenges);
+    const result = await generateAllChallengesForGoal(user, goal, resource, claimedChallenges, operation);
 
     console.log(`[ChallengeJob] Completed for goal ${goalId}: ${result.success} success, ${result.failed} failed`);
   } catch (error) {
@@ -78,8 +78,8 @@ async function runGenerateChallengesJob(userId: string, goalId: string): Promise
  * Uses Next.js `after()` API to ensure the job runs to completion
  * even after the HTTP response is sent.
  */
-export function startGenerateChallengesJob(userId: string, goalId: string): void {
+export function startGenerateChallengesJob(userId: string, goalId: string, operation?: string): void {
   after(async () => {
-    await runGenerateChallengesJob(userId, goalId);
+    await runGenerateChallengesJob(userId, goalId, operation);
   });
 }
