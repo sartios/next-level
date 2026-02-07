@@ -182,6 +182,22 @@ export async function getChallengeQuestion(challengeId: string, questionNumber: 
 }
 
 /**
+ * Normalize options to array format.
+ * LLM may produce { A: "text", B: "text" } instead of [{ label: "A", text: "text" }].
+ * Zod schema validation in ChallengeGeneratorAgent catches this at generation time;
+ * this serves as a defensive fallback for any data already persisted.
+ */
+function normalizeOptions(options: unknown): { label: string; text: string }[] {
+  if (Array.isArray(options)) {
+    return options.map((o) => ({ label: String(o.label), text: String(o.text) }));
+  }
+  if (typeof options === 'object' && options !== null) {
+    return Object.entries(options).map(([label, text]) => ({ label, text: String(text) }));
+  }
+  return [];
+}
+
+/**
  * Add questions to a challenge
  */
 export async function addChallengeQuestions(challengeId: string, questions: NewChallengeQuestion[]): Promise<ChallengeQuestion[]> {
@@ -191,7 +207,7 @@ export async function addChallengeQuestions(challengeId: string, questions: NewC
     challengeId,
     questionNumber: q.questionNumber,
     question: q.question,
-    options: q.options,
+    options: normalizeOptions(q.options),
     correctAnswer: q.correctAnswer,
     explanation: q.explanation,
     hint: q.hint || null

@@ -1,4 +1,5 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
+import { z } from 'zod';
 
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { createAgentTrace, getOpikClient, type Trace, type Span } from '@/lib/opik';
@@ -12,19 +13,25 @@ import { OpikSpanType } from 'opik';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
-interface QuestionOption {
-  label: 'A' | 'B' | 'C' | 'D';
-  text: string;
-}
+const optionLabelSchema = z.enum(['A', 'B', 'C', 'D']);
 
-interface GeneratedQuestion {
-  questionNumber: number;
-  question: string;
-  options: QuestionOption[];
-  correctAnswer: 'A' | 'B' | 'C' | 'D';
-  explanation: string;
-  hint?: string;
-}
+const questionOptionSchema = z.object({
+  label: optionLabelSchema,
+  text: z.string().min(1)
+});
+
+const generatedQuestionSchema = z.object({
+  questionNumber: z.number().int().positive(),
+  question: z.string().min(1),
+  options: z.array(questionOptionSchema).length(4),
+  correctAnswer: optionLabelSchema,
+  explanation: z.string().min(1),
+  hint: z.string().optional()
+});
+
+const generatedQuestionsSchema = z.array(generatedQuestionSchema);
+
+type GeneratedQuestion = z.infer<typeof generatedQuestionSchema>;
 
 // ============================================================================
 // Prompts
@@ -69,21 +76,42 @@ async function buildQuestionsUserPrompt(
 // Generator
 // ============================================================================
 
-function parseJsonResponse(content: string): GeneratedQuestion[] | null {
-  try {
-    let jsonContent = content.trim();
-    if (jsonContent.startsWith('```json')) {
-      jsonContent = jsonContent.slice(7);
-    } else if (jsonContent.startsWith('```')) {
-      jsonContent = jsonContent.slice(3);
-    }
-    if (jsonContent.endsWith('```')) {
-      jsonContent = jsonContent.slice(0, -3);
-    }
-    return JSON.parse(jsonContent.trim());
-  } catch {
-    return null;
+function extractJson(content: string): string {
+  // Strip markdown code fences
+  let text = content.trim();
+  const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fenceMatch) {
+    text = fenceMatch[1].trim();
   }
+
+  // Find the outermost JSON array
+  const start = text.indexOf('[');
+  const end = text.lastIndexOf(']');
+  if (start !== -1 && end > start) {
+    return text.slice(start, end + 1);
+  }
+
+  return text;
+}
+
+function parseJsonResponse(content: string): { data: GeneratedQuestion[] } | { error: string } {
+  const jsonString = extractJson(content);
+
+  let raw: unknown;
+  try {
+    raw = JSON.parse(jsonString);
+  } catch (e) {
+    const detail = e instanceof SyntaxError ? e.message : 'unknown parse error';
+    return { error: `JSON parse failed: ${detail}` };
+  }
+
+  const result = generatedQuestionsSchema.safeParse(raw);
+  if (!result.success) {
+    const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+    return { error: `Schema validation failed: ${issues}` };
+  }
+
+  return { data: result.data };
 }
 
 /**
@@ -145,11 +173,23 @@ export async function generateChallengeQuestions(
     throw error;
   }
 
-  const parsed = parseJsonResponse(responseContent);
+  const parseResult = parseJsonResponse(responseContent);
 
-  if (!parsed || parsed.length !== QUESTIONS_PER_CHALLENGE) {
-    const actualCount = parsed?.length ?? 0;
-    const reason = `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${actualCount}`;
+  if ('error' in parseResult) {
+    generateQuestionsSpan?.update({ endTime: new Date() });
+    ownTrace?.update({
+      tags: ['review', 'schema-validation-failed'],
+      errorInfo: { exceptionType: 'Error', message: parseResult.error, traceback: '' },
+      endTime: new Date()
+    });
+    if (ownTrace) await getOpikClient()?.flush();
+    throw new Error(parseResult.error);
+  }
+
+  const questions = parseResult.data;
+
+  if (questions.length !== QUESTIONS_PER_CHALLENGE) {
+    const reason = `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${questions.length}`;
     generateQuestionsSpan?.score({ name: 'needs_review', value: 0, reason, categoryName: 'question_count_mismatch' });
     generateQuestionsSpan?.update({ endTime: new Date() });
     ownTrace?.update({
@@ -162,14 +202,14 @@ export async function generateChallengeQuestions(
   }
 
   const output = {
-    questionCount: parsed.length,
-    questions: parsed.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
+    questionCount: questions.length,
+    questions: questions.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
   };
   generateQuestionsSpan?.update({ output, endTime: new Date() });
   ownTrace?.update({ output, endTime: new Date() });
   if (ownTrace) await getOpikClient()?.flush();
 
-  return parsed;
+  return questions;
 }
 
 /**

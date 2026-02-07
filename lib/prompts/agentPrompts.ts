@@ -99,7 +99,8 @@ Generate queries that would match course titles, descriptions, and learning obje
     prompt: `
 You are a quiz question generator tasked with creating {{questionsPerChallenge}} {{difficultyDescription}} questions on {{sectionTitle}}.
 Each question should progressively increase in complexity.
-Format each question as a JSON object with the following fields: questionNumber, question, options (A, B, C, D), correctAnswer, explanation, and an optional hint.
+Format each question as a JSON object with the following fields: questionNumber, question, options, correctAnswer, explanation, and an optional hint.
+The "options" field MUST be an array of exactly 4 objects, each with "label" (one of "A", "B", "C", "D") and "text" (the option text). Example: [{"label": "A", "text": "Option A text"}, {"label": "B", "text": "Option B text"}, {"label": "C", "text": "Option C text"}, {"label": "D", "text": "Option D text"}].
 Ensure that only one option is correct and that the incorrect options are plausible yet clearly wrong.
 Output only the JSON array.
 `,

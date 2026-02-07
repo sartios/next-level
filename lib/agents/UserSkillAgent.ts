@@ -173,7 +173,7 @@ class UserSkillAgent {
       yield { type: 'token', userId, content: `__stream_error__: ${message}` };
       throw err;
     } finally {
-      trace?.update({endTime: new Date()});
+      trace?.update({ endTime: new Date() });
       await getOpikClient()?.flush();
     }
   }
