@@ -361,7 +361,7 @@ function ChallengeContent() {
                   <Unlock className="h-5 w-5" />
                   <span>{unlockedDifficulty.charAt(0).toUpperCase() + unlockedDifficulty.slice(1)} level unlocked!</span>
                 </div>
-                <p className="text-sm text-green-600 mt-1">You scored 50% or higher. The next stage is now available.</p>
+                <p className="text-sm text-green-600 mt-1">You scored 50% or higher. The next level is now available.</p>
               </div>
             )}
 
