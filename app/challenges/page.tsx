@@ -309,7 +309,11 @@ export default function ChallengesPage() {
                   const cardContent = (
                     <Card
                       className={`p-5 border transition-all flex flex-col h-full ${
-                        isReady ? 'hover:border-accent/50 hover:shadow-md cursor-pointer' : isLocked ? 'opacity-60 bg-muted/30' : 'opacity-80'
+                        isReady
+                          ? 'hover:border-accent/50 hover:shadow-md cursor-pointer'
+                          : isLocked
+                            ? 'opacity-60 bg-muted/30'
+                            : 'opacity-80'
                       }`}
                     >
                       {/* Header with Badge and Time */}
