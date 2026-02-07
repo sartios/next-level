@@ -30,20 +30,21 @@ export async function userSkillAgentTask(item: UserSkillDatasetItem): Promise<{
   const systemPrompt = await getAgentPrompt('user-skill-agent:system-prompt');
 
   // Build context for grounding the evaluation
-  // Include the actual output schema that the agent returns
   const context = [
-    `User ID: ${item.input.user.id}`,
     `User role: ${item.input.user.role}`,
     `User current skills: ${item.input.user.skills.join(', ')}`,
     `User career goals: ${item.input.user.careerGoals.join(', ')}`,
     `Expected skill count: ${item.expected.skillCount}`,
     `Skills to exclude (user already has): ${item.expected.excludedSkills.join(', ')}`,
-    `Output format: Array of SuggestedSkill objects with fields: id (generated UUID), userId (user's ID), name (skill name), priority (1-10), reasoning (explanation)`
+    `Output format: JSON Lines — one JSON object per line with exactly these fields: name (string), priority (1-10), reasoning (string)`
   ];
+
+  // Format output as JSON Lines to match the agent's prompt instructions
+  const jsonLines = skills.map((s) => JSON.stringify({ name: s.name, priority: s.priority, reasoning: s.reasoning })).join('\n');
 
   return {
     input: systemPrompt,
-    output: JSON.stringify(skills),
+    output: jsonLines,
     context
   };
 }
