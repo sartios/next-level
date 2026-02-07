@@ -64,6 +64,13 @@
       "when": 1770243211825,
       "tag": "0008_parched_killraven",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1770477932301,
+      "tag": "0009_normalize_challenge_question_options",
+      "breakpoints": true
     }
   ]
 }

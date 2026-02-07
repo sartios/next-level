@@ -1,6 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 import { requireDb } from './index';
 import { challenges, challengeQuestions, type ChallengeDifficulty, type ChallengeStatus } from './schema';
+import { optionsNormalizationSchema } from '@/lib/schemas';
 
 // ============================================================================
 // Types
@@ -181,6 +182,10 @@ export async function getChallengeQuestion(challengeId: string, questionNumber: 
   return results[0];
 }
 
+function normalizeOptions(options: unknown): { label: string; text: string }[] {
+  return optionsNormalizationSchema.parse(options);
+}
+
 /**
  * Add questions to a challenge
  */
@@ -191,7 +196,7 @@ export async function addChallengeQuestions(challengeId: string, questions: NewC
     challengeId,
     questionNumber: q.questionNumber,
     question: q.question,
-    options: q.options,
+    options: normalizeOptions(q.options),
     correctAnswer: q.correctAnswer,
     explanation: q.explanation,
     hint: q.hint || null
