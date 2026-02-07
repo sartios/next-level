@@ -300,7 +300,7 @@ function ChallengeContent() {
         <Button
           asChild
           variant="ghost"
-          className="font-medium text-base xl:text-lg min-h-14 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Link href="/challenges">
             <ArrowLeft className="h-5 w-5 mr-2" />
@@ -369,7 +369,7 @@ function ChallengeContent() {
               <Button
                 asChild
                 variant="ghost"
-                className="font-medium text-base xl:text-lg min-h-14 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+                className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
               >
                 <Link href="/challenges">
                   <ArrowLeft className="h-5 w-5 mr-2" />
@@ -378,7 +378,7 @@ function ChallengeContent() {
               </Button>
               <Button
                 onClick={handleTryAgain}
-                className="font-medium text-base xl:text-lg min-h-14 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+                className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
               >
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Try Again
@@ -401,7 +401,7 @@ function ChallengeContent() {
         <Button
           asChild
           variant="ghost"
-          className="font-medium text-base xl:text-lg min-h-14 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Link href="/challenges">
             <ArrowLeft className="h-5 w-5 mr-2" />
@@ -529,16 +529,16 @@ function ChallengeContent() {
 
           {/* Actions */}
           <div className="flex justify-between pt-4 border-t">
-            <Button variant="outline" asChild className="font-medium text-base xl:text-lg min-h-14">
+            <Button variant="outline" asChild className="font-medium text-base xl:text-lg min-h-14 rounded-xl hover:border-transparent">
               <Link href="/challenges">End Challenge</Link>
             </Button>
 
             {!showResult ? (
-              <Button onClick={submitAnswer} disabled={!selectedAnswer} className="font-medium text-base xl:text-lg min-h-14">
+              <Button onClick={submitAnswer} disabled={!selectedAnswer} className="font-medium text-base xl:text-lg min-h-14 rounded-xl">
                 Submit Answer
               </Button>
             ) : isCorrect ? (
-              <Button onClick={nextQuestion} className="font-medium text-base xl:text-lg min-h-14">
+              <Button onClick={nextQuestion} className="font-medium text-base xl:text-lg min-h-14 rounded-xl">
                 {currentQuestionIndex < totalQuestions - 1 ? (
                   <>
                     Next Question
@@ -554,7 +554,7 @@ function ChallengeContent() {
                   setShowResult(false);
                   setSelectedAnswer(null);
                 }}
-                className="font-medium text-base xl:text-lg min-h-14"
+                className="font-medium text-base xl:text-lg min-h-14 rounded-xl"
               >
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Try Again

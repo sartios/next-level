@@ -222,7 +222,7 @@ export default function ChallengesPage() {
           <Button
             asChild
             variant="ghost"
-            className="font-medium text-base xl:text-lg min-h-14 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+            className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
           >
             <Link href="/goal">
               <ArrowLeft className="h-4 w-4 mr-2" />
