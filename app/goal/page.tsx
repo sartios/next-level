@@ -45,10 +45,10 @@ export default function GoalPage() {
 
   const fetchGoal = useCallback(async () => {
     if (!userId || !goalId) {
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
       const response = await fetch(`/api/users/${userId}/goals/${goalId}`);
 
