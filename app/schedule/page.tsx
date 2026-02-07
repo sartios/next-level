@@ -130,7 +130,7 @@ function ScheduleContent() {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <Card className="p-8 text-center border-2 border-muted shadow-none">
+        <Card className="p-8 text-center border-2 border-muted shadow-none h-120 flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 mx-auto text-accent mb-4 animate-spin" />
           <h3 className="text-2xl xl:text-3xl font-bold text-foreground">Loading your schedule...</h3>
           <p className="xl:text-xl text-muted-foreground">Please wait while we fetch your schedule</p>
@@ -140,7 +140,7 @@ function ScheduleContent() {
 
     if (!goalId) {
       return (
-        <Card className="p-8 text-center border-2 border-muted shadow-none">
+        <Card className="p-8 text-center border-2 border-muted shadow-none h-120 flex flex-col items-center justify-center">
           <Target className="h-12 w-12 mx-auto text-accent mb-4" />
           <h3 className="text-2xl xl:text-3xl font-bold text-foreground">Set your goal to begin</h3>
           <p className="xl:text-xl text-muted-foreground mb-4">Define your aspirations and build your schedule.</p>
