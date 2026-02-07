@@ -168,13 +168,12 @@ class UserSkillAgent {
           exceptionType: err instanceof Error ? err.constructor.name : 'Error',
           message,
           traceback: err instanceof Error ? err.stack || '' : ''
-        },
-        endTime: new Date()
+        }
       });
       yield { type: 'token', userId, content: `__stream_error__: ${message}` };
       throw err;
     } finally {
-      trace?.update({endTime: new Date()})
+      trace?.update({endTime: new Date()});
       await getOpikClient()?.flush();
     }
   }

@@ -113,18 +113,23 @@ export default function ChallengesPage() {
   const [stats, setStats] = useState<ChallengeStats | null>(null);
   const [resource, setResource] = useState<ResourceInfo | null>(null);
   const [progress, setProgress] = useState<Record<string, ChallengeProgressInfo>>({});
-  const [loading, setLoading] = useState(true);
+  const [initializing, setInitializing] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setUserId(getUserId());
     setGoalId(getGoalId());
+    setInitializing(false);
   }, []);
 
   const fetchChallenges = useCallback(async () => {
-    if (!userId || !goalId) return;
+    if (!userId || !goalId) {
+      return;
+    }
 
+    setLoading(true);
     try {
       const response = await fetch(`/api/users/${userId}/goals/${goalId}/challenges`);
       if (!response.ok) throw new Error('Failed to fetch challenges');
@@ -142,9 +147,7 @@ export default function ChallengesPage() {
   }, [userId, goalId]);
 
   useEffect(() => {
-    if (userId && goalId) {
-      fetchChallenges();
-    }
+    fetchChallenges();
   }, [userId, goalId, fetchChallenges]);
 
   // Poll for updates if there are pending/generating challenges
@@ -176,32 +179,6 @@ export default function ChallengesPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <p className="text-muted-foreground">Loading challenges...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <p className="text-red-500 mb-4">{error}</p>
-        <Button
-          asChild
-          variant="ghost"
-          className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
-        >
-          <Link href="/goal">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Goal
-          </Link>
-        </Button>
-      </div>
-    );
-  }
-
   const completedCount = stats?.complete || 0;
   const totalCount = stats?.total || 0;
   const progressPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
@@ -227,55 +204,87 @@ export default function ChallengesPage() {
     group.challenges.sort((a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]);
   });
 
-  return (
-    <div className="max-w-6xl mx-auto py-10 xl:py-12">
-      {/* Header */}
-      <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11">Challenges</h1>
-      <div>
-        {resource && (
-          <p className="text-foreground xl:text-lg">
-            Based on: <span className="font-bold">{resource.title}</span>
-            <span className="mx-2">•</span>
-            <span className="font-bold">{resource.provider}</span>
-          </p>
-        )}
-      </div>
+  const renderContent = () => {
+    if (initializing || loading) {
+      return (
+        <Card className="p-8 text-center border-2 border-muted shadow-none mx-4 xl:mx-0 h-120 flex flex-col items-center justify-center">
+          <Loader2 className="h-12 w-12 mx-auto text-accent mb-4 animate-spin" />
+          <h3 className="text-2xl xl:text-3xl font-bold text-foreground">Loading challenges...</h3>
+          <p className="xl:text-xl text-muted-foreground">Please wait while we fetch your challenges</p>
+        </Card>
+      );
+    }
 
-      {/* Stats Bar */}
-      {stats && totalCount > 0 && (
-        <div className="mb-8 py-4">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="font-medium">
-              {completedCount} of {totalCount} challenges ready
-            </span>
-            {stats.pending > 0 && (
-              <Button size="sm" onClick={generateChallenges} disabled={generating}>
-                {generating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Generate {stats.pending} Pending
-                  </>
-                )}
-              </Button>
-            )}
-            <div className="flex gap-4 text-muted-foreground">
-              {stats.generating > 0 && <span className="text-blue-600">{stats.generating} generating</span>}
-              {stats.pending > 0 && <span>{stats.pending} pending</span>}
-              {stats.locked > 0 && <span>{stats.locked} locked</span>}
-              {stats.failed > 0 && <span className="text-red-600">{stats.failed} failed</span>}
-            </div>
-          </div>
-          <Progress value={progressPercentage} className="h-4 bg-muted *:data-[slot='progress-indicator']:bg-accent" />
+    if (error) {
+      return (
+        <div className="px-4 xl:px-0">
+          <p className="text-red-500 mb-4">{error}</p>
+          <Button
+            asChild
+            variant="ghost"
+            className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+          >
+            <Link href="/goal">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Goal
+            </Link>
+          </Button>
         </div>
-      )}
+      );
+    }
 
-      {/* Challenges by Section */}
-      {sectionGroups.length > 0 ? (
+    if (!goalId) {
+      return (
+        <Card className="p-8 text-center border-2 border-muted shadow-none mx-4 xl:mx-0 h-120 flex flex-col items-center justify-center">
+          <Sparkles className="h-12 w-12 mx-auto text-accent mb-4" />
+          <h3 className="text-2xl xl:text-3xl font-bold text-foreground">No Challenges Yet</h3>
+          <p className="xl:text-xl text-muted-foreground mb-4">Set your goal to start your journey.</p>
+          <Button
+            asChild
+            className="w-full lg:w-1/3 h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold mx-auto"
+          >
+            <Link href="/">Define your goal</Link>
+          </Button>
+        </Card>
+      );
+    }
+
+    return (
+      <>
+        {/* Stats Bar */}
+        {stats && totalCount > 0 && (
+          <div className="mb-8 py-4">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="font-medium">
+                {completedCount} of {totalCount} challenges ready
+              </span>
+              {stats.pending > 0 && (
+                <Button size="sm" onClick={generateChallenges} disabled={generating}>
+                  {generating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Generate {stats.pending} Pending
+                    </>
+                  )}
+                </Button>
+              )}
+              <div className="flex gap-4 text-muted-foreground">
+                {stats.generating > 0 && <span className="text-blue-600">{stats.generating} generating</span>}
+                {stats.pending > 0 && <span>{stats.pending} pending</span>}
+                {stats.locked > 0 && <span>{stats.locked} locked</span>}
+                {stats.failed > 0 && <span className="text-red-600">{stats.failed} failed</span>}
+              </div>
+            </div>
+            <Progress value={progressPercentage} className="h-4 bg-muted *:data-[slot='progress-indicator']:bg-accent" />
+          </div>
+        )}
+
+        {/* Challenges by Section */}
         <div className="space-y-10">
           {sectionGroups.map((group) => (
             <div key={group.sectionId}>
@@ -382,26 +391,29 @@ export default function ChallengesPage() {
             </div>
           ))}
         </div>
-      ) : (
-        <Card className="p-8 text-center border-2">
-          <Sparkles className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="font-bold text-foreground mb-2">No Challenges Yet</h3>
-          <p className="text-muted-foreground mb-4">Select a learning resource for your goal to unlock challenges for each section.</p>
-          <Button asChild>
-            <Link href="/roadmap/results">Browse Resources</Link>
-          </Button>
-        </Card>
-      )}
 
-      {/* Pro Tip */}
-      {challenges.length > 0 && (
-        <div className="mt-10 p-4 bg-muted/50 rounded-lg border">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Pro Tip:</span> Each challenge is based on a section from your learning
-            resource. Complete them as you progress through the material to reinforce your understanding.
-          </p>
-        </div>
-      )}
+        {/* Pro Tip */}
+        {challenges.length > 0 && (
+          <div className="mt-10 p-4 bg-muted/50 rounded-lg border">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">Pro Tip:</span> Each challenge is based on a section from your learning
+              resource. Complete them as you progress through the material to reinforce your understanding.
+            </p>
+          </div>
+        )}
+      </>
+    );
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 md:px-6 xl:px-0 py-10 xl:py-12">
+      <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11 px-4 xl:px-0">Challenges</h1>
+      <p className="text-foreground xl:text-lg px-4 xl:px-0 mb-8">
+        Based on: <span className="font-bold">{resource?.title ?? 'your selected resource'}</span>
+        <span className="mx-2">{resource ? '•' : ''}</span>
+        <span className="font-bold">{resource?.provider ?? ''}</span>
+      </p>
+      {renderContent()}
     </div>
   );
 }

@@ -171,7 +171,13 @@ export async function generateChallengeQuestions(
   }
 
   llmSpan?.update({ endTime: new Date() });
-  ownTrace?.update({ output: { questionCount: parsed.length, questions: parsed }, endTime: new Date() });
+  ownTrace?.update({
+    output: {
+      questionCount: parsed.length,
+      questions: parsed.map((q) => ({ questionNumber: q.questionNumber, question: q.question.slice(0, 120) }))
+    },
+    endTime: new Date()
+  });
   if (ownTrace) await getOpikClient()?.flush();
 
   return parsed;
@@ -224,10 +230,11 @@ async function processChallengeGeneration(
         exceptionType: error instanceof Error ? error.constructor.name : 'Error',
         message: errorMessage,
         traceback: error instanceof Error ? error.stack || '' : ''
-      },
-      endTime: new Date()
+      }
     });
     throw error;
+  } finally {
+    processSpan?.update({ endTime: new Date() });
   }
 }
 
@@ -267,22 +274,27 @@ export async function generateAllChallengesForGoal(
       }
     }
 
-    trace?.update({ output: { success, failed, total: challenges.length, challenges }, endTime: new Date() });
+    trace?.update({
+      output: {
+        success,
+        failed,
+        total: challenges.length,
+        challenges: challenges.map((c) => ({ id: c.id, sectionTitle: c.sectionTitle, difficulty: c.difficulty }))
+      }
+    });
+
+    return { success, failed };
   } catch (err) {
     trace?.update({
       errorInfo: {
         exceptionType: err instanceof Error ? err.constructor.name : 'Error',
         message: err instanceof Error ? err.message : String(err),
         traceback: err instanceof Error ? err.stack || '' : ''
-      },
-      endTime: new Date()
+      }
     });
-
-    // Commenting out for now - needs retry
-    // throw err;
+    throw err;
   } finally {
+    trace?.update({ endTime: new Date() });
     await getOpikClient()?.flush();
   }
-
-  return { success, failed };
 }

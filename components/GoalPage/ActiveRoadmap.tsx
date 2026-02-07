@@ -4,9 +4,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Check, X, MoreVertical } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CheckCircle2, Check, X, MoreVertical, Target } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import Link from 'next/link';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { PlanSessionStatus } from '@/lib/db/schema';
 import type { WeeklyPlanWithSessions } from '@/lib/db/weeklyPlanRepository';
@@ -145,9 +147,19 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
 
   if (!goal) {
     return (
-      <div className="lg:col-span-2 space-y-8">
-        <p className="text-muted-foreground">No active goal found.</p>
-      </div>
+      <Card className="p-8 text-center border-2 border-muted shadow-none mx-4 xl:mx-0">
+        <Target className="h-12 w-12 mx-auto text-accent mb-4" />
+        <h3 className="text-2xl xl:text-3xl font-bold text-foreground">Start your journey by setting your first goal</h3>
+        <p className="xl:text-xl text-muted-foreground mb-4">
+          Define your career aspirations and we&apos;ll create a personalized learning roadmap to help you achieve them.
+        </p>
+        <Button
+          asChild
+          className="w-full lg:w-1/3 h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold mx-auto"
+        >
+          <Link href="/">Define your goal</Link>
+        </Button>
+      </Card>
     );
   }
 
@@ -275,8 +287,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
   });
 
   return (
-    <div>
-      <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-11">This week&apos;s Plan</h1>
+    <div className="px-4 md:px-6 xl:px-0">
       <div className="flex flex-col xl:flex-row justify-between gap-8">
         <div className="space-y-8">
           <section className="space-y-4 mb-8 xl:mb-11">

@@ -3,11 +3,10 @@ import sys
 from pathlib import Path
 
 OPTIMIZERS = [
-#    "meta_optimizers/user_skill_agent.py",
-#    "meta_optimizers/skill_resource_retriever.py",
+    "meta_optimizers/user_skill_agent.py",
+    "meta_optimizers/skill_resource_retriever.py",
     "meta_optimizers/challenge_generator.py",
 ]
-
 
 def main():
     root = Path(__file__).parent
