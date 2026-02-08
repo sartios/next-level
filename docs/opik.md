@@ -96,20 +96,20 @@ Every trace carries structured metadata for filtering and debugging in the Opik 
 
 All traces automatically include:
 
-| Key           | Value                           |
-| ------------- | ------------------------------- |
-| `environment` | `process.env.NODE_ENV`          |
-| `version`     | `'1.0.0'`                       |
-| `agentName`   | The agent identifier string     |
+| Key           | Value                       |
+| ------------- | --------------------------- |
+| `environment` | `process.env.NODE_ENV`      |
+| `version`     | `'1.0.0'`                   |
+| `agentName`   | The agent identifier string |
 
 ### Per-agent metadata
 
 Each agent merges additional keys via the `metadata` option:
 
-| Agent                       | Extra keys                                                |
-| --------------------------- | --------------------------------------------------------- |
-| **UserSkillAgent**          | `userId`                                                  |
-| **SkillResourceRetrieverAgent** | `userId`, `goalId`                                    |
+| Agent                                       | Extra keys                                         |
+| ------------------------------------------- | -------------------------------------------------- |
+| **UserSkillAgent**                          | `userId`                                           |
+| **SkillResourceRetrieverAgent**             | `userId`, `goalId`                                 |
 | **ChallengeGeneratorAgent** (per challenge) | `goalId`, `challengeId`, `sectionId`, `difficulty` |
 | **ChallengeGeneratorAgent** (top-level)     | `goalId`, `userId`, `resourceId`                   |
 
@@ -117,23 +117,23 @@ Each agent merges additional keys via the `metadata` option:
 
 The callback handler extracts metadata from LangChain's internal run context and attaches it to spans:
 
-| Key                | Source                              |
-| ------------------ | ----------------------------------- |
-| `ls_provider`      | LLM provider (e.g. `openai`)       |
-| `ls_model_name`    | Model identifier (e.g. `gpt-5-mini`) |
-| `tools`            | Tool definitions from invocation params |
-| Invocation params  | Temperature, top_p, etc.            |
+| Key               | Source                                  |
+| ----------------- | --------------------------------------- |
+| `ls_provider`     | LLM provider (e.g. `openai`)            |
+| `ls_model_name`   | Model identifier (e.g. `gpt-5-mini`)    |
+| `tools`           | Tool definitions from invocation params |
+| Invocation params | Temperature, top_p, etc.                |
 
 ### [`Prompt metadata`](../lib/prompts/agentPrompts.ts)
 
 Each prompt definition includes metadata for the Opik prompt registry:
 
-| Key         | Example values                                     |
-| ----------- | -------------------------------------------------- |
+| Key         | Example values                                      |
+| ----------- | --------------------------------------------------- |
 | `agent`     | `'user-skill-agent'`, `'challenge-generator-agent'` |
-| `type`      | `'system-prompt'`, `'user-prompt'`                 |
-| `operation` | `'generate'`, `'search'`                           |
-| `category`  | `'career-development'`, `'resource-discovery'`     |
+| `type`      | `'system-prompt'`, `'user-prompt'`                  |
+| `operation` | `'generate'`, `'search'`                            |
+| `category`  | `'career-development'`, `'resource-discovery'`      |
 
 ## Prompt Management
 
@@ -161,11 +161,11 @@ Runs agents against test datasets and scores output quality using Opik's built-i
 
 ### Evaluated Agents
 
-| CLI key                    | Agent                       | Dataset                                              |
-| -------------------------- | --------------------------- | ---------------------------------------------------- |
-| `user-skill-agent`         | UserSkillAgent              | `evals/datasets/user-skill-agent.json`               |
-| `skill-resource-retriever` | SkillResourceRetrieverAgent | `evals/datasets/skill-resource-retriever-agent.json` |
-| `challenge-generator`      | ChallengeGeneratorAgent     | `evals/datasets/challenge-generator-agent.json`      |
+| CLI key                    | Agent                       | Dataset                                                               |
+| -------------------------- | --------------------------- | --------------------------------------------------------------------- |
+| `user-skill-agent`         | UserSkillAgent              | [`datasource`](../evals/datasets/user-skill-agent.json)               |
+| `skill-resource-retriever` | SkillResourceRetrieverAgent | [`datasource`](../evals/datasets/skill-resource-retriever-agent.json) |
+| `challenge-generator`      | ChallengeGeneratorAgent     | [`datasource`](../evals/datasets/challenge-generator-agent.json)      |
 
 ### How it works
 
@@ -211,11 +211,11 @@ Automated prompt improvement using `opik-optimizer` (`optimize/`). Each agent ha
 
 ### Optimizer scripts
 
-| Script | Agent | Model |
-|---|---|---|
-| `optimize/meta_optimizers/user_skill_agent.py` | UserSkillAgent | `gpt-4o-mini` |
+| Script                                                 | Agent                       | Model         |
+| ------------------------------------------------------ | --------------------------- | ------------- |
+| `optimize/meta_optimizers/user_skill_agent.py`         | UserSkillAgent              | `gpt-4o-mini` |
 | `optimize/meta_optimizers/skill_resource_retriever.py` | SkillResourceRetrieverAgent | `gpt-4o-mini` |
-| `optimize/meta_optimizers/challenge_generator.py` | ChallengeGeneratorAgent | `gpt-4o-mini` |
+| `optimize/meta_optimizers/challenge_generator.py`      | ChallengeGeneratorAgent     | `gpt-4o-mini` |
 
 ### CLI usage
 
