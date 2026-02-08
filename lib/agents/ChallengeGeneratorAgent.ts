@@ -11,6 +11,7 @@ import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';
 import { updateChallengeStatus, addChallengeQuestions, type Challenge, type NewChallengeQuestion } from '@/lib/db/challengeRepository';
 import { NextLevelOpikCallbackHandler } from '../trace/handler';
 import { OpikSpanType } from 'opik';
+import { parseErrorInfo } from '@/lib/agents/utils';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 type GeneratedQuestion = z.infer<typeof generatedQuestionSchema>;
@@ -289,9 +290,3 @@ export async function generateAllChallengesForGoal(
     await getOpikClient()?.flush();
   }
 }
-
-const parseErrorInfo = (err: unknown) => ({
-  exceptionType: err instanceof Error ? err.constructor.name : 'Error',
-  message: err instanceof Error ? err.message : String(err),
-  traceback: err instanceof Error ? err.stack || '' : ''
-});
