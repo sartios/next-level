@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { requireDb, closeConnection } from '../../lib/db';
-import { users, goals, learningResources, learningResourceSections, challenges } from '../../lib/db/schema';
+import { users, goals, learningResources, learningResourceSections } from '../../lib/db/schema';
 import { selectResourceAndCreateChallenges } from '../../lib/db/goalResourceService';
-import { getGoalById } from '../../lib/db/goalRepository';
 import { getChallengesByGoalId } from '../../lib/db/challengeRepository';
 
 describe('goalResourceService integration tests', () => {
@@ -117,18 +116,9 @@ describe('goalResourceService integration tests', () => {
     expect(result.id).toBe(testGoalId);
     expect(result.selectedResourceId).toBe(testResourceId);
 
-    // Verify challenges were created
+    // Verify challenges were created (detailed status assertions in challengeRepository tests)
     const createdChallenges = await getChallengesByGoalId(testGoalId);
     expect(createdChallenges).toHaveLength(6); // 2 sections × 3 difficulties
-
-    const easy = createdChallenges.filter((c) => c.difficulty === 'easy');
-    const medium = createdChallenges.filter((c) => c.difficulty === 'medium');
-    const hard = createdChallenges.filter((c) => c.difficulty === 'hard');
-
-    expect(easy).toHaveLength(2);
-    easy.forEach((c) => expect(c.status).toBe('pending'));
-    medium.forEach((c) => expect(c.status).toBe('locked'));
-    hard.forEach((c) => expect(c.status).toBe('locked'));
   });
 
   it('creates no challenges when sections is null', async () => {

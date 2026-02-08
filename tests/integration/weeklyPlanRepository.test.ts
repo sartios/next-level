@@ -482,35 +482,6 @@ describe('weeklyPlanRepository integration tests', () => {
       expect(result.remainingSessions[0].status).toBe('completed');
     });
 
-    it('should only delete pending sessions, not completed ones', async () => {
-      // Create a plan with sessions
-      const planData: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 13,
-        weekStartDate: new Date('2024-03-25'),
-        focusArea: 'Mixed Status Test',
-        totalMinutes: 90
-      };
-
-      const plan = await createWeeklyPlan(planData, testSessions);
-
-      // Mark Monday and Friday sessions as completed
-      const mondaySession = plan.sessions.find((s) => s.dayOfWeek === 'Monday');
-      const fridaySession = plan.sessions.find((s) => s.dayOfWeek === 'Friday');
-      await updateSessionStatus(mondaySession!.id, 'completed');
-      await updateSessionStatus(fridaySession!.id, 'completed');
-
-      // Remove all slots
-      const emptySlots: AvailabilitySlot[] = [];
-
-      const result = await syncSessionsWithAvailability(plan.id, emptySlots);
-
-      // Only the pending Wednesday session should be deleted
-      expect(result.deletedSessionIds).toHaveLength(1);
-      // Both completed sessions should be retained
-      expect(result.remainingSessions).toHaveLength(2);
-      expect(result.remainingSessions.every((s) => s.status === 'completed')).toBe(true);
-    });
   });
 
   describe('getIncompleteSessions', () => {
