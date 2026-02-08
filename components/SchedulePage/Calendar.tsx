@@ -38,26 +38,20 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
   const mobileScrollRef = useRef<HTMLDivElement>(null);
   const [selectedDay, setSelectedDay] = useState(days[0]);
 
+  const scrollToTime = (container: HTMLDivElement | null, rowSelector: string) => {
+    const viewport = container?.querySelector('[data-radix-scroll-area-viewport]');
+    const targetRow = container?.querySelector(rowSelector) as HTMLElement | null;
+    if (viewport && targetRow) {
+      viewport.scrollTop = targetRow.offsetTop;
+    }
+  };
+
   useEffect(() => {
-    setTimeout(() => {
-      const viewport = scrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-      if (viewport) {
-        const rowHeight = 56;
-        const targetIndex = 16;
-        viewport.scrollTop = rowHeight * targetIndex;
-      }
-    }, 100);
+    setTimeout(() => scrollToTime(scrollRef.current, '[data-time="08:00"]'), 100);
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      const viewport = mobileScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-      if (viewport) {
-        const rowHeight = 57; // py-4 (32px) + text height (~25px)
-        const targetIndex = 16;
-        viewport.scrollTop = rowHeight * targetIndex;
-      }
-    }, 100);
+    setTimeout(() => scrollToTime(mobileScrollRef.current, '[data-time="08:00"]'), 100);
   }, [selectedDay]);
 
   const timeSlots = generateTimeSlots();
@@ -109,6 +103,7 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
                   return (
                     <button
                       key={time}
+                      data-time={time}
                       onClick={() => toggleSlot(id)}
                       disabled={isLoading}
                       aria-label={`Select ${selectedDay} at ${time}`}
@@ -158,7 +153,9 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
               <div className="grid grid-cols-8 gap-2 pr-4">
                 {timeSlots.map((time) => (
                   <div key={time} className="contents">
-                    <div className="text-right pr-4 text-xs lg:text-sm font-bold text-border self-center">{time}</div>
+                    <div data-time={time} className="text-right pr-4 text-xs lg:text-sm font-bold text-border self-center">
+                      {time}
+                    </div>
                     {days.map((day) => {
                       const id = `${day}-${time}`;
                       const isSelected = selectedSlots.includes(id);
