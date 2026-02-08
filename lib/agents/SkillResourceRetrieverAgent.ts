@@ -1,13 +1,11 @@
-import { createAgent, providerStrategy } from 'langchain';
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
 import { z } from 'zod';
 
 import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
 import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
-import { searchCuratedResourcesTool, searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
+import { searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
 import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
 import { LearningResourceWithSections } from '../types';
-import { BaseAgent } from './BaseAgent';
 import { createLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
@@ -39,20 +37,8 @@ const RetrieveOperationOutputSchema = z.object({
 
 export const RetrieverOutputSchema = RetrieveOperationOutputSchema;
 
-type RetrieverAgentType = ReturnType<typeof createAgent>;
-
-class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
+class SkillResourceRetrieverAgent {
   protected readonly agentName = 'skill-resource-retriever-agent';
-
-  protected async createAgent(): Promise<RetrieverAgentType> {
-    const systemPrompt = await getAgentPrompt('skill-resource-retriever-agent:system-prompt');
-    return createAgent({
-      model: createLLM('gpt-5-nano'),
-      tools: [searchCuratedResourcesTool],
-      systemPrompt: new SystemMessage(systemPrompt),
-      responseFormat: providerStrategy(RetrieveOperationOutputSchema)
-    });
-  }
 
   public async *streamResources(user: User, goal: Goal, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
     if (!user) {
