@@ -24,7 +24,6 @@ describe('challengeRepository integration tests', () => {
   let testSectionId: string;
   let testSection2Id: string;
   let easyChallengeId: string;
-  let mediumChallengeId: string;
 
   const sampleQuestions: NewChallengeQuestion[] = [
     {
@@ -137,7 +136,6 @@ describe('challengeRepository integration tests', () => {
     hard.forEach((c) => expect(c.status).toBe('locked'));
 
     easyChallengeId = easy.find((c) => c.sectionId === testSectionId)!.id;
-    mediumChallengeId = medium.find((c) => c.sectionId === testSectionId)!.id;
   });
 
   it('checks existence', async () => {
