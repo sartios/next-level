@@ -12,7 +12,7 @@ Next.js frontend streams responses from LangChain agents, backed by PostgreSQL w
 
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4, shadcn/ui
 - **AI/LLM:** LangChain, OpenAI (gpt-4o-mini, gpt-5-nano, gpt-5-mini), text-embedding-3-small
-- **Database:** PostgreSQL with pgvector (embeddings), Drizzle ORM
+- **Database:** PostgreSQL with pgvector ([embeddings](docs/embeddings.md)), Drizzle ORM
 - **Observability:** Opik (tracing, prompt management, LLM-as-judge evaluations)
 - **Optimization:** opik-optimizer (MetaPromptOptimizer, Python)
 - **Testing:** Vitest
