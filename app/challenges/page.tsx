@@ -243,7 +243,7 @@ export default function ChallengesPage() {
           <Button
             asChild
             variant="ghost"
-            className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+            className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
           >
             <Link href="/goal">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -262,7 +262,7 @@ export default function ChallengesPage() {
           <p className="xl:text-xl text-muted-foreground mb-4">Set your goal to start your journey.</p>
           <Button
             asChild
-            className="w-full lg:w-1/3 h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold mx-auto"
+            className="w-full lg:w-1/3 min-h-14 text-base xl:text-lg bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-medium mx-auto"
           >
             <Link href="/">Define your goal</Link>
           </Button>
@@ -327,11 +327,14 @@ export default function ChallengesPage() {
                   const challengeProgress = progress[challenge.id];
                   const hasProgress = challengeProgress?.hasProgress && challengeProgress?.status !== 'completed';
 
-                  return (
+                  const cardContent = (
                     <Card
-                      key={challenge.id}
-                      className={`p-5 border transition-all flex flex-col ${
-                        isReady ? 'hover:border-accent/50 hover:shadow-md' : isLocked ? 'opacity-60 bg-muted/30' : 'opacity-80'
+                      className={`p-5 border transition-all flex flex-col h-full ${
+                        isReady
+                          ? 'hover:border-accent/50 hover:shadow-md cursor-pointer'
+                          : isLocked
+                            ? 'opacity-60 bg-muted/30'
+                            : 'opacity-80'
                       }`}
                     >
                       {/* Header with Badge and Time */}
@@ -366,7 +369,7 @@ export default function ChallengesPage() {
                       </h3>
 
                       {/* Description */}
-                      <p className="text-sm text-muted-foreground mb-4 grow line-clamp-3">
+                      <p className="text-sm xl:text-base text-muted-foreground mb-4 grow line-clamp-3">
                         {isLocked
                           ? challenge.difficulty === 'medium'
                             ? 'Complete 50% of the Easy challenge to unlock this level.'
@@ -379,19 +382,16 @@ export default function ChallengesPage() {
                       </p>
 
                       {/* Footer */}
-                      <div className="flex items-center justify-between pt-3 border-t">
+                      <div className="flex items-center justify-between pt-3 border-t border-muted">
                         <span className={`text-sm font-medium flex items-center gap-1 ${isLocked ? 'text-muted-foreground' : ''}`}>
                           <Trophy className={`h-4 w-4 ${isLocked ? 'text-muted-foreground' : 'text-accent'}`} />
                           {diffConfig.points} pts
                         </span>
                         {isReady ? (
-                          <Link
-                            href={`/challenges/start?challengeId=${challenge.id}`}
-                            className="text-sm font-medium text-accent hover:text-accent/80 flex items-center"
-                          >
+                          <span className="text-sm font-medium text-accent flex items-center">
                             {hasProgress ? 'Continue' : 'Start'}
                             <ArrowRight className="h-4 w-4 ml-1" />
-                          </Link>
+                          </span>
                         ) : isLocked ? (
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Lock className="h-3 w-3" />
@@ -423,6 +423,18 @@ export default function ChallengesPage() {
                       </div>
                     </Card>
                   );
+
+                  return isReady ? (
+                    <Link
+                      key={challenge.id}
+                      href={`/challenges/start?challengeId=${challenge.id}`}
+                      className="block touch-manipulation active:opacity-80"
+                    >
+                      {cardContent}
+                    </Link>
+                  ) : (
+                    <div key={challenge.id}>{cardContent}</div>
+                  );
                 })}
               </div>
             </div>
@@ -431,7 +443,7 @@ export default function ChallengesPage() {
 
         {/* Pro Tip */}
         {challenges.length > 0 && (
-          <div className="mt-10 p-4 bg-muted/50 rounded-lg border">
+          <div className="mt-10 p-4 bg-muted/20 rounded-lg border">
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">Pro Tip:</span> Each challenge is based on a section from your learning
               resource. Complete them as you progress through the material to reinforce your understanding.

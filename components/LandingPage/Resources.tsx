@@ -92,7 +92,7 @@ function ResourceCard({ resource, index, isSelected, onSelect, onCommit, isSavin
         {isSelected && onCommit && (
           <div className="p-6 md:p-8 pt-0">
             <Button
-              className="w-full h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+              className="w-full min-h-14 text-base xl:text-lg bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 whitespace-normal py-3"
               disabled={isSaving}
               onClick={(e) => {
                 e.stopPropagation();

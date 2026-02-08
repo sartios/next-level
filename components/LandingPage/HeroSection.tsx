@@ -26,7 +26,7 @@ export default function HeroSection({ onDefineGoal }: HeroSectionProps) {
         <div className="mt-10 flex flex-col w-full sm:w-auto sm:flex-row items-center justify-center gap-4 xl:pb-24">
           <Button
             size="lg"
-            className="w-full sm:w-auto h-14 text-lg font-bold bg-background text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-4 focus-visible:ring-offset-foreground transition-colors"
+            className="w-full sm:w-auto min-h-14 text-base xl:text-lg font-medium rounded-xl bg-background text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-4 focus-visible:ring-offset-foreground transition-colors"
             onClick={onDefineGoal}
           >
             Define Your Goal
@@ -35,7 +35,7 @@ export default function HeroSection({ onDefineGoal }: HeroSectionProps) {
           <Button
             size="lg"
             variant="outline"
-            className="w-full sm:w-auto h-14 text-lg font-bold border-2 border-background text-background bg-transparent hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-4 focus-visible:ring-offset-foreground transition-colors"
+            className="w-full sm:w-auto min-h-14 text-base xl:text-lg font-medium rounded-xl border-2 border-background text-background bg-transparent hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-background focus-visible:ring-offset-4 focus-visible:ring-offset-foreground transition-colors"
             asChild
           >
             <a href="#how-it-works">See How It Works</a>

@@ -300,7 +300,7 @@ function ChallengeContent() {
         <Button
           asChild
           variant="ghost"
-          className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Link href="/challenges">
             <ArrowLeft className="h-5 w-5 mr-2" />
@@ -361,7 +361,7 @@ function ChallengeContent() {
                   <Unlock className="h-5 w-5" />
                   <span>{unlockedDifficulty.charAt(0).toUpperCase() + unlockedDifficulty.slice(1)} level unlocked!</span>
                 </div>
-                <p className="text-sm text-green-600 mt-1">You scored 50% or higher. The next difficulty is now available.</p>
+                <p className="text-sm text-green-600 mt-1">You scored 50% or higher. The next level is now available.</p>
               </div>
             )}
 
@@ -369,14 +369,17 @@ function ChallengeContent() {
               <Button
                 asChild
                 variant="ghost"
-                className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+                className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
               >
                 <Link href="/challenges">
                   <ArrowLeft className="h-5 w-5 mr-2" />
                   All Challenges
                 </Link>
               </Button>
-              <Button onClick={handleTryAgain}>
+              <Button
+                onClick={handleTryAgain}
+                className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+              >
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Try Again
               </Button>
@@ -392,13 +395,13 @@ function ChallengeContent() {
   const answeredCount = Object.keys(answeredQuestions).length;
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
+    <div className="max-w-4xl mx-auto px-6 py-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <Button
           asChild
           variant="ghost"
-          className="font-medium text-base xl:text-lg min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
+          className="font-medium text-base xl:text-lg min-h-14 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Link href="/challenges">
             <ArrowLeft className="h-5 w-5 mr-2" />
@@ -434,7 +437,7 @@ function ChallengeContent() {
         <CardContent className="p-6 space-y-6">
           {/* Question */}
           <div className="min-h-[60px]">
-            <p className="text-lg font-medium">{currentQuestion?.question}</p>
+            <p className="text-lg xl:text-xl font-medium">{currentQuestion?.question}</p>
           </div>
 
           {/* Options */}
@@ -452,26 +455,26 @@ function ChallengeContent() {
                   key={label}
                   onClick={() => isInteractive && setSelectedAnswer(label)}
                   disabled={!isInteractive}
-                  className={`w-full p-4 rounded-lg border-2 text-left transition-all flex items-start gap-3 ${
+                  className={`w-full p-4 rounded-lg border-2 text-left xl:text-lg transition-all flex items-center gap-3 ${
                     showCorrectHighlight
                       ? 'border-green-500 bg-green-50'
                       : showIncorrectHighlight
                         ? 'border-red-500 bg-red-50'
                         : isSelected
-                          ? 'border-accent bg-accent/10'
+                          ? 'border-primary bg-primary/10'
                           : isInteractive
-                            ? 'border-muted hover:border-accent/50'
+                            ? 'border-muted hover:border-primary/50'
                             : 'border-muted'
                   }`}
                 >
                   <span
-                    className={`font-bold shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm transition-colors duration-300 ${
+                    className={`font-black xl:text-base shrink-0 w-6 h-6 xl:w-9 xl:h-9 rounded-full flex items-center justify-center text-sm transition-colors duration-300 ${
                       showCorrectHighlight
                         ? 'bg-green-500 text-white'
                         : showIncorrectHighlight
                           ? 'bg-red-500 text-white'
                           : isSelected
-                            ? 'bg-accent text-white'
+                            ? 'bg-primary text-white'
                             : 'bg-muted'
                     }`}
                   >
@@ -507,7 +510,7 @@ function ChallengeContent() {
           {/* Result Explanation */}
           {showResult && currentQuestion && (
             <div className={`p-4 rounded-lg ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-              <p className={`font-bold mb-2 flex items-center gap-2 ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+              <p className={`font-medium mb-2 flex items-center gap-2 ${isCorrect ? 'text-green-700' : 'text-red-700'}`}>
                 {isCorrect ? (
                   <>
                     <CheckCircle2 className="h-5 w-5" />
@@ -520,22 +523,22 @@ function ChallengeContent() {
                   </>
                 )}
               </p>
-              <p className="text-sm text-muted-foreground">{currentQuestion.explanation}</p>
+              <p className="text-muted-foreground">{currentQuestion.explanation}</p>
             </div>
           )}
 
           {/* Actions */}
           <div className="flex justify-between pt-4 border-t">
-            <Button variant="outline" asChild>
+            <Button variant="outline" asChild className="font-medium text-base xl:text-lg min-h-14 rounded-xl hover:border-transparent">
               <Link href="/challenges">End Challenge</Link>
             </Button>
 
             {!showResult ? (
-              <Button onClick={submitAnswer} disabled={!selectedAnswer}>
+              <Button onClick={submitAnswer} disabled={!selectedAnswer} className="font-medium text-base xl:text-lg min-h-14 rounded-xl">
                 Submit Answer
               </Button>
             ) : isCorrect ? (
-              <Button onClick={nextQuestion}>
+              <Button onClick={nextQuestion} className="font-medium text-base xl:text-lg min-h-14 rounded-xl">
                 {currentQuestionIndex < totalQuestions - 1 ? (
                   <>
                     Next Question
@@ -551,6 +554,7 @@ function ChallengeContent() {
                   setShowResult(false);
                   setSelectedAnswer(null);
                 }}
+                className="font-medium text-base xl:text-lg min-h-14 rounded-xl"
               >
                 <RotateCcw className="h-5 w-5 mr-2" />
                 Try Again

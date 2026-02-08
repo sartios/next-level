@@ -47,7 +47,7 @@ export default function ControlsSidebar({ weeksToComplete, onClick, disabled }: 
         </div>
 
         <Button
-          className="w-full min-h-14 bg-foreground text-background text-lg hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+          className="w-full min-h-14 bg-foreground text-background text-base xl:text-lg rounded-xl hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
           onClick={onClick}
           disabled={disabled}
         >

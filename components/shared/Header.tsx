@@ -33,8 +33,8 @@ const Header = () => {
                 key={item.href}
                 variant="ghost"
                 asChild
-                className={`font-medium text-base min-h-11 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 ${
-                  pathname === item.href ? 'text-accent' : 'text-foreground'
+                className={`font-medium text-base min-h-11 rounded-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 ${
+                  pathname.startsWith(item.href) ? 'text-accent' : 'text-foreground'
                 }`}
               >
                 <Link href={item.href}>{item.label}</Link>

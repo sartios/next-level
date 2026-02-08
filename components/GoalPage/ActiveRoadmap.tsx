@@ -155,7 +155,7 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
         </p>
         <Button
           asChild
-          className="w-full lg:w-1/3 h-16 text-xl bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-bold mx-auto"
+          className="w-full lg:w-1/3 min-h-14 text-base xl:text-lg bg-foreground text-background hover:opacity-90 rounded-xl shadow-xl focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 font-medium mx-auto"
         >
           <Link href="/">Define your goal</Link>
         </Button>
@@ -348,9 +348,9 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                     {slot.time}-{slot.endTime}
                                   </span>
                                   {slot.status === 'completed' ? (
-                                    <Check className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <Check className={`h-3 w-3 mt-0.5 stroke-[1.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : slot.status === 'missed' ? (
-                                    <X className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <X className={`h-3 w-3 mt-0.5 stroke-[1.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : null}
                                 </button>
                               );
@@ -391,9 +391,9 @@ export default function ActiveRoadmap({ goal }: ActiveRoadmapProps) {
                                     {slot.time}-{slot.endTime}
                                   </span>
                                   {slot.status === 'completed' ? (
-                                    <Check className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <Check className={`h-3 w-3 mt-0.5 stroke-[2.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : slot.status === 'missed' ? (
-                                    <X className={`h-3 w-3 mt-0.5 ${isUpdating ? 'animate-pulse' : ''}`} />
+                                    <X className={`h-3 w-3 mt-0.5 stroke-[2.5] ${isUpdating ? 'animate-pulse' : ''}`} />
                                   ) : null}
                                 </button>
                               );
