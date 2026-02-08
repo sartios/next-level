@@ -26,7 +26,7 @@ const steps = [
     step: 'Step 4',
     title: 'Get your personalised roadmap',
     description:
-      'Our AI agent creates a personalised learning plan based on your selected resources and schedule to help you concentrate on your goals and track your weekly progress.'
+      'Our system creates a personalised weekly plan based on your selected resources and schedule to help you concentrate on your goals and track your weekly progress.'
   },
   {
     id: 5,
