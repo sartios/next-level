@@ -153,16 +153,16 @@ Runs agents against test datasets and scores output quality using Opik's built-i
 
 ### Metrics
 
-| Metric              | What it checks                                      |
-| ------------------- | --------------------------------------------------- |
-| **Hallucination**   | Is the output grounded in context (not fabricated)? |
-| **AnswerRelevance** | Is the output relevant to the input prompt?         |
-| **Usefulness**      | Is the output practically useful for the user?      |
+| Metric                                                                                     | What it checks                                      |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| [**Hallucination** ](https://www.comet.com/docs/opik/evaluation/metrics/hallucination)     | Is the output grounded in context (not fabricated)? |
+| [**AnswerRelevance**](https://www.comet.com/docs/opik/evaluation/metrics/answer_relevance) | Is the output relevant to the input prompt?         |
+| [**Usefulness**](https://www.comet.com/docs/opik/evaluation/metrics/usefulness)            | Is the output practically useful for the user?      |
 
 ### Evaluated Agents
 
-| CLI key                    | Agent                       | Dataset                                                               |
-| -------------------------- | --------------------------- | --------------------------------------------------------------------- |
+| CLI key                    | Agent                       | Dataset                                                            |
+| -------------------------- | --------------------------- | ------------------------------------------------------------------ |
 | `user-skill-agent`         | UserSkillAgent              | [`dataset`](../evals/datasets/user-skill-agent.json)               |
 | `skill-resource-retriever` | SkillResourceRetrieverAgent | [`dataset`](../evals/datasets/skill-resource-retriever-agent.json) |
 | `challenge-generator`      | ChallengeGeneratorAgent     | [`dataset`](../evals/datasets/challenge-generator-agent.json)      |
@@ -211,11 +211,11 @@ Automated prompt improvement using `opik-optimizer` (`optimize/`). Each agent ha
 
 ### Optimizer scripts
 
-| Script                                                 | Agent                       | Model         |
-| ------------------------------------------------------ | --------------------------- | ------------- |
-| [`user_skill_agent.py`](../optimize/meta_optimizers/user_skill_agent.py)         | UserSkillAgent              | `gpt-4o-mini` |
+| Script                                                                                   | Agent                       | Model         |
+| ---------------------------------------------------------------------------------------- | --------------------------- | ------------- |
+| [`user_skill_agent.py`](../optimize/meta_optimizers/user_skill_agent.py)                 | UserSkillAgent              | `gpt-4o-mini` |
 | [`skill_resource_retriever.py`](../optimize/meta_optimizers/skill_resource_retriever.py) | SkillResourceRetrieverAgent | `gpt-4o-mini` |
-| [`challenge_generator.py`](../optimize/meta_optimizers/challenge_generator.py)      | ChallengeGeneratorAgent     | `gpt-4o-mini` |
+| [`challenge_generator.py`](../optimize/meta_optimizers/challenge_generator.py)           | ChallengeGeneratorAgent     | `gpt-4o-mini` |
 
 ### CLI usage
 
