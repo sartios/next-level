@@ -78,7 +78,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
         <Input
           id="occupation"
           type="text"
-          placeholder={isMobile ? 'e.g., Software Engineer' : 'e.g., Software Engineer, Product Manager, Data Analyst'}
+          placeholder={isMobile ? 'e.g., Web Designer, UI/UX' : 'e.g., Web Designer, UI/UX, Graphic Designer'}
           value={occupation}
           onChange={(e) => setOccupation(e.target.value)}
           disabled={isFormDisabled}
@@ -93,7 +93,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
         <Input
           id="strongest-skills"
           type="text"
-          placeholder={isMobile ? 'e.g., JavaScript, Leadership' : 'e.g., JavaScript, Team Leadership, Data Analysis'}
+          placeholder={isMobile ? 'e.g., Figma, Photoshop' : 'e.g., Figma, Adobe Photoshop, Wireframing, Color Theory'}
           value={userSkills}
           onChange={(e) => setUserSkills(e.target.value)}
           disabled={isFormDisabled}
@@ -108,7 +108,7 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
         <Input
           id="career-goals"
           type="text"
-          placeholder={isMobile ? 'e.g., Senior role, Lead projects' : 'e.g., Transition to senior role, Lead technical projects'}
+          placeholder={isMobile ? 'e.g., UX Lead, Creative Director' : 'e.g., UX Lead, Design System Architect, Creative Director'}
           value={careerGoals}
           onChange={(e) => setCareerGoals(e.target.value)}
           disabled={isFormDisabled}
