@@ -163,9 +163,9 @@ Runs agents against test datasets and scores output quality using Opik's built-i
 
 | CLI key                    | Agent                       | Dataset                                                               |
 | -------------------------- | --------------------------- | --------------------------------------------------------------------- |
-| `user-skill-agent`         | UserSkillAgent              | [`datasource`](../evals/datasets/user-skill-agent.json)               |
-| `skill-resource-retriever` | SkillResourceRetrieverAgent | [`datasource`](../evals/datasets/skill-resource-retriever-agent.json) |
-| `challenge-generator`      | ChallengeGeneratorAgent     | [`datasource`](../evals/datasets/challenge-generator-agent.json)      |
+| `user-skill-agent`         | UserSkillAgent              | [`dataset`](../evals/datasets/user-skill-agent.json)               |
+| `skill-resource-retriever` | SkillResourceRetrieverAgent | [`dataset`](../evals/datasets/skill-resource-retriever-agent.json) |
+| `challenge-generator`      | ChallengeGeneratorAgent     | [`dataset`](../evals/datasets/challenge-generator-agent.json)      |
 
 ### How it works
 
