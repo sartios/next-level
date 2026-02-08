@@ -72,6 +72,28 @@ The user message will contain their profile (role, skills, career goals) and lea
     }
   },
 
+  'skill-resource-retriever-agent:query-generation-user-prompt': {
+    name: 'skill-resource-retriever-agent:query-generation-user-prompt',
+    description: 'User prompt for generating search queries based on user profile and learning goal',
+    prompt: `
+User Profile:
+- Role: {{userRole}}
+- Current Skills: {{userSkills}}
+- Career Goals: {{userCareerGoals}}
+
+Learning Goal: {{goalName}}
+Goal Reasoning: {{goalReasoning}}
+
+Generate 3-5 search queries to find the most relevant learning resources for this user's goal.
+`,
+    metadata: {
+      agent: 'skill-resource-retriever-agent',
+      type: 'user-prompt',
+      operation: 'query-generation',
+      category: 'career-development'
+    }
+  },
+
   'skill-resource-retriever-agent:query-generation-system-prompt': {
     name: 'skill-resource-retriever-agent:query-generation-system-prompt',
     description: 'System prompt for generating search queries to find learning resources',
