@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
 import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
-import { getUserById, User } from '@/lib/db/userRepository';
+import { User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
 import { SKILLS_PER_USER } from '../prompts/agentPrompts';
