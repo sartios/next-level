@@ -49,6 +49,14 @@ npm install --legacy-peer-deps
 cp .env.example .env
 ```
 
+| Variable            | Description                                        | Required |
+| ------------------- | -------------------------------------------------- | -------- |
+| `OPENAI_API_KEY`    | OpenAI API key for LangChain agents and embeddings | Yes      |
+| `DATABASE_URL`      | PostgreSQL connection string                       | Yes      |
+| `OPIK_API_KEY`      | Opik API key for tracing                           | Yes      |
+| `OPIK_PROJECT_NAME` | Opik project name (default: `next-level`)          | Yes      |
+| `NODE_ENV`          | Environment (`development`, `production`)          | No       |
+
 3. Start the database and run migrations:
 
 ```bash
