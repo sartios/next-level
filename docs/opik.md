@@ -18,7 +18,7 @@ Every LLM call captures: **prompts**, **generations**, **model**, **provider**, 
 
 ## Tracing Architecture
 
-### `NextLevelOpikCallbackHandler` (`lib/trace/handler.ts`)
+### [`NextLevelOpikCallbackHandler`](../lib/trace/handler.ts)
 
 Custom LangChain `BaseCallbackHandler` (forked from `opik-langchain`) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces.
 
@@ -92,7 +92,7 @@ This makes mismatches filterable in the Opik dashboard. The trace is also tagged
 
 Every trace carries structured metadata for filtering and debugging in the Opik dashboard. Metadata is built in layers:
 
-### Base metadata (`createAgentTrace` in `lib/opik.ts`)
+### [`Base metadata`](../lib/opik.ts)
 
 All traces automatically include:
 
@@ -124,7 +124,7 @@ The callback handler extracts metadata from LangChain's internal run context and
 | `tools`            | Tool definitions from invocation params |
 | Invocation params  | Temperature, top_p, etc.            |
 
-### Prompt metadata (`lib/prompts/agentPrompts.ts`)
+### [`Prompt metadata`](../lib/prompts/agentPrompts.ts)
 
 Each prompt definition includes metadata for the Opik prompt registry:
 
