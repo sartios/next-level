@@ -98,7 +98,7 @@ python run_all.py
 
 ## Deployment
 
-Deployed on [Vercel](https://next-level-umber.vercel.app/). The build step automatically runs database migrations and resource sync:
+Deployed on [Vercel](https://next-level-umber.vercel.app/). The build step automatically runs database migrations and resource sync.
 
 ```bash
 npm run build:vercel  # db:migrate + resources:sync + next build
