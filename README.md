@@ -13,13 +13,12 @@ Next.js frontend streams responses from LangChain agents, backed by PostgreSQL w
 - **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4, shadcn/ui
 - **AI/LLM:** LangChain, OpenAI (gpt-4o-mini, gpt-5-nano, gpt-5-mini), text-embedding-3-small — see [agents](docs/agents.md)
 - **Database:** PostgreSQL with pgvector ([embeddings](docs/embeddings.md)), Drizzle ORM
-- **Observability:** Opik (tracing, prompt management, LLM-as-judge evaluations)
-- **Optimization:** opik-optimizer (MetaPromptOptimizer, Python)
+- **Observability:** Opik ([tracing, prompt management, evaluations, optimization](docs/observability.md))
 - **Testing:** Vitest
 
 ## Opik Integration
 
-This project uses [Opik](https://www.comet.com/site/opik/) across the full LLM development lifecycle:
+This project uses [Opik](https://www.comet.com/site/opik/) across the full LLM development lifecycle. See [docs/opik.md](docs/opik.md) for the detailed integration guide.
 
 - **Tracing** — Every agent call is traced with hierarchical parent/child spans via a custom LangChain callback handler, giving full visibility into LLM inputs, outputs, and token usage.
 - **Prompt Management** — Agent prompts are versioned and managed in Opik. Prompts are fetched at runtime with a local fallback, enabling A/B testing and iteration without code changes.
