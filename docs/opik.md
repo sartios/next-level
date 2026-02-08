@@ -20,7 +20,7 @@ Every LLM call captures: **prompts**, **generations**, **model**, **provider**, 
 
 ### [`NextLevelOpikCallbackHandler`](../lib/trace/handler.ts)
 
-Custom LangChain `BaseCallbackHandler` (forked from `opik-langchain`) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces.
+Custom LangChain `BaseCallbackHandler` (forked from [`opik-langchain`](https://github.com/comet-ml/opik/tree/main/sdks/typescript/src/opik/integrations/opik-langchain)) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces.
 
 ```typescript
 const trace = createAgentTrace('agent-name', 'operation', { input, metadata, tags });
