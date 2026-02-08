@@ -49,7 +49,6 @@ npm install --legacy-peer-deps
 cp .env.example .env
 ```
 
-
 | Variable            | Description                                        | Required |
 | ------------------- | -------------------------------------------------- | -------- |
 | `OPENAI_API_KEY`    | OpenAI API key for LangChain agents and embeddings | Yes      |
