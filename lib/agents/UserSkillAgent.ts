@@ -68,21 +68,6 @@ interface SkillSuggestionResponse {
 class UserSkillAgent {
   private readonly agentName = 'user-skill-agent';
 
-  public async suggestSkills(userId: string, opikOptions?: OpikHandlerOptions): Promise<SkillSuggestionResponse> {
-    const user = await getUserById(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    for await (const event of this.streamSkillSuggestions(user, opikOptions)) {
-      if (event.type === 'complete' && event.result) {
-        return event.result;
-      }
-    }
-
-    return { skills: [] };
-  }
-
   public async *streamSkillSuggestions(user: User, opikOptions?: OpikHandlerOptions): AsyncGenerator<UserSkillStreamEvent> {
     if (!user) {
       throw new Error('User is required');
