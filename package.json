@@ -62,7 +62,6 @@
     "next": "^16.1.6",
     "next-themes": "^0.4.6",
     "opik": "^1.9.98",
-    "opik-langchain": "^1.9.98",
     "pg": "^8.17.2",
     "react": "19.2.3",
     "react-day-picker": "^9.13.0",
