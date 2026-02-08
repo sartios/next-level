@@ -170,8 +170,8 @@ Runs agents against test datasets and scores output quality using Opik's built-i
 ### How it works
 
 1. **Dataset loading** — Test fixtures from local JSON or the Opik platform (`--source opik`).
-2. **DB seeding** — `evals/seed.ts` populates the database with test data so agents can run against real records.
-3. **Task execution** — Each task function (`evals/tasks/*.ts`) calls the real agent and returns `{ input, output, context }` for the judges.
+2. **DB seeding** — [`evals/seed.ts`](../evals/seed.ts) populates the database with test data so agents can run against real records.
+3. **Task execution** — Each task function ([`evals/tasks/*.ts`](../evals/tasks/)) calls the real agent and returns `{ input, output, context }` for the judges.
 4. **Scoring** — Opik's `evaluate()` runs the three judge metrics against each task result.
 5. **Results** — Stored as Opik experiments linked to their datasets, viewable in the Opik dashboard.
 
@@ -213,9 +213,9 @@ Automated prompt improvement using `opik-optimizer` (`optimize/`). Each agent ha
 
 | Script                                                 | Agent                       | Model         |
 | ------------------------------------------------------ | --------------------------- | ------------- |
-| `optimize/meta_optimizers/user_skill_agent.py`         | UserSkillAgent              | `gpt-4o-mini` |
-| `optimize/meta_optimizers/skill_resource_retriever.py` | SkillResourceRetrieverAgent | `gpt-4o-mini` |
-| `optimize/meta_optimizers/challenge_generator.py`      | ChallengeGeneratorAgent     | `gpt-4o-mini` |
+| [`user_skill_agent.py`](../optimize/meta_optimizers/user_skill_agent.py)         | UserSkillAgent              | `gpt-4o-mini` |
+| [`skill_resource_retriever.py`](../optimize/meta_optimizers/skill_resource_retriever.py) | SkillResourceRetrieverAgent | `gpt-4o-mini` |
+| [`challenge_generator.py`](../optimize/meta_optimizers/challenge_generator.py)      | ChallengeGeneratorAgent     | `gpt-4o-mini` |
 
 ### CLI usage
 
