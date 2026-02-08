@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { createAgentTrace, getOpikClient, type Trace, type Span } from '@/lib/opik';
 import { getAgentPrompt, QUESTIONS_PER_CHALLENGE, DIFFICULTY_DESCRIPTIONS } from '@/lib/prompts';
-import { generatedQuestionSchema, generatedQuestionsSchema } from '@/lib/schemas';
+import { generatedQuestionSchema, generatedQuestionsSchema } from '@/lib/validation/schemas';
 import type { User } from '@/lib/db/userRepository';
 import type { Goal } from '@/lib/db/goalRepository';
 import type { LearningResourceWithSections } from '@/lib/db/resourceRepository';

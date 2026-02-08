@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-const LearningResourceSectionSchema = z.object({
+// ============================================================================
+// Learning Resource Schemas
+// ============================================================================
+
+export const LearningResourceSectionSchema = z.object({
   id: z.string(),
   resourceId: z.string(),
   title: z.string(),
@@ -9,7 +13,7 @@ const LearningResourceSectionSchema = z.object({
   topics: z.array(z.string()).default([])
 });
 
-const LearningResourceSchema = z.object({
+export const LearningResourceSchema = z.object({
   id: z.string(),
   url: z.string(),
   title: z.string(),
@@ -68,3 +72,47 @@ export const optionsNormalizationSchema = z
 
     return (['A', 'B', 'C', 'D'] as const).map((label) => arr.find((o) => o.label === label)!);
   });
+
+// ============================================================================
+// Agent Schemas
+// ============================================================================
+
+export const SkillSchema = z.object({
+  name: z.string(),
+  priority: z.number(),
+  reasoning: z.string()
+});
+
+export const SearchQueriesSchema = z.object({
+  queries: z.array(z.string()).min(1).max(5).describe('Search queries to find relevant learning resources')
+});
+
+export const RetrieverOutputSchema = z.object({
+  resources: z.array(LearningResourceWithSectionsSchema)
+});
+
+// ============================================================================
+// Resource Import Schemas
+// ============================================================================
+
+export const ResourceSectionSchema = z.object({
+  title: z.string().min(1, 'Section title is required'),
+  estimatedMinutes: z.number().int().positive().optional(),
+  topics: z.array(z.string()).optional().default([])
+});
+
+export const ImportResourceSchema = z.object({
+  url: z.string().url('Invalid URL format'),
+  title: z.string().min(1, 'Title is required'),
+  provider: z.string().min(1, 'Provider is required'),
+  resourceType: z.enum(['course', 'book', 'tutorial', 'article']),
+  description: z.string().optional(),
+  learningObjectives: z.array(z.string()).optional().default([]),
+  targetAudience: z.array(z.string()).optional().default([]),
+  totalHours: z.number().positive().optional(),
+  sections: z.array(ResourceSectionSchema).optional().default([])
+});
+
+export const ImportFileSchema = z.object({
+  resources: z.array(ImportResourceSchema).min(1, 'At least one resource is required')
+});
