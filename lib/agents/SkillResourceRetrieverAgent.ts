@@ -18,6 +18,8 @@ export interface RetrieverOutput {
 }
 
 const AGENT_NAME = 'skill-resource-retriever-agent';
+const MAX_SEARCH_QUERIES = 5;
+const MAX_RESOURCES = 5;
 
 export async function* streamResources(user: User, goal: Goal, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
   if (!user) {
@@ -84,7 +86,7 @@ export async function* streamResources(user: User, goal: Goal, opikOptions?: Opi
       throw new Error('Failed to generate search queries');
     }
 
-    const queries = parsedQueries.data.queries.slice(0, 5);
+    const queries = parsedQueries.data.queries.slice(0, MAX_SEARCH_QUERIES);
 
     // Step 2: Execute each search query and stream results
     for (const query of queries) {
@@ -131,7 +133,7 @@ export async function* streamResources(user: User, goal: Goal, opikOptions?: Opi
       }
 
       // Stop if we have enough resources
-      if (emittedResources.length >= 5) {
+      if (emittedResources.length >= MAX_RESOURCES) {
         break;
       }
     }
