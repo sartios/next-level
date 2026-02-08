@@ -11,13 +11,29 @@ describe('parseErrorInfo', () => {
     expect(result.traceback).toContain('something went wrong');
   });
 
-  it('extracts the constructor name from Error subclasses', () => {
+  it('uses err.name from built-in Error subclasses', () => {
     const err = new TypeError('bad type');
     const result = parseErrorInfo(err);
 
     expect(result.exceptionType).toBe('TypeError');
     expect(result.message).toBe('bad type');
     expect(result.traceback).toContain('bad type');
+  });
+
+  it('prefers err.name over err.constructor.name when they differ', () => {
+    const err = new Error('overridden');
+    err.name = 'CustomName';
+    const result = parseErrorInfo(err);
+
+    expect(result.exceptionType).toBe('CustomName');
+  });
+
+  it('falls back to constructor.name when err.name is empty', () => {
+    const err = new TypeError('empty name');
+    err.name = '';
+    const result = parseErrorInfo(err);
+
+    expect(result.exceptionType).toBe('TypeError');
   });
 
   it('handles a string value', () => {
