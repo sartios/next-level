@@ -9,7 +9,7 @@ graph TB
         Hooks[useSkillStream / useResourceStream]
     end
 
-    subgraph NextJS["Next.js 15 App Router"]
+    subgraph NextJS["Next.js 16 App Router"]
         subgraph API["API Routes"]
             REST[REST CRUD Endpoints]
             SSE[SSE Streaming Endpoints]
