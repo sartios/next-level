@@ -1,6 +1,10 @@
 # Next Level
 
-Most new year's resolutions fail because people set ambitious goals without a clear plan to get there. Next Level turns career growth resolutions into actionable learning paths. Users define their role, current skills, and career goals, and LangChain [agents](docs/agents.md) take it from there: recommending skills to acquire, discovering curated learning resources via semantic search, and generating quiz challenges to reinforce knowledge. Adaptive weekly study plans are built around the user's availability without AI, using [algorithmic scheduling](docs/scheduling.md).
+**Turn resolutions into reality.**
+
+Most new year's resolutions fail because people set ambitious goals without a clear plan to get there. Next Level bridges that gap for career growth — it recommends skills to learn, finds curated resources, builds adaptive weekly study plans, and generates practice challenges to reinforce knowledge.
+
+Users define their role, current skills, and career goals, and LangChain [agents](docs/agents.md) take it from there: recommending skills to acquire, discovering curated learning resources via semantic search, and generating quiz challenges to reinforce knowledge. Adaptive weekly study plans are built around the user's availability without AI, using [algorithmic scheduling](docs/scheduling.md).
 
 Built as part of the [Opik Hackathon](https://www.encodeclub.com/programmes/comet-resolution-v2-hackathon).
 
