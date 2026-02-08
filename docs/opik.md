@@ -71,6 +71,68 @@ Handles all LangChain lifecycle events: `handleChatModelStart`, `handleLLMEnd`, 
   └── ...
 ```
 
+## Automated Span Scoring
+
+The `ChallengeGeneratorAgent` attaches a score directly to the `generate-questions` span when the LLM returns an unexpected question count:
+
+```typescript
+generateQuestionsSpan?.score({
+  name: 'needs_review',
+  value: 0,
+  reason: `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${questions.length}`,
+  categoryName: 'question_count_mismatch'
+});
+```
+
+This makes mismatches filterable in the Opik dashboard. The trace is also tagged with `['review', 'question-count-mismatch']` for easy discovery.
+
+## Trace Metadata
+
+Every trace carries structured metadata for filtering and debugging in the Opik dashboard. Metadata is built in layers:
+
+### Base metadata (`createAgentTrace` in `lib/opik.ts`)
+
+All traces automatically include:
+
+| Key           | Value                           |
+| ------------- | ------------------------------- |
+| `environment` | `process.env.NODE_ENV`          |
+| `version`     | `'1.0.0'`                       |
+| `agentName`   | The agent identifier string     |
+
+### Per-agent metadata
+
+Each agent merges additional keys via the `metadata` option:
+
+| Agent                       | Extra keys                                                |
+| --------------------------- | --------------------------------------------------------- |
+| **UserSkillAgent**          | `userId`                                                  |
+| **SkillResourceRetrieverAgent** | `userId`, `goalId`                                    |
+| **ChallengeGeneratorAgent** (per challenge) | `goalId`, `challengeId`, `sectionId`, `difficulty` |
+| **ChallengeGeneratorAgent** (top-level)     | `goalId`, `userId`, `resourceId`                   |
+
+### Auto-captured LangChain metadata (`NextLevelOpikCallbackHandler`)
+
+The callback handler extracts metadata from LangChain's internal run context and attaches it to spans:
+
+| Key                | Source                              |
+| ------------------ | ----------------------------------- |
+| `ls_provider`      | LLM provider (e.g. `openai`)       |
+| `ls_model_name`    | Model identifier (e.g. `gpt-5-mini`) |
+| `tools`            | Tool definitions from invocation params |
+| Invocation params  | Temperature, top_p, etc.            |
+
+### Prompt metadata (`lib/prompts/agentPrompts.ts`)
+
+Each prompt definition includes metadata for the Opik prompt registry:
+
+| Key         | Example values                                     |
+| ----------- | -------------------------------------------------- |
+| `agent`     | `'user-skill-agent'`, `'challenge-generator-agent'` |
+| `type`      | `'system-prompt'`, `'user-prompt'`                 |
+| `operation` | `'generate'`, `'search'`                           |
+| `category`  | `'career-development'`, `'resource-discovery'`     |
+
 ## Prompt Management
 
 Prompts are managed through Opik and fetched at runtime with local fallback and 5-minute caching.
