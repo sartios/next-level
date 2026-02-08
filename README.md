@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next Level
+
+Most new year's resolutions fail because people set ambitious goals without a clear plan to get there. Next Level turns career growth resolutions into actionable learning paths. Users define their role, current skills, and career goals, and LangChain agents take it from there: recommending skills to acquire, discovering curated learning resources via semantic search, building adaptive weekly study plans around their availability, and generating quiz challenges to reinforce knowledge along the way.
+
+Built as part of the [Opik Hackathon](https://www.comet.com/site/opik/).
+
+## Architecture
+
+Next.js frontend streams responses from LangChain agents, backed by PostgreSQL with pgvector for semantic search. See [docs/architecture.md](docs/architecture.md) for the full diagram.
+
+## Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS 4, shadcn/ui
+- **AI/LLM:** LangChain, OpenAI (gpt-4o-mini, gpt-5-nano, gpt-5-mini), text-embedding-3-small
+- **Database:** PostgreSQL with pgvector (embeddings), Drizzle ORM
+- **Observability:** Opik (tracing, prompt management, LLM-as-judge evaluations)
+- **Optimization:** opik-optimizer (MetaPromptOptimizer, Python)
+- **Testing:** Vitest
+
+## Opik Integration
+
+This project uses [Opik](https://www.comet.com/site/opik/) across the full LLM development lifecycle:
+
+- **Tracing** — Every agent call is traced with hierarchical parent/child spans via a custom LangChain callback handler, giving full visibility into LLM inputs, outputs, and token usage.
+- **Prompt Management** — Agent prompts are versioned and managed in Opik. Prompts are fetched at runtime with a local fallback, enabling A/B testing and iteration without code changes.
+- **LLM-as-Judge Evaluations** — Automated evaluation pipeline using Hallucination, AnswerRelevance, and Usefulness metrics with gpt-5-mini as the judge model.
+- **Prompt Optimization** — Python-based `MetaPromptOptimizer` automatically improves agent prompts by evaluating candidates against Opik datasets.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- Docker (for PostgreSQL)
+- Python 3.11+ (for prompt optimization)
+- OpenAI API key
+- Opik API key
+
+### Setup
+
+1. Clone the repository and install dependencies:
+
+```bash
+npm install --legacy-peer-deps
+```
+
+2. Copy the environment file and fill in your keys:
+
+```bash
+cp .env.example .env
+```
+
+3. Start the database and run migrations:
+
+```bash
+docker compose up -d
+npm run db:migrate
+```
+
+4. Sync learning resources and generate embeddings:
+
+```bash
+npm run resources:sync
+```
+
+5. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to use the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prompt Optimization (Python)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd optimize
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+python run_all.py
+```
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command                            | Description                            |
+| ---------------------------------- | -------------------------------------- |
+| `npm run dev`                      | Start development server               |
+| `npm run build`                    | Production build                       |
+| `npm run lint`                     | Run ESLint                             |
+| `npm test`                         | Run all tests                          |
+| `npm run test:coverage`            | Test coverage report                   |
+| `npm run db:migrate`               | Push schema to database                |
+| `npm run db:studio`                | Open Drizzle Studio                    |
+| `npm run prompts:sync`             | Sync prompts to Opik                   |
+| `npm run resources:sync`           | Import resources + generate embeddings |
+| `npm run eval:all`                 | Run all LLM-as-judge evaluations       |
+| `cd optimize && python run_all.py` | Run all prompt optimizers              |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Deployed on [Vercel](https://vercel.com). The build step automatically runs database migrations and resource sync:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build:vercel  # db:migrate + resources:sync + next build
+```
