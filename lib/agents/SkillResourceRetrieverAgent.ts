@@ -11,18 +11,6 @@ import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
 import { Goal } from '../db/goalRepository';
 
-function buildQueryGenerationUserPrompt(user: User, goal: Goal): string {
-  return `User Profile:
-- Role: ${user.role}
-- Current Skills: ${user.skills.join(', ')}
-- Career Goals: ${user.careerGoals.join(', ')}
-
-Learning Goal: ${goal.name}
-Goal Reasoning: ${goal.reasoning}
-
-Generate 3-5 search queries to find the most relevant learning resources for this user's goal.`;
-}
-
 const SearchQueriesSchema = z.object({
   queries: z.array(z.string()).min(1).max(5).describe('Search queries to find relevant learning resources')
 });
@@ -66,7 +54,13 @@ class SkillResourceRetrieverAgent {
       yield { type: 'token', userId, goalId, content: 'Generating search queries...' };
 
       const queryLLM = createLLM('gpt-4o-mini');
-      const queryUserPrompt = buildQueryGenerationUserPrompt(user, goal);
+      const queryUserPrompt = await getAgentPrompt('skill-resource-retriever-agent:query-generation-user-prompt', {
+        userRole: user.role,
+        userSkills: user.skills.join(', '),
+        userCareerGoals: user.careerGoals.join(', '),
+        goalName: goal.name,
+        goalReasoning: goal.reasoning
+      });
       const queryGenerationSystemPrompt = await getAgentPrompt('skill-resource-retriever-agent:query-generation-system-prompt');
 
       const usageCapture = new NextLevelOpikCallbackHandler({ parent: trace });
