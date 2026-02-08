@@ -1,4 +1,4 @@
-import SkillResourceRetrieverAgent from '@/lib/agents/SkillResourceRetrieverAgent';
+import { streamResources } from '@/lib/agents/SkillResourceRetrieverAgent';
 import { getUserById } from '@/lib/db/userRepository';
 import { getGoalById } from '@/lib/db/goalRepository';
 import { NextRequest } from 'next/server';
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const eventGenerator = SkillResourceRetrieverAgent.streamResources(user, goal, {
+        const eventGenerator = streamResources(user, goal, {
           metadata: { invokedBy: `GET /api/users/${userId}/goals/${goalId}/resources/stream` }
         });
 
