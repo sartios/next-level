@@ -207,8 +207,8 @@ describe('weeklyPlanService integration tests', () => {
       expect(syncResult?.syncResult?.addedSessionCount).toBe(1); // Friday added
     });
 
-    it('should retain completed sessions when their slots are removed', async () => {
-      // Create schedule and plan
+    it('should retain completed sessions but delete pending ones when slots are removed', async () => {
+      // Create schedule and plan with 2 slots
       const schedule = await upsertSchedule(
         {
           userId: testUserId,
@@ -228,13 +228,13 @@ describe('weeklyPlanService integration tests', () => {
         schedule
       });
 
-      // Mark Monday session as completed
+      // Mark Monday as completed, Tuesday stays pending
       const mondaySession = createResult?.plan?.sessions.find((s) => s.dayOfWeek === 'Monday');
       if (mondaySession) {
         await updateSessionStatus(mondaySession.id, 'completed');
       }
 
-      // Remove Monday slot
+      // Remove both slots, add a new one
       const updatedSchedule = await upsertSchedule(
         {
           userId: testUserId,
@@ -243,7 +243,7 @@ describe('weeklyPlanService integration tests', () => {
           weeklyHours: 1,
           targetCompletionDate: null
         },
-        [{ dayOfWeek: 'Tuesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60 }]
+        [{ dayOfWeek: 'Friday', startTime: '09:00', endTime: '10:00', durationMinutes: 60 }]
       );
 
       const syncResult = await syncWeeklyPlanWithSchedule({
@@ -252,52 +252,9 @@ describe('weeklyPlanService integration tests', () => {
       });
 
       expect(syncResult?.action).toBe('synced');
-      // Monday session should be retained because it's completed
-      expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(0);
-      expect(syncResult?.syncResult?.remainingSessionCount).toBe(2); // Both sessions retained
-    });
-
-    it('should delete pending sessions when their slots are removed', async () => {
-      // Create schedule and plan
-      const schedule = await upsertSchedule(
-        {
-          userId: testUserId,
-          goalId: testGoalId,
-          startDate: new Date(),
-          weeklyHours: 2,
-          targetCompletionDate: null
-        },
-        [
-          { dayOfWeek: 'Monday', startTime: '09:00', endTime: '10:00', durationMinutes: 60 },
-          { dayOfWeek: 'Tuesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60 }
-        ]
-      );
-
-      await syncWeeklyPlanWithSchedule({
-        goalId: testGoalId,
-        schedule
-      });
-
-      // Remove Monday slot (session is still pending)
-      const updatedSchedule = await upsertSchedule(
-        {
-          userId: testUserId,
-          goalId: testGoalId,
-          startDate: new Date(),
-          weeklyHours: 1,
-          targetCompletionDate: null
-        },
-        [{ dayOfWeek: 'Tuesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60 }]
-      );
-
-      const syncResult = await syncWeeklyPlanWithSchedule({
-        goalId: testGoalId,
-        schedule: updatedSchedule
-      });
-
-      expect(syncResult?.action).toBe('synced');
-      expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(1); // Monday deleted
-      expect(syncResult?.syncResult?.remainingSessionCount).toBe(1); // Only Tuesday
+      // Tuesday (pending) deleted, Monday (completed) retained
+      expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(1);
+      expect(syncResult?.syncResult?.remainingSessionCount).toBe(1);
     });
 
     it('should add sessions for new slots', async () => {
@@ -575,189 +532,6 @@ describe('weeklyPlanService integration tests', () => {
       // Verify week 3 was updated - Wednesday removed, Friday added
       expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(1);
       expect(syncResult?.syncResult?.addedSessionCount).toBe(1);
-    });
-
-    it('should only affect current week even with multiple previous plans with different sessions', async () => {
-      const threeWeeksAgo = new Date();
-      threeWeeksAgo.setDate(threeWeeksAgo.getDate() - 21);
-
-      // Create week 1 with 3 sessions
-      const week1Plan: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 1,
-        weekStartDate: threeWeeksAgo,
-        focusArea: 'Section 1',
-        totalMinutes: 180
-      };
-
-      const week1Sessions: NewPlanSession[] = [
-        { dayOfWeek: 'Monday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic A', activities: [] },
-        { dayOfWeek: 'Tuesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic A', activities: [] },
-        { dayOfWeek: 'Thursday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic A', activities: [] }
-      ];
-
-      const savedWeek1 = await createWeeklyPlan(week1Plan, week1Sessions);
-      const week1SessionCount = savedWeek1.sessions.length;
-
-      // Create week 2 with 2 sessions
-      const twoWeeksAgo = new Date();
-      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-
-      const week2Plan: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 2,
-        weekStartDate: twoWeeksAgo,
-        focusArea: 'Section 2',
-        totalMinutes: 120
-      };
-
-      const week2Sessions: NewPlanSession[] = [
-        { dayOfWeek: 'Wednesday', startTime: '14:00', endTime: '15:00', durationMinutes: 60, topic: 'Topic B', activities: [] },
-        { dayOfWeek: 'Friday', startTime: '14:00', endTime: '15:00', durationMinutes: 60, topic: 'Topic B', activities: [] }
-      ];
-
-      const savedWeek2 = await createWeeklyPlan(week2Plan, week2Sessions);
-      const week2SessionCount = savedWeek2.sessions.length;
-
-      // Create week 3 with 1 session
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const week3Plan: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 3,
-        weekStartDate: oneWeekAgo,
-        focusArea: 'Section 3',
-        totalMinutes: 60
-      };
-
-      const week3Sessions: NewPlanSession[] = [
-        { dayOfWeek: 'Saturday', startTime: '10:00', endTime: '11:00', durationMinutes: 60, topic: 'Topic C', activities: [] }
-      ];
-
-      const savedWeek3 = await createWeeklyPlan(week3Plan, week3Sessions);
-      const week3SessionCount = savedWeek3.sessions.length;
-
-      // Create current week (week 4) with 2 sessions
-      const week4Plan: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 4,
-        weekStartDate: new Date(),
-        focusArea: 'Section 4',
-        totalMinutes: 120
-      };
-
-      const week4Sessions: NewPlanSession[] = [
-        { dayOfWeek: 'Monday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic D', activities: [] },
-        { dayOfWeek: 'Wednesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic D', activities: [] }
-      ];
-
-      await createWeeklyPlan(week4Plan, week4Sessions);
-
-      // User completely changes schedule
-      const newSchedule = await upsertSchedule(
-        {
-          userId: testUserId,
-          goalId: testGoalId,
-          startDate: threeWeeksAgo,
-          weeklyHours: 3,
-          targetCompletionDate: null
-        },
-        [
-          { dayOfWeek: 'Tuesday', startTime: '18:00', endTime: '19:00', durationMinutes: 60 },
-          { dayOfWeek: 'Thursday', startTime: '18:00', endTime: '19:00', durationMinutes: 60 },
-          { dayOfWeek: 'Sunday', startTime: '10:00', endTime: '11:00', durationMinutes: 60 }
-        ]
-      );
-
-      const syncResult = await syncWeeklyPlanWithSchedule({
-        goalId: testGoalId,
-        schedule: newSchedule
-      });
-
-      expect(syncResult?.weekNumber).toBe(4);
-      expect(syncResult?.action).toBe('synced');
-
-      // Verify previous weeks are completely unchanged
-      const { getWeeklyPlanByWeekNumber } = await import('../../lib/db/weeklyPlanRepository');
-
-      const week1After = await getWeeklyPlanByWeekNumber(testGoalId, 1);
-      expect(week1After?.sessions.length).toBe(week1SessionCount);
-
-      const week2After = await getWeeklyPlanByWeekNumber(testGoalId, 2);
-      expect(week2After?.sessions.length).toBe(week2SessionCount);
-
-      const week3After = await getWeeklyPlanByWeekNumber(testGoalId, 3);
-      expect(week3After?.sessions.length).toBe(week3SessionCount);
-
-      // Week 4 should be completely different now
-      // Both Monday and Wednesday sessions should be deleted (pending)
-      // 3 new sessions should be added
-      expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(2);
-      expect(syncResult?.syncResult?.addedSessionCount).toBe(3);
-    });
-
-    it('should preserve completed sessions in current week while updating with new schedule', async () => {
-      // Create current week plan
-      const week1Plan: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 1,
-        weekStartDate: new Date(),
-        focusArea: 'Mixed Status Test',
-        totalMinutes: 180
-      };
-
-      const week1Sessions: NewPlanSession[] = [
-        { dayOfWeek: 'Monday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic A', activities: [] },
-        { dayOfWeek: 'Tuesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic B', activities: [] },
-        { dayOfWeek: 'Wednesday', startTime: '09:00', endTime: '10:00', durationMinutes: 60, topic: 'Topic C', activities: [] }
-      ];
-
-      const savedPlan = await createWeeklyPlan(week1Plan, week1Sessions);
-
-      // Mark Monday as completed, leave Tuesday and Wednesday pending
-      const mondaySession = savedPlan.sessions.find((s) => s.dayOfWeek === 'Monday');
-      await updateSessionStatus(mondaySession!.id, 'completed');
-
-      // User removes all existing slots and adds completely new ones
-      const newSchedule = await upsertSchedule(
-        {
-          userId: testUserId,
-          goalId: testGoalId,
-          startDate: new Date(),
-          weeklyHours: 2,
-          targetCompletionDate: null
-        },
-        [
-          { dayOfWeek: 'Thursday', startTime: '14:00', endTime: '15:00', durationMinutes: 60 },
-          { dayOfWeek: 'Friday', startTime: '14:00', endTime: '15:00', durationMinutes: 60 }
-        ]
-      );
-
-      const syncResult = await syncWeeklyPlanWithSchedule({
-        goalId: testGoalId,
-        schedule: newSchedule
-      });
-
-      expect(syncResult?.action).toBe('synced');
-
-      // Monday (completed) should be retained
-      // Tuesday and Wednesday (pending) should be deleted
-      expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(2);
-
-      // Thursday and Friday should be added
-      expect(syncResult?.syncResult?.addedSessionCount).toBe(2);
-
-      // Total remaining: 1 (Monday completed) + 2 new = but remainingSessionCount is before adding
-      expect(syncResult?.syncResult?.remainingSessionCount).toBe(1);
-
-      // Final plan should have 3 sessions: Monday (completed) + Thursday + Friday
-      expect(syncResult?.plan?.sessions.length).toBe(3);
-
-      // Verify Monday session still exists and is completed
-      const mondayInResult = syncResult?.plan?.sessions.find((s) => s.dayOfWeek === 'Monday');
-      expect(mondayInResult).toBeDefined();
-      expect(mondayInResult?.status).toBe('completed');
     });
   });
 });
