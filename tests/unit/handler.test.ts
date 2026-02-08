@@ -53,12 +53,14 @@ describe('NextLevelOpikCallbackHandler — parent injection', () => {
     vi.clearAllMocks();
   });
 
-  it('should store injected parent in tracerMap', () => {
+  it('should create a child span under injected parent instead of a root trace', async () => {
     const handler = new NextLevelOpikCallbackHandler({ parent: mockParent });
 
-    // Parent is stored — when handleChatModelStart fires without a parentRunId,
-    // it should resolve to the injected parent and create a child span
-    expect(handler).toBeDefined();
+    await handler.handleChainStart(mockLlm, {}, 'run-1', undefined, [], {});
+
+    // Should create a child span on the injected parent, NOT a root trace
+    expect(mockSpanFn).toHaveBeenCalledTimes(1);
+    expect(mockTraceFn).not.toHaveBeenCalled();
   });
 
   it('should nest LLM span under injected parent when no parentRunId', async () => {
@@ -134,10 +136,13 @@ describe('NextLevelOpikCallbackHandler — parent injection', () => {
     );
   });
 
-  it('should set threadId in metadata when provided', () => {
-    const handler = new NextLevelOpikCallbackHandler({ parent: mockParent, threadId: 'thread-abc' });
+  it('should pass threadId to root trace when provided', async () => {
+    const handler = new NextLevelOpikCallbackHandler({ threadId: 'thread-abc' });
 
-    expect(handler).toBeDefined();
-    // threadId is stored in options.metadata for trace creation
+    await handler.handleChainStart(mockLlm, {}, 'run-1', undefined, [], {});
+
+    expect(mockTraceFn).toHaveBeenCalledWith(
+      expect.objectContaining({ threadId: 'thread-abc' })
+    );
   });
 });
