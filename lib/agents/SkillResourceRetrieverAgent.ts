@@ -9,6 +9,7 @@ import { createLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
 import { Goal } from '../db/goalRepository';
+import { parseErrorInfo } from '@/lib/agents/utils';
 
 export { RetrieverOutputSchema };
 
@@ -117,14 +118,7 @@ class SkillResourceRetrieverAgent {
             }
           });
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          toolSpan?.update({
-            errorInfo: {
-              exceptionType: error instanceof Error ? error.constructor.name : 'Error',
-              message: errorMessage,
-              traceback: error instanceof Error ? error.stack || '' : ''
-            }
-          });
+          toolSpan?.update({ errorInfo: parseErrorInfo(error) });
         } finally {
           toolSpan?.update({ endTime: new Date() });
         }
@@ -159,15 +153,9 @@ class SkillResourceRetrieverAgent {
         result: { resources: emittedResources }
       };
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      trace?.update({
-        errorInfo: {
-          exceptionType: err instanceof Error ? err.constructor.name : 'Error',
-          message,
-          traceback: err instanceof Error ? err.stack || '' : ''
-        }
-      });
-      yield { type: 'token', userId, goalId, content: `__stream_error__: ${message}` };
+      const errorInfo = parseErrorInfo(err);
+      trace?.update({ errorInfo });
+      yield { type: 'token', userId, goalId, content: `__stream_error__: ${errorInfo.message}` };
       throw err;
     } finally {
       trace?.update({ endTime: new Date() });
