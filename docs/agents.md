@@ -1,6 +1,6 @@
 # Agents
 
-Three LangChain agents power the core AI features.
+Three LangChain agents power the core AI features. See also: [embeddings](embeddings.md) (semantic search), [opik](opik.md) (tracing & prompts).
 
 ## Common Pattern
 

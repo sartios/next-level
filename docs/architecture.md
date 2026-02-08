@@ -1,5 +1,7 @@
 # Architecture Diagram
 
+Related docs: [agents](agents.md) | [embeddings](embeddings.md) | [scheduling](scheduling.md) | [opik](opik.md)
+
 ```mermaid
 graph TB
     subgraph Client["Client"]

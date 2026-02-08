@@ -1,6 +1,6 @@
 # Adaptive Weekly Plan Scheduling
 
-The weekly plan system uses a deterministic, greedy slot-filling algorithm to distribute learning resource sections across a user's availability slots. No AI is involved — plans are generated purely from schedule data, resource structure, and completion state.
+The weekly plan system uses a deterministic, greedy slot-filling algorithm to distribute learning resource sections across a user's availability slots. No AI is involved — plans are generated purely from schedule data, resource structure, and completion state. See also: [architecture](architecture.md).
 
 ## How It Works
 

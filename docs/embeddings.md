@@ -40,7 +40,6 @@ learningResourceSections (1) → many(resourceEmbeddings)
 
 **Write:**
 
-- `insertResourceEmbedding()` — single insert
 - `insertResourceEmbeddings()` — batch insert
 
 **Search (pgvector cosine distance `<=>`):**

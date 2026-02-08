@@ -1,6 +1,6 @@
 # Opik Integration
 
-Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observability: tracing, prompt management, and evaluations.
+Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observability: tracing, prompt management, evaluations, and prompt optimization.
 
 ## What We Trace
 
@@ -39,27 +39,23 @@ llmSpan?.update({ output: { ... }, endTime: new Date() });
 
 Handles all LangChain lifecycle events: `handleChatModelStart`, `handleLLMEnd`, `handleChainStart/End`, `handleToolStart/End`, `handleRetrieverStart/End`, `handleAgentAction/End`.
 
-### `createOpikHandler` (`lib/opik.ts`)
-
-Factory for the **built-in** `OpikCallbackHandler` from `opik-langchain`. Only used for standalone LangChain agent calls where auto-created traces are acceptable. Do not mix with manual parent traces.
-
 ## Trace Hierarchies
 
 ### UserSkillAgent — `streamSkillSuggestions()`
 
 ```
 [Trace] user-skill-agent:stream
-  └── [Span:llm] skill-suggestion-llm
+  └── [Span:llm] user-skill-agent:stream  (auto-created by callback handler)
 ```
 
 ### SkillResourceRetrieverAgent — `streamResources()`
 
 ```
 [Trace] skill-resource-retriever-agent:stream
-  ├── [Span:llm]  query-generation
-  ├── [Span:tool] search-curated-resources  ← query 1
-  ├── [Span:tool] search-curated-resources  ← query 2
-  └── [Span:tool] search-curated-resources  ← query N
+  ├── [Span:llm]  gpt-4o-mini  (auto-created by callback handler, query generation)
+  ├── [Span:tool] search-curated-resources  ← query 1  (manual span)
+  ├── [Span:tool] search-curated-resources  ← query 2  (manual span)
+  └── [Span:tool] search-curated-resources  ← query N  (manual span)
 ```
 
 ### ChallengeGeneratorAgent — `generateAllChallengesForGoal()`
@@ -67,9 +63,11 @@ Factory for the **built-in** `OpikCallbackHandler` from `opik-langchain`. Only u
 ```
 [Trace] challenge-generator-agent:generate-all
   ├── [Span:general] process-challenge:<section>:easy
-  │    └── [Span:llm] generate-questions:<section>
+  │    └── [Span:general] generate-questions
+  │         └── [Span:llm] gpt-5-mini  (auto-created by callback handler)
   ├── [Span:general] process-challenge:<section>:medium
-  │    └── [Span:llm] generate-questions:<section>
+  │    └── [Span:general] generate-questions
+  │         └── [Span:llm] gpt-5-mini  (auto-created by callback handler)
   └── ...
 ```
 
