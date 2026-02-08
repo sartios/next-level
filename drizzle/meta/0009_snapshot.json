@@ -140,13 +140,9 @@
         "challenge_progress_challenge_id_challenges_id_fk": {
           "name": "challenge_progress_challenge_id_challenges_id_fk",
           "tableFrom": "challenge_progress",
-          "columnsFrom": [
-            "challenge_id"
-          ],
+          "columnsFrom": ["challenge_id"],
           "tableTo": "challenges",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -260,13 +256,9 @@
         "challenge_questions_challenge_id_challenges_id_fk": {
           "name": "challenge_questions_challenge_id_challenges_id_fk",
           "tableFrom": "challenge_questions",
-          "columnsFrom": [
-            "challenge_id"
-          ],
+          "columnsFrom": ["challenge_id"],
           "tableTo": "challenges",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -433,26 +425,18 @@
         "challenges_goal_id_goals_id_fk": {
           "name": "challenges_goal_id_goals_id_fk",
           "tableFrom": "challenges",
-          "columnsFrom": [
-            "goal_id"
-          ],
+          "columnsFrom": ["goal_id"],
           "tableTo": "goals",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "challenges_section_id_learning_resource_sections_id_fk": {
           "name": "challenges_section_id_learning_resource_sections_id_fk",
           "tableFrom": "challenges",
-          "columnsFrom": [
-            "section_id"
-          ],
+          "columnsFrom": ["section_id"],
           "tableTo": "learning_resource_sections",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -534,26 +518,18 @@
         "goals_user_id_users_id_fk": {
           "name": "goals_user_id_users_id_fk",
           "tableFrom": "goals",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "users",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "goals_selected_resource_id_learning_resources_id_fk": {
           "name": "goals_selected_resource_id_learning_resources_id_fk",
           "tableFrom": "goals",
-          "columnsFrom": [
-            "selected_resource_id"
-          ],
+          "columnsFrom": ["selected_resource_id"],
           "tableTo": "learning_resources",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -628,13 +604,9 @@
         "learning_resource_sections_resource_id_learning_resources_id_fk": {
           "name": "learning_resource_sections_resource_id_learning_resources_id_fk",
           "tableFrom": "learning_resource_sections",
-          "columnsFrom": [
-            "resource_id"
-          ],
+          "columnsFrom": ["resource_id"],
           "tableTo": "learning_resources",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -773,9 +745,7 @@
       "uniqueConstraints": {
         "learning_resources_url_unique": {
           "name": "learning_resources_url_unique",
-          "columns": [
-            "url"
-          ],
+          "columns": ["url"],
           "nullsNotDistinct": false
         }
       },
@@ -901,13 +871,9 @@
         "plan_sessions_weekly_plan_id_weekly_plans_id_fk": {
           "name": "plan_sessions_weekly_plan_id_weekly_plans_id_fk",
           "tableFrom": "plan_sessions",
-          "columnsFrom": [
-            "weekly_plan_id"
-          ],
+          "columnsFrom": ["weekly_plan_id"],
           "tableTo": "weekly_plans",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1024,26 +990,18 @@
         "resource_embeddings_resource_id_learning_resources_id_fk": {
           "name": "resource_embeddings_resource_id_learning_resources_id_fk",
           "tableFrom": "resource_embeddings",
-          "columnsFrom": [
-            "resource_id"
-          ],
+          "columnsFrom": ["resource_id"],
           "tableTo": "learning_resources",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "resource_embeddings_section_id_learning_resource_sections_id_fk": {
           "name": "resource_embeddings_section_id_learning_resource_sections_id_fk",
           "tableFrom": "resource_embeddings",
-          "columnsFrom": [
-            "section_id"
-          ],
+          "columnsFrom": ["section_id"],
           "tableTo": "learning_resource_sections",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1117,13 +1075,9 @@
         "schedule_slots_schedule_id_schedules_id_fk": {
           "name": "schedule_slots_schedule_id_schedules_id_fk",
           "tableFrom": "schedule_slots",
-          "columnsFrom": [
-            "schedule_id"
-          ],
+          "columnsFrom": ["schedule_id"],
           "tableTo": "schedules",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1226,26 +1180,18 @@
         "schedules_user_id_users_id_fk": {
           "name": "schedules_user_id_users_id_fk",
           "tableFrom": "schedules",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "users",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "schedules_goal_id_goals_id_fk": {
           "name": "schedules_goal_id_goals_id_fk",
           "tableFrom": "schedules",
-          "columnsFrom": [
-            "goal_id"
-          ],
+          "columnsFrom": ["goal_id"],
           "tableTo": "goals",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1446,13 +1392,9 @@
         "weekly_plans_goal_id_goals_id_fk": {
           "name": "weekly_plans_goal_id_goals_id_fk",
           "tableFrom": "weekly_plans",
-          "columnsFrom": [
-            "goal_id"
-          ],
+          "columnsFrom": ["goal_id"],
           "tableTo": "goals",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
