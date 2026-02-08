@@ -1,6 +1,6 @@
 # Opik Integration
 
-Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observability: tracing, prompt management, and evaluations.
+Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observability: tracing, prompt management, evaluations, and prompt optimization.
 
 ## What We Trace
 
@@ -18,7 +18,7 @@ Every LLM call captures: **prompts**, **generations**, **model**, **provider**, 
 
 ### `NextLevelOpikCallbackHandler` (`lib/trace/handler.ts`)
 
-Custom LangChain `BaseCallbackHandler` (forked from `opik-langchain`) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces that the built-in `OpikCallbackHandler` creates.
+Custom LangChain `BaseCallbackHandler` (forked from `opik-langchain`) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces.
 
 ```typescript
 const trace = createAgentTrace('agent-name', 'operation', { input, metadata, tags });
@@ -39,27 +39,23 @@ llmSpan?.update({ output: { ... }, endTime: new Date() });
 
 Handles all LangChain lifecycle events: `handleChatModelStart`, `handleLLMEnd`, `handleChainStart/End`, `handleToolStart/End`, `handleRetrieverStart/End`, `handleAgentAction/End`.
 
-### `createOpikHandler` (`lib/opik.ts`)
-
-Factory for the **built-in** `OpikCallbackHandler` from `opik-langchain`. Only used for standalone LangChain agent calls where auto-created traces are acceptable. Do not mix with manual parent traces.
-
 ## Trace Hierarchies
 
 ### UserSkillAgent — `streamSkillSuggestions()`
 
 ```
 [Trace] user-skill-agent:stream
-  └── [Span:llm] skill-suggestion-llm
+  └── [Span:llm] user-skill-agent:stream  (auto-created by callback handler)
 ```
 
 ### SkillResourceRetrieverAgent — `streamResources()`
 
 ```
 [Trace] skill-resource-retriever-agent:stream
-  ├── [Span:llm]  query-generation
-  ├── [Span:tool] search-curated-resources  ← query 1
-  ├── [Span:tool] search-curated-resources  ← query 2
-  └── [Span:tool] search-curated-resources  ← query N
+  ├── [Span:llm]  gpt-4o-mini  (auto-created by callback handler, query generation)
+  ├── [Span:tool] search-curated-resources  ← query 1  (manual span)
+  ├── [Span:tool] search-curated-resources  ← query 2  (manual span)
+  └── [Span:tool] search-curated-resources  ← query N  (manual span)
 ```
 
 ### ChallengeGeneratorAgent — `generateAllChallengesForGoal()`
@@ -67,9 +63,11 @@ Factory for the **built-in** `OpikCallbackHandler` from `opik-langchain`. Only u
 ```
 [Trace] challenge-generator-agent:generate-all
   ├── [Span:general] process-challenge:<section>:easy
-  │    └── [Span:llm] generate-questions:<section>
+  │    └── [Span:general] generate-questions
+  │         └── [Span:llm] gpt-5-mini  (auto-created by callback handler)
   ├── [Span:general] process-challenge:<section>:medium
-  │    └── [Span:llm] generate-questions:<section>
+  │    └── [Span:general] generate-questions
+  │         └── [Span:llm] gpt-5-mini  (auto-created by callback handler)
   └── ...
 ```
 
@@ -135,3 +133,43 @@ npx tsx evals/run.ts --all --verbose                              # detailed per
 ```
 
 Results are stored as Opik experiments linked to their datasets.
+
+## Prompt Optimization (Python)
+
+Automated prompt improvement using `opik-optimizer` (`optimize/`). Each agent has a dedicated optimizer script that generates prompt candidates, evaluates them, and selects the best variant.
+
+### How it works
+
+1. **Load prompts and datasets** from Opik via the Python SDK
+2. **MetaPromptOptimizer** generates candidate prompts (4 per round, 8 threads, temperature 0.0, seed 42)
+3. Each candidate is evaluated against the agent's Opik dataset using **AnswerRelevance** as the scoring metric
+4. Best-performing prompt variant is displayed with scores
+
+### Optimizer scripts
+
+| Script | Agent | Model |
+|---|---|---|
+| `optimize/meta_optimizers/user_skill_agent.py` | UserSkillAgent | `gpt-4o-mini` |
+| `optimize/meta_optimizers/skill_resource_retriever.py` | SkillResourceRetrieverAgent | `gpt-4o-mini` |
+| `optimize/meta_optimizers/challenge_generator.py` | ChallengeGeneratorAgent | `gpt-4o-mini` |
+
+### CLI usage
+
+```bash
+cd optimize
+python run_all.py                                    # Run all optimizers
+python meta_optimizers/user_skill_agent.py           # Single agent
+```
+
+## Full Lifecycle Overview
+
+```mermaid
+graph LR
+    Dev[Define prompts locally] --> Sync[npm run prompts:sync]
+    Sync --> Opik[Opik Prompt Registry]
+    Opik --> Runtime[Agents fetch prompts at runtime]
+    Runtime --> Trace[Traces captured in Opik]
+    Trace --> Eval[LLM-as-judge evaluations]
+    Eval --> Optimize[MetaPromptOptimizer]
+    Optimize --> Opik
+```
