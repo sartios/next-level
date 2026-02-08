@@ -1,9 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { requireDb, closeConnection } from '../../lib/db';
-import { users, goals, learningResources, learningResourceSections } from '../../lib/db/schema';
+import { users, goals, learningResources, learningResourceSections, challenges as challengesTable } from '../../lib/db/schema';
 import {
-  createChallengesForGoal,
   challengesExistForGoal,
   getChallengesByGoalId,
   getChallengeById,
@@ -101,13 +100,27 @@ describe('challengeRepository integration tests', () => {
     await closeConnection();
   });
 
-  it('creates challenges for goal (3 per section)', async () => {
+  it('creates challenges for goal (3 per section via direct insert)', async () => {
+    const db = requireDb();
     const sections = [
       { id: testSectionId, title: 'Basics', topics: ['types', 'interfaces'] },
       { id: testSection2Id, title: 'Advanced', topics: ['generics'] }
     ];
 
-    const result = await createChallengesForGoal(testGoalId, sections);
+    const difficulties = ['easy', 'medium', 'hard'] as const;
+    const values = sections.flatMap((section) =>
+      difficulties.map((difficulty) => ({
+        goalId: testGoalId,
+        sectionId: section.id,
+        sectionTitle: section.title,
+        sectionTopics: section.topics,
+        difficulty,
+        status: difficulty === 'easy' ? ('pending' as const) : ('locked' as const),
+        totalQuestions: 10
+      }))
+    );
+
+    const result = await db.insert(challengesTable).values(values).returning();
 
     expect(result).toHaveLength(6); // 2 sections × 3 difficulties
 
@@ -119,12 +132,10 @@ describe('challengeRepository integration tests', () => {
     expect(medium).toHaveLength(2);
     expect(hard).toHaveLength(2);
 
-    // Easy starts as pending, medium/hard as locked
     easy.forEach((c) => expect(c.status).toBe('pending'));
     medium.forEach((c) => expect(c.status).toBe('locked'));
     hard.forEach((c) => expect(c.status).toBe('locked'));
 
-    // Capture IDs for later tests
     easyChallengeId = easy.find((c) => c.sectionId === testSectionId)!.id;
     mediumChallengeId = medium.find((c) => c.sectionId === testSectionId)!.id;
   });

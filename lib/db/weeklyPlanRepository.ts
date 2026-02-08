@@ -131,6 +131,26 @@ export async function getWeeklyPlanById(id: string): Promise<WeeklyPlanWithSessi
 }
 
 /**
+ * Get weekly plan by goal and week number
+ */
+export async function getWeeklyPlanByWeekNumber(goalId: string, weekNumber: number): Promise<WeeklyPlanWithSessions | undefined> {
+  const db = requireDb();
+
+  const results = await db
+    .select()
+    .from(weeklyPlans)
+    .where(and(eq(weeklyPlans.goalId, goalId), eq(weeklyPlans.weekNumber, weekNumber)))
+    .limit(1);
+
+  if (results.length === 0) return undefined;
+
+  const plan = results[0];
+  const sessions = await db.select().from(planSessions).where(eq(planSessions.weeklyPlanId, plan.id));
+
+  return { ...plan, sessions };
+}
+
+/**
  * Get all weekly plans for a goal
  */
 export async function getWeeklyPlansByGoalId(goalId: string): Promise<WeeklyPlanWithSessions[]> {
@@ -173,53 +193,6 @@ export async function getCurrentWeeklyPlan(goalId: string): Promise<WeeklyPlanWi
   const sessions = await db.select().from(planSessions).where(eq(planSessions.weeklyPlanId, plan.id));
 
   return { ...plan, sessions };
-}
-
-/**
- * Get weekly plan by goal and week number
- */
-export async function getWeeklyPlanByWeekNumber(goalId: string, weekNumber: number): Promise<WeeklyPlanWithSessions | undefined> {
-  const db = requireDb();
-
-  const results = await db
-    .select()
-    .from(weeklyPlans)
-    .where(and(eq(weeklyPlans.goalId, goalId), eq(weeklyPlans.weekNumber, weekNumber)))
-    .limit(1);
-
-  if (results.length === 0) return undefined;
-
-  const plan = results[0];
-  const sessions = await db.select().from(planSessions).where(eq(planSessions.weeklyPlanId, plan.id));
-
-  return { ...plan, sessions };
-}
-
-/**
- * Update a weekly plan
- */
-export async function updateWeeklyPlan(
-  id: string,
-  data: Partial<Pick<NewWeeklyPlan, 'focusArea' | 'totalMinutes' | 'completionPercentage'>>
-): Promise<WeeklyPlan | undefined> {
-  const db = requireDb();
-
-  const [updated] = await db
-    .update(weeklyPlans)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(weeklyPlans.id, id))
-    .returning();
-
-  return updated;
-}
-
-/**
- * Delete a weekly plan and its sessions
- */
-export async function deleteWeeklyPlan(id: string): Promise<boolean> {
-  const db = requireDb();
-  const result = await db.delete(weeklyPlans).where(eq(weeklyPlans.id, id)).returning();
-  return result.length > 0;
 }
 
 // ============================================================================
@@ -279,21 +252,6 @@ export async function getPlanSessionById(sessionId: string): Promise<PlanSession
 }
 
 /**
- * Delete a specific plan session by ID
- */
-export async function deletePlanSession(sessionId: string): Promise<boolean> {
-  const db = requireDb();
-  const result = await db.delete(planSessions).where(eq(planSessions.id, sessionId)).returning();
-
-  // Recalculate completion percentage if session was deleted
-  if (result.length > 0) {
-    await recalculateCompletionPercentage(result[0].weeklyPlanId);
-  }
-
-  return result.length > 0;
-}
-
-/**
  * Add a new session to an existing weekly plan
  */
 export async function addPlanSession(weeklyPlanId: string, session: NewPlanSession): Promise<PlanSession> {
@@ -322,16 +280,6 @@ export interface AvailabilitySlot {
   startTime: string;
   endTime: string;
   durationMinutes?: number;
-}
-
-/**
- * Get incomplete (not completed) sessions from a weekly plan
- */
-export async function getIncompleteSessions(weeklyPlanId: string): Promise<PlanSession[]> {
-  const db = requireDb();
-  const sessions = await db.select().from(planSessions).where(eq(planSessions.weeklyPlanId, weeklyPlanId));
-
-  return sessions.filter((s) => s.status !== 'completed');
 }
 
 /**

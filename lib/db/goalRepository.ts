@@ -35,37 +35,3 @@ export async function getGoalById(id: string): Promise<Goal | undefined> {
   const results = await db.select().from(goals).where(eq(goals.id, id)).limit(1);
   return results[0];
 }
-
-/**
- * Get goals by user ID
- */
-export async function getGoalsByUserId(userId: string): Promise<Goal[]> {
-  const db = requireDb();
-  return db.select().from(goals).where(eq(goals.userId, userId));
-}
-
-/**
- * Update a goal
- */
-export async function updateGoal(id: string, goalData: Partial<Omit<NewGoal, 'userId'>>): Promise<Goal | undefined> {
-  const db = requireDb();
-  const [updated] = await db
-    .update(goals)
-    .set({ ...goalData, updatedAt: new Date() })
-    .where(eq(goals.id, id))
-    .returning();
-  return updated;
-}
-
-/**
- * Update the selected resource for a goal
- */
-export async function updateGoalSelectedResource(goalId: string, resourceId: string): Promise<Goal | undefined> {
-  const db = requireDb();
-  const [updated] = await db
-    .update(goals)
-    .set({ selectedResourceId: resourceId, updatedAt: new Date() })
-    .where(eq(goals.id, goalId))
-    .returning();
-  return updated;
-}

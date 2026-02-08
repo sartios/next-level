@@ -4,11 +4,8 @@ import { requireDb, closeConnection } from '../../lib/db';
 import { users, goals } from '../../lib/db/schema';
 import {
   createSchedule,
-  getScheduleById,
   getScheduleByUserAndGoal,
-  getSchedulesByUserId,
   updateSchedule,
-  deleteSchedule,
   upsertSchedule,
   type NewSchedule,
   type NewScheduleSlot
@@ -77,14 +74,6 @@ describe('scheduleRepository integration tests', () => {
     expect(result.slots).toHaveLength(0);
   });
 
-  it('retrieves schedule by id with slots', async () => {
-    const result = await getScheduleById(testScheduleId);
-
-    expect(result).toBeDefined();
-    expect(result?.id).toBe(testScheduleId);
-    expect(result?.slots).toHaveLength(2);
-  });
-
   it('retrieves schedule by user and goal', async () => {
     const result = await getScheduleByUserAndGoal(testUserId, testGoalId);
 
@@ -98,13 +87,6 @@ describe('scheduleRepository integration tests', () => {
     const result = await getScheduleByUserAndGoal(testUserId, '00000000-0000-0000-0000-000000000000');
 
     expect(result).toBeUndefined();
-  });
-
-  it('retrieves schedules by user id', async () => {
-    const result = await getSchedulesByUserId(testUserId);
-
-    expect(result.length).toBeGreaterThanOrEqual(1);
-    expect(result[0].userId).toBe(testUserId);
   });
 
   it('updates schedule and replaces slots', async () => {

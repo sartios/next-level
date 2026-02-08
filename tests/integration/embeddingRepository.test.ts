@@ -3,15 +3,7 @@ import { eq } from 'drizzle-orm';
 import { requireDb, closeConnection } from '../../lib/db';
 import { learningResources, resourceEmbeddings } from '../../lib/db/schema';
 import { insertLearningResource } from '../../lib/db/resourceRepository';
-import {
-  insertResourceEmbedding,
-  insertResourceEmbeddings,
-  searchEmbeddings,
-  searchByResource,
-  searchByDescription,
-  searchByLearningObjective,
-  getUniqueResourcesFromResults
-} from '../../lib/db/embeddingRepository';
+import { insertResourceEmbeddings, searchEmbeddings, getUniqueResourcesFromResults } from '../../lib/db/embeddingRepository';
 import type { NewLearningResource, NewResourceEmbedding } from '../../lib/types';
 
 describe('embeddingRepository integration tests', () => {
@@ -51,30 +43,17 @@ describe('embeddingRepository integration tests', () => {
     await closeConnection();
   });
 
-  describe('insertResourceEmbedding', () => {
-    it('should insert a single embedding', async () => {
-      const embedding: NewResourceEmbedding = {
-        resourceId: insertedResourceId,
-        contentType: 'resource',
-        contentIndex: null,
-        sectionId: null,
-        contentText: 'Full resource text for embedding',
-        embedding: createTestEmbedding(1)
-      };
-
-      const result = await insertResourceEmbedding(embedding);
-
-      expect(result).toBeDefined();
-      expect(result.id).toBeDefined();
-      expect(result.resourceId).toBe(insertedResourceId);
-      expect(result.contentType).toBe('resource');
-      expect(result.contentText).toBe(embedding.contentText);
-    });
-  });
-
   describe('insertResourceEmbeddings', () => {
     it('should insert multiple embeddings in batch', async () => {
       const embeddings: NewResourceEmbedding[] = [
+        {
+          resourceId: insertedResourceId,
+          contentType: 'resource',
+          contentIndex: null,
+          sectionId: null,
+          contentText: 'Full resource text for embedding',
+          embedding: createTestEmbedding(1)
+        },
         {
           resourceId: insertedResourceId,
           contentType: 'description',
@@ -103,10 +82,11 @@ describe('embeddingRepository integration tests', () => {
 
       const result = await insertResourceEmbeddings(embeddings);
 
-      expect(result).toHaveLength(3);
-      expect(result[0].contentType).toBe('description');
-      expect(result[1].contentType).toBe('learning_objective');
-      expect(result[2].contentType).toBe('target_audience');
+      expect(result).toHaveLength(4);
+      expect(result[0].contentType).toBe('resource');
+      expect(result[1].contentType).toBe('description');
+      expect(result[2].contentType).toBe('learning_objective');
+      expect(result[3].contentType).toBe('target_audience');
     });
 
     it('should return empty array when no embeddings provided', async () => {
@@ -160,45 +140,6 @@ describe('embeddingRepository integration tests', () => {
       });
 
       expect(results.length).toBeLessThanOrEqual(2);
-    });
-  });
-
-  describe('searchByResource', () => {
-    it('should search only resource-type embeddings', async () => {
-      const queryEmbedding = createTestEmbedding(1);
-
-      const results = await searchByResource(queryEmbedding, 5);
-
-      expect(results).toBeDefined();
-      for (const result of results) {
-        expect(result.contentType).toBe('resource');
-      }
-    });
-  });
-
-  describe('searchByDescription', () => {
-    it('should search only description-type embeddings', async () => {
-      const queryEmbedding = createTestEmbedding(2);
-
-      const results = await searchByDescription(queryEmbedding, 5);
-
-      expect(results).toBeDefined();
-      for (const result of results) {
-        expect(result.contentType).toBe('description');
-      }
-    });
-  });
-
-  describe('searchByLearningObjective', () => {
-    it('should search only learning_objective-type embeddings', async () => {
-      const queryEmbedding = createTestEmbedding(3);
-
-      const results = await searchByLearningObjective(queryEmbedding, 5);
-
-      expect(results).toBeDefined();
-      for (const result of results) {
-        expect(result.contentType).toBe('learning_objective');
-      }
     });
   });
 
