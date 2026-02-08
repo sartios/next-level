@@ -533,6 +533,5 @@ describe('weeklyPlanService integration tests', () => {
       expect(syncResult?.syncResult?.deletedSessionIds.length).toBe(1);
       expect(syncResult?.syncResult?.addedSessionCount).toBe(1);
     });
-
   });
 });

@@ -69,15 +69,9 @@ describe('scheduleRepository integration tests', () => {
 
   it('creates schedule with empty slots', async () => {
     const db = requireDb();
-    const [goal2] = await db
-      .insert(goals)
-      .values({ userId: testUserId, name: 'Empty Slots Goal', reasoning: 'Test' })
-      .returning();
+    const [goal2] = await db.insert(goals).values({ userId: testUserId, name: 'Empty Slots Goal', reasoning: 'Test' }).returning();
 
-    const result = await createSchedule(
-      { userId: testUserId, goalId: goal2.id, startDate: new Date('2024-01-01'), weeklyHours: 0 },
-      []
-    );
+    const result = await createSchedule({ userId: testUserId, goalId: goal2.id, startDate: new Date('2024-01-01'), weeklyHours: 0 }, []);
 
     expect(result).toBeDefined();
     expect(result.slots).toHaveLength(0);
@@ -114,9 +108,7 @@ describe('scheduleRepository integration tests', () => {
   });
 
   it('updates schedule and replaces slots', async () => {
-    const newSlots: NewScheduleSlot[] = [
-      { dayOfWeek: 'Friday', startTime: '16:00', endTime: '17:00', durationMinutes: 60 }
-    ];
+    const newSlots: NewScheduleSlot[] = [{ dayOfWeek: 'Friday', startTime: '16:00', endTime: '17:00', durationMinutes: 60 }];
 
     const result = await updateSchedule(testScheduleId, { weeklyHours: 3 }, newSlots);
 
@@ -137,10 +129,7 @@ describe('scheduleRepository integration tests', () => {
 
   it('upsert creates when none exists, updates when exists', async () => {
     const db = requireDb();
-    const [goal3] = await db
-      .insert(goals)
-      .values({ userId: testUserId, name: 'Upsert Goal', reasoning: 'Test upsert' })
-      .returning();
+    const [goal3] = await db.insert(goals).values({ userId: testUserId, name: 'Upsert Goal', reasoning: 'Test upsert' }).returning();
 
     const scheduleData: NewSchedule = {
       userId: testUserId,
@@ -148,9 +137,7 @@ describe('scheduleRepository integration tests', () => {
       startDate: new Date('2024-02-01'),
       weeklyHours: 4
     };
-    const slots: NewScheduleSlot[] = [
-      { dayOfWeek: 'Tuesday', startTime: '10:00', endTime: '11:00', durationMinutes: 60 }
-    ];
+    const slots: NewScheduleSlot[] = [{ dayOfWeek: 'Tuesday', startTime: '10:00', endTime: '11:00', durationMinutes: 60 }];
 
     // First call creates
     const created = await upsertSchedule(scheduleData, slots);

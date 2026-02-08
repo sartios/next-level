@@ -27,10 +27,7 @@ describe('challengeProgressRepository integration tests', () => {
       .returning();
     testUserId = user.id;
 
-    const [goal] = await db
-      .insert(goals)
-      .values({ userId: testUserId, name: 'Learn Testing', reasoning: 'Testing progress' })
-      .returning();
+    const [goal] = await db.insert(goals).values({ userId: testUserId, name: 'Learn Testing', reasoning: 'Testing progress' }).returning();
     testGoalId = goal.id;
 
     const [resource] = await db

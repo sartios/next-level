@@ -124,34 +124,20 @@ describe('generateChallengesJob', () => {
   });
 
   it('should generate challenges for claimed pending challenges', async () => {
-    const pendingChallenges = [
-      makeChallenge({ id: 'c1', status: 'pending' }),
-      makeChallenge({ id: 'c2', status: 'pending' })
-    ];
-    const claimedChallenges = [
-      makeChallenge({ id: 'c1', status: 'generating' }),
-      makeChallenge({ id: 'c2', status: 'generating' })
-    ];
+    const pendingChallenges = [makeChallenge({ id: 'c1', status: 'pending' }), makeChallenge({ id: 'c2', status: 'pending' })];
+    const claimedChallenges = [makeChallenge({ id: 'c1', status: 'generating' }), makeChallenge({ id: 'c2', status: 'generating' })];
 
     mockGetUserById.mockResolvedValue(testUser);
     mockGetGoalById.mockResolvedValue(testGoal);
     mockGetLearningResourceWithSections.mockResolvedValue(testResource);
     mockGetChallengesByGoalId.mockResolvedValue(pendingChallenges);
-    mockClaimChallengeForGeneration
-      .mockResolvedValueOnce(claimedChallenges[0])
-      .mockResolvedValueOnce(claimedChallenges[1]);
+    mockClaimChallengeForGeneration.mockResolvedValueOnce(claimedChallenges[0]).mockResolvedValueOnce(claimedChallenges[1]);
     mockGenerateAllChallengesForGoal.mockResolvedValue({ success: 2, failed: 0 });
 
     startGenerateChallengesJob(userId, goalId, 'test-op');
     await jobPromise;
 
-    expect(mockGenerateAllChallengesForGoal).toHaveBeenCalledWith(
-      testUser,
-      testGoal,
-      testResource,
-      claimedChallenges,
-      'test-op'
-    );
+    expect(mockGenerateAllChallengesForGoal).toHaveBeenCalledWith(testUser, testGoal, testResource, claimedChallenges, 'test-op');
   });
 
   it('should only claim pending challenges, not completed ones', async () => {

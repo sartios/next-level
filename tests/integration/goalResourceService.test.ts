@@ -26,10 +26,7 @@ describe('goalResourceService integration tests', () => {
     testUserId = user.id;
 
     // Goal with 2 sections
-    const [goal] = await db
-      .insert(goals)
-      .values({ userId: testUserId, name: 'Learn React', reasoning: 'Testing service' })
-      .returning();
+    const [goal] = await db.insert(goals).values({ userId: testUserId, name: 'Learn React', reasoning: 'Testing service' }).returning();
     testGoalId = goal.id;
 
     // Goal for null sections test
@@ -142,8 +139,8 @@ describe('goalResourceService integration tests', () => {
   });
 
   it('throws when goal update fails', async () => {
-    await expect(
-      selectResourceAndCreateChallenges('00000000-0000-0000-0000-000000000000', testResourceId, [])
-    ).rejects.toThrow('Failed to update goal');
+    await expect(selectResourceAndCreateChallenges('00000000-0000-0000-0000-000000000000', testResourceId, [])).rejects.toThrow(
+      'Failed to update goal'
+    );
   });
 });

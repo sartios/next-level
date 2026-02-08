@@ -481,7 +481,6 @@ describe('weeklyPlanRepository integration tests', () => {
       expect(result.remainingSessions[0].dayOfWeek).toBe('Monday');
       expect(result.remainingSessions[0].status).toBe('completed');
     });
-
   });
 
   describe('getIncompleteSessions', () => {
