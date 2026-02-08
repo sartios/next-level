@@ -9,14 +9,9 @@ import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
 import { LearningResourceWithSections } from '../types';
 import { BaseAgent } from './BaseAgent';
 import { createLLM } from '@/lib/utils/llm';
-import { createAgentOpikHandler } from '@/lib/utils/createAgentOpikHandler';
 import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
 import { Goal } from '../db/goalRepository';
-
-function buildUserPrompt(user: User, goal: Goal): string {
-  return `user:\`\`\`json${JSON.stringify({ role: user.role, skills: user.skills.join(','), careerGoals: user.careerGoals.join(',') })}\`\`\` goal:\`\`\`json${JSON.stringify({ name: goal.name, reasoning: goal.reasoning })}\`\`\``;
-}
 
 function buildQueryGenerationUserPrompt(user: User, goal: Goal): string {
   return `User Profile:
@@ -57,26 +52,6 @@ class SkillResourceRetrieverAgent extends BaseAgent<RetrieverAgentType> {
       systemPrompt: new SystemMessage(systemPrompt),
       responseFormat: providerStrategy(RetrieveOperationOutputSchema)
     });
-  }
-
-  /**
-   * Retrieve resources from the curated database using RAG.
-   * This is the first step in the resource suggestion pipeline.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async retrieve(user: any, goal: any, opikOptions?: OpikHandlerOptions): Promise<RetrieverOutput> {
-    await this.ensureInitialized();
-    const agent = this.getAgent();
-
-    const handler = createAgentOpikHandler(this.agentName, 'retrieve', { userId: user.id, goalId: goal.id }, opikOptions);
-    const userPrompt = buildUserPrompt(user, goal);
-
-    const result = await agent.invoke(
-      { messages: [new HumanMessage(userPrompt)] },
-      { callbacks: [handler], runName: `${this.agentName}:retrieve` }
-    );
-
-    return { resources: result.structuredResponse.resources };
   }
 
   public async *streamResources(user: User, goal: Goal, opikOptions?: OpikHandlerOptions): AsyncGenerator<GoalResourceStreamEvent> {
