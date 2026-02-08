@@ -1,7 +1,7 @@
 import { eq, and } from 'drizzle-orm';
 import { requireDb } from './index';
 import { challenges, challengeQuestions, type ChallengeDifficulty, type ChallengeStatus } from './schema';
-import { optionsNormalizationSchema } from '@/lib/schemas';
+import { optionsNormalizationSchema } from '@/lib/validation/schemas';
 
 // ============================================================================
 // Types

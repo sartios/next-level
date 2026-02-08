@@ -1,29 +1,20 @@
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
-import { z } from 'zod';
 
 import { OpikHandlerOptions, createAgentTrace, getOpikClient } from '@/lib/opik';
 import { NextLevelOpikCallbackHandler } from '@/lib/trace/handler';
 import { searchCuratedResources } from '@/lib/tools/searchCuratedResourcesTool';
-import { LearningResourceWithSectionsSchema } from '@/lib/schemas';
+import { SearchQueriesSchema, RetrieverOutputSchema } from '@/lib/validation/schemas';
 import { LearningResourceWithSections } from '../types';
 import { createLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
 import { User } from '../db/userRepository';
 import { Goal } from '../db/goalRepository';
 
-const SearchQueriesSchema = z.object({
-  queries: z.array(z.string()).min(1).max(5).describe('Search queries to find relevant learning resources')
-});
+export { RetrieverOutputSchema };
 
 export interface RetrieverOutput {
   resources: LearningResourceWithSections[];
 }
-
-const RetrieveOperationOutputSchema = z.object({
-  resources: z.array(LearningResourceWithSectionsSchema)
-});
-
-export const RetrieverOutputSchema = RetrieveOperationOutputSchema;
 
 class SkillResourceRetrieverAgent {
   protected readonly agentName = 'skill-resource-retriever-agent';

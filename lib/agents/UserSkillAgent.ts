@@ -7,6 +7,7 @@ import { User } from '@/lib/db/userRepository';
 import { createStreamingLLM } from '@/lib/utils/llm';
 import { getAgentPrompt } from '@/lib/prompts';
 import { SKILLS_PER_USER } from '../prompts/agentPrompts';
+import { SkillSchema } from '@/lib/validation/schemas';
 
 async function buildUserPrompt(user: User): Promise<string> {
   return getAgentPrompt('user-skill-agent:user-prompt', {
@@ -25,12 +26,6 @@ async function buildSystemPrompt(user: User): Promise<string> {
     userCareerGoals: user.careerGoals.join(', ')
   });
 }
-
-const SkillSchema = z.object({
-  name: z.string(),
-  priority: z.number(),
-  reasoning: z.string()
-});
 
 interface SuggestedSkill {
   id: string;
