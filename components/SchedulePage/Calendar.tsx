@@ -95,39 +95,41 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
           </div>
 
           {/* Time slots list */}
-          <ScrollArea className="h-[400px] relative" ref={mobileScrollRef}>
-            {isLoading && (
-              <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10">
-                <Loader2 className="h-8 w-8 animate-spin text-accent" />
-              </div>
-            )}
-            <div className="px-4">
-              {timeSlots.map((time) => {
-                const id = `${selectedDay}-${time}`;
-                const isSelected = selectedSlots.includes(id);
-                return (
-                  <button
-                    key={time}
-                    onClick={() => toggleSlot(id)}
-                    disabled={isLoading}
-                    aria-label={`Select ${selectedDay} at ${time}`}
-                    className="w-full flex items-center gap-4 py-4 border-b border-muted text-left"
-                  >
-                    <div
-                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                        isSelected ? 'bg-foreground border-foreground text-background' : 'border-muted hover:border-border'
-                      }`}
+          <div ref={mobileScrollRef}>
+            <ScrollArea className="h-[400px] relative">
+              {isLoading && (
+                <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10">
+                  <Loader2 className="h-8 w-8 animate-spin text-accent" />
+                </div>
+              )}
+              <div className="px-4">
+                {timeSlots.map((time) => {
+                  const id = `${selectedDay}-${time}`;
+                  const isSelected = selectedSlots.includes(id);
+                  return (
+                    <button
+                      key={time}
+                      onClick={() => toggleSlot(id)}
+                      disabled={isLoading}
+                      aria-label={`Select ${selectedDay} at ${time}`}
+                      className="w-full flex items-center gap-4 py-4 border-b border-muted text-left"
                     >
-                      {isSelected && <Check className="h-4 w-4" />}
-                    </div>
-                    <span className="font-bold text-sm text-border">
-                      {time}-{getEndTime24h(time)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </ScrollArea>
+                      <div
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                          isSelected ? 'bg-foreground border-foreground text-background' : 'border-muted hover:border-border'
+                        }`}
+                      >
+                        {isSelected && <Check className="h-4 w-4" />}
+                      </div>
+                      <span className="font-bold text-sm text-border">
+                        {time}-{getEndTime24h(time)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </div>
 
@@ -146,39 +148,41 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
             ))}
           </div>
 
-          <ScrollArea className="h-[400px] relative" ref={scrollRef}>
-            {isLoading && (
-              <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10">
-                <Loader2 className="h-8 w-8 animate-spin text-accent" />
-              </div>
-            )}
-            <div className="grid grid-cols-8 gap-2 pr-4">
-              {timeSlots.map((time) => (
-                <div key={time} className="contents">
-                  <div className="text-right pr-4 text-xs lg:text-sm font-bold text-border self-center">{time}</div>
-                  {days.map((day) => {
-                    const id = `${day}-${time}`;
-                    const isSelected = selectedSlots.includes(id);
-                    return (
-                      <button
-                        key={id}
-                        onClick={() => toggleSlot(id)}
-                        disabled={isLoading}
-                        aria-label={`Select ${day} at ${time}`}
-                        className={`h-12 rounded-md border transition-all min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
-                          isSelected
-                            ? 'bg-foreground border-foreground text-background shadow-inner scale-[0.98]'
-                            : 'bg-background border-muted hover:border-border'
-                        }`}
-                      >
-                        {isSelected && <Check className="h-4 w-4 mx-auto" />}
-                      </button>
-                    );
-                  })}
+          <div ref={scrollRef}>
+            <ScrollArea className="h-[400px] relative">
+              {isLoading && (
+                <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-10">
+                  <Loader2 className="h-8 w-8 animate-spin text-accent" />
                 </div>
-              ))}
-            </div>
-          </ScrollArea>
+              )}
+              <div className="grid grid-cols-8 gap-2 pr-4">
+                {timeSlots.map((time) => (
+                  <div key={time} className="contents">
+                    <div className="text-right pr-4 text-xs lg:text-sm font-bold text-border self-center">{time}</div>
+                    {days.map((day) => {
+                      const id = `${day}-${time}`;
+                      const isSelected = selectedSlots.includes(id);
+                      return (
+                        <button
+                          key={id}
+                          onClick={() => toggleSlot(id)}
+                          disabled={isLoading}
+                          aria-label={`Select ${day} at ${time}`}
+                          className={`h-12 rounded-md border transition-all min-h-[44px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                            isSelected
+                              ? 'bg-foreground border-foreground text-background shadow-inner scale-[0.98]'
+                              : 'bg-background border-muted hover:border-border'
+                          }`}
+                        >
+                          {isSelected && <Check className="h-4 w-4 mx-auto" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </div>
     </div>
