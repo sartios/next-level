@@ -147,11 +147,11 @@ Automated prompt improvement using `opik-optimizer` (`optimize/`). Each agent ha
 
 ### Optimizer scripts
 
-| Script | Agent | Model |
-|---|---|---|
-| `optimize/meta_optimizers/user_skill_agent.py` | UserSkillAgent | `gpt-4o-mini` |
+| Script                                                 | Agent                       | Model         |
+| ------------------------------------------------------ | --------------------------- | ------------- |
+| `optimize/meta_optimizers/user_skill_agent.py`         | UserSkillAgent              | `gpt-4o-mini` |
 | `optimize/meta_optimizers/skill_resource_retriever.py` | SkillResourceRetrieverAgent | `gpt-4o-mini` |
-| `optimize/meta_optimizers/challenge_generator.py` | ChallengeGeneratorAgent | `gpt-4o-mini` |
+| `optimize/meta_optimizers/challenge_generator.py`      | ChallengeGeneratorAgent     | `gpt-4o-mini` |
 
 ### CLI usage
 

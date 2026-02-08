@@ -141,8 +141,6 @@ describe('NextLevelOpikCallbackHandler — parent injection', () => {
 
     await handler.handleChainStart(mockLlm, {}, 'run-1', undefined, [], {});
 
-    expect(mockTraceFn).toHaveBeenCalledWith(
-      expect.objectContaining({ threadId: 'thread-abc' })
-    );
+    expect(mockTraceFn).toHaveBeenCalledWith(expect.objectContaining({ threadId: 'thread-abc' }));
   });
 });

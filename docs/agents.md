@@ -89,23 +89,23 @@ Generates multiple-choice quiz questions for each section of a learning resource
 
 ## Models
 
-| Agent | Model | Mode |
-|---|---|---|
-| UserSkillAgent | `gpt-5-mini` | Streaming |
+| Agent                       | Model         | Mode          |
+| --------------------------- | ------------- | ------------- |
+| UserSkillAgent              | `gpt-5-mini`  | Streaming     |
 | SkillResourceRetrieverAgent | `gpt-4o-mini` | Non-streaming |
-| ChallengeGeneratorAgent | `gpt-5-mini` | Streaming |
+| ChallengeGeneratorAgent     | `gpt-5-mini`  | Streaming     |
 
 LLM instances are created via `createLLM()` / `createStreamingLLM()` in `lib/utils/llm.ts`.
 
 ## Key Files
 
-| File | Purpose |
-|---|---|
-| `lib/agents/UserSkillAgent.ts` | Skill suggestion agent |
-| `lib/agents/SkillResourceRetrieverAgent.ts` | Resource retrieval agent |
-| `lib/agents/ChallengeGeneratorAgent.ts` | Quiz generation agent |
-| `lib/agents/utils.ts` | Shared `parseErrorInfo()` helper |
-| `lib/utils/llm.ts` | LLM factory (`createLLM`, `createStreamingLLM`) |
-| `lib/validation/schemas.ts` | Zod schemas for all agent outputs |
-| `lib/prompts/agentPrompts.ts` | Local prompt definitions and constants |
-| `lib/jobs/generateChallengesJob.ts` | Background job orchestrating challenge generation |
+| File                                        | Purpose                                           |
+| ------------------------------------------- | ------------------------------------------------- |
+| `lib/agents/UserSkillAgent.ts`              | Skill suggestion agent                            |
+| `lib/agents/SkillResourceRetrieverAgent.ts` | Resource retrieval agent                          |
+| `lib/agents/ChallengeGeneratorAgent.ts`     | Quiz generation agent                             |
+| `lib/agents/utils.ts`                       | Shared `parseErrorInfo()` helper                  |
+| `lib/utils/llm.ts`                          | LLM factory (`createLLM`, `createStreamingLLM`)   |
+| `lib/validation/schemas.ts`                 | Zod schemas for all agent outputs                 |
+| `lib/prompts/agentPrompts.ts`               | Local prompt definitions and constants            |
+| `lib/jobs/generateChallengesJob.ts`         | Background job orchestrating challenge generation |
