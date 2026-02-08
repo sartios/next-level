@@ -212,49 +212,6 @@ export async function addChallengeQuestions(challengeId: string, questions: NewC
 // ============================================================================
 
 /**
- * Difficulty levels for challenges
- */
-const DIFFICULTY_LEVELS: ChallengeDifficulty[] = ['easy', 'medium', 'hard'];
-
-/**
- * Get initial status for a difficulty level
- * Easy starts as 'pending' (ready to generate), medium/hard start as 'locked'
- */
-function getInitialStatus(difficulty: ChallengeDifficulty): ChallengeStatus {
-  return difficulty === 'easy' ? 'pending' : 'locked';
-}
-
-/**
- * Create challenges for all sections of a resource
- * Creates 3 challenges per section (easy, medium, hard)
- * Easy starts as 'pending', medium and hard start as 'locked'
- */
-export async function createChallengesForGoal(
-  goalId: string,
-  sections: Array<{ id: string; title: string; topics: string[] }>
-): Promise<Challenge[]> {
-  const db = requireDb();
-
-  // Create 3 challenges per section (one for each difficulty level)
-  // Easy is pending (ready to generate), medium/hard are locked
-  const values = sections.flatMap((section) =>
-    DIFFICULTY_LEVELS.map((difficulty) => ({
-      goalId,
-      sectionId: section.id,
-      sectionTitle: section.title,
-      sectionTopics: section.topics,
-      difficulty,
-      status: getInitialStatus(difficulty),
-      totalQuestions: 10
-    }))
-  );
-
-  const inserted = await db.insert(challenges).values(values).returning();
-
-  return inserted;
-}
-
-/**
  * Unlock the next difficulty level for a section
  * Called when a challenge is completed with sufficient score
  */

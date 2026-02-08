@@ -10,9 +10,7 @@ import {
   getWeeklyPlanByWeekNumber,
   updateSessionStatus,
   syncSessionsWithAvailability,
-  getIncompleteSessions,
   getCompletedSectionTitles,
-  deletePlanSession,
   addPlanSession,
   type NewWeeklyPlan,
   type NewPlanSession,
@@ -483,35 +481,6 @@ describe('weeklyPlanRepository integration tests', () => {
     });
   });
 
-  describe('getIncompleteSessions', () => {
-    let incompletePlanId: string;
-    let completedSessionId: string;
-
-    beforeAll(async () => {
-      const planData: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 7,
-        weekStartDate: new Date('2024-02-12'),
-        focusArea: 'Incomplete Sessions Test',
-        totalMinutes: 90
-      };
-
-      const plan = await createWeeklyPlan(planData, testSessions);
-      incompletePlanId = plan.id;
-
-      // Mark one session as completed
-      completedSessionId = plan.sessions[0].id;
-      await updateSessionStatus(completedSessionId, 'completed');
-    });
-
-    it('should return only incomplete sessions', async () => {
-      const result = await getIncompleteSessions(incompletePlanId);
-
-      expect(result).toHaveLength(2);
-      expect(result.every((s) => s.status !== 'completed')).toBe(true);
-    });
-  });
-
   describe('getCompletedSectionTitles', () => {
     beforeAll(async () => {
       // Create a plan with all sessions for one topic completed
@@ -554,28 +523,6 @@ describe('weeklyPlanRepository integration tests', () => {
       const result = await getCompletedSectionTitles(testGoalId);
 
       expect(result).toContain('Fully Completed Topic');
-    });
-  });
-
-  describe('deletePlanSession', () => {
-    it('should delete a specific session', async () => {
-      const planData: NewWeeklyPlan = {
-        goalId: testGoalId,
-        weekNumber: 9,
-        weekStartDate: new Date('2024-02-26'),
-        focusArea: 'Delete Session Test',
-        totalMinutes: 60
-      };
-
-      const plan = await createWeeklyPlan(planData, testSessions);
-      const sessionToDelete = plan.sessions[0].id;
-
-      const result = await deletePlanSession(sessionToDelete);
-
-      expect(result).toBe(true);
-
-      const updatedPlan = await getWeeklyPlanById(plan.id);
-      expect(updatedPlan?.sessions).toHaveLength(2);
     });
   });
 

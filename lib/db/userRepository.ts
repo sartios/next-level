@@ -34,16 +34,3 @@ export async function getUserById(id: string): Promise<User | undefined> {
   const results = await db.select().from(users).where(eq(users.id, id)).limit(1);
   return results[0];
 }
-
-/**
- * Update a user
- */
-export async function updateUser(id: string, userData: Partial<NewUser>): Promise<User | undefined> {
-  const db = requireDb();
-  const [updated] = await db
-    .update(users)
-    .set({ ...userData, updatedAt: new Date() })
-    .where(eq(users.id, id))
-    .returning();
-  return updated;
-}
