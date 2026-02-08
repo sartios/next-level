@@ -1,16 +1,5 @@
 import { Separator } from '@/components/ui/separator';
 
-const footerLinks = {
-  product: [
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'FAQ', href: '#faq' }
-  ],
-  team: [
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' }
-  ]
-};
-
 export default function Footer() {
   return (
     <footer className="bg-background max-w-6xl mx-auto mt-10 md:mt-20 xl:mt-28">

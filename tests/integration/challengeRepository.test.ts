@@ -24,7 +24,6 @@ describe('challengeRepository integration tests', () => {
   let testSectionId: string;
   let testSection2Id: string;
   let easyChallengeId: string;
-  let mediumChallengeId: string;
 
   const sampleQuestions: NewChallengeQuestion[] = [
     {
