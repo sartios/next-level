@@ -1,5 +1,7 @@
 # Opik Integration
 
+See also: [agents](agents.md) | [embeddings](embeddings.md) | [scheduling](scheduling.md) | [architecture](architecture.md).
+
 Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observability: tracing, prompt management, evaluations, and prompt optimization.
 
 ## What We Trace
@@ -16,9 +18,9 @@ Every LLM call captures: **prompts**, **generations**, **model**, **provider**, 
 
 ## Tracing Architecture
 
-### `NextLevelOpikCallbackHandler` (`lib/trace/handler.ts`)
+### [`NextLevelOpikCallbackHandler`](../lib/trace/handler.ts)
 
-Custom LangChain `BaseCallbackHandler` (forked from `opik-langchain`) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces.
+Custom LangChain `BaseCallbackHandler` (forked from [`opik-langchain`](https://github.com/comet-ml/opik/tree/main/sdks/typescript/src/opik/integrations/opik-langchain)) that handles all tracing. Key feature: **parent injection** — accepts an existing `Trace` or `Span` and nests all LangChain-generated spans under it, avoiding the duplicate traces.
 
 ```typescript
 const trace = createAgentTrace('agent-name', 'operation', { input, metadata, tags });
@@ -71,6 +73,68 @@ Handles all LangChain lifecycle events: `handleChatModelStart`, `handleLLMEnd`, 
   └── ...
 ```
 
+## Automated Span Scoring
+
+The `ChallengeGeneratorAgent` attaches a score directly to the `generate-questions` span when the LLM returns an unexpected question count:
+
+```typescript
+generateQuestionsSpan?.score({
+  name: 'needs_review',
+  value: 0,
+  reason: `Expected ${QUESTIONS_PER_CHALLENGE} questions but got ${questions.length}`,
+  categoryName: 'question_count_mismatch'
+});
+```
+
+This makes mismatches filterable in the Opik dashboard. The trace is also tagged with `['review', 'question-count-mismatch']` for easy discovery.
+
+## Trace Metadata
+
+Every trace carries structured metadata for filtering and debugging in the Opik dashboard. Metadata is built in layers:
+
+### [`Base metadata`](../lib/opik.ts)
+
+All traces automatically include:
+
+| Key           | Value                       |
+| ------------- | --------------------------- |
+| `environment` | `process.env.NODE_ENV`      |
+| `version`     | `'1.0.0'`                   |
+| `agentName`   | The agent identifier string |
+
+### Per-agent metadata
+
+Each agent merges additional keys via the `metadata` option:
+
+| Agent                                       | Extra keys                                         |
+| ------------------------------------------- | -------------------------------------------------- |
+| **UserSkillAgent**                          | `userId`                                           |
+| **SkillResourceRetrieverAgent**             | `userId`, `goalId`                                 |
+| **ChallengeGeneratorAgent** (per challenge) | `goalId`, `challengeId`, `sectionId`, `difficulty` |
+| **ChallengeGeneratorAgent** (top-level)     | `goalId`, `userId`, `resourceId`                   |
+
+### Auto-captured LangChain metadata (`NextLevelOpikCallbackHandler`)
+
+The callback handler extracts metadata from LangChain's internal run context and attaches it to spans:
+
+| Key               | Source                                  |
+| ----------------- | --------------------------------------- |
+| `ls_provider`     | LLM provider (e.g. `openai`)            |
+| `ls_model_name`   | Model identifier (e.g. `gpt-5-mini`)    |
+| `tools`           | Tool definitions from invocation params |
+| Invocation params | Temperature, top_p, etc.                |
+
+### [`Prompt metadata`](../lib/prompts/agentPrompts.ts)
+
+Each prompt definition includes metadata for the Opik prompt registry:
+
+| Key         | Example values                                      |
+| ----------- | --------------------------------------------------- |
+| `agent`     | `'user-skill-agent'`, `'challenge-generator-agent'` |
+| `type`      | `'system-prompt'`, `'user-prompt'`                  |
+| `operation` | `'generate'`, `'search'`                            |
+| `category`  | `'career-development'`, `'resource-discovery'`      |
+
 ## Prompt Management
 
 Prompts are managed through Opik and fetched at runtime with local fallback and 5-minute caching.
@@ -89,25 +153,25 @@ Runs agents against test datasets and scores output quality using Opik's built-i
 
 ### Metrics
 
-| Metric              | What it checks                                      |
-| ------------------- | --------------------------------------------------- |
-| **Hallucination**   | Is the output grounded in context (not fabricated)? |
-| **AnswerRelevance** | Is the output relevant to the input prompt?         |
-| **Usefulness**      | Is the output practically useful for the user?      |
+| Metric                                                                                     | What it checks                                      |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| [**Hallucination** ](https://www.comet.com/docs/opik/evaluation/metrics/hallucination)     | Is the output grounded in context (not fabricated)? |
+| [**AnswerRelevance**](https://www.comet.com/docs/opik/evaluation/metrics/answer_relevance) | Is the output relevant to the input prompt?         |
+| [**Usefulness**](https://www.comet.com/docs/opik/evaluation/metrics/usefulness)            | Is the output practically useful for the user?      |
 
 ### Evaluated Agents
 
-| CLI key                    | Agent                       | Dataset                                              |
-| -------------------------- | --------------------------- | ---------------------------------------------------- |
-| `user-skill-agent`         | UserSkillAgent              | `evals/datasets/user-skill-agent.json`               |
-| `skill-resource-retriever` | SkillResourceRetrieverAgent | `evals/datasets/skill-resource-retriever-agent.json` |
-| `challenge-generator`      | ChallengeGeneratorAgent     | `evals/datasets/challenge-generator-agent.json`      |
+| CLI key                    | Agent                       | Dataset                                                            |
+| -------------------------- | --------------------------- | ------------------------------------------------------------------ |
+| `user-skill-agent`         | UserSkillAgent              | [`dataset`](../evals/datasets/user-skill-agent.json)               |
+| `skill-resource-retriever` | SkillResourceRetrieverAgent | [`dataset`](../evals/datasets/skill-resource-retriever-agent.json) |
+| `challenge-generator`      | ChallengeGeneratorAgent     | [`dataset`](../evals/datasets/challenge-generator-agent.json)      |
 
 ### How it works
 
 1. **Dataset loading** — Test fixtures from local JSON or the Opik platform (`--source opik`).
-2. **DB seeding** — `evals/seed.ts` populates the database with test data so agents can run against real records.
-3. **Task execution** — Each task function (`evals/tasks/*.ts`) calls the real agent and returns `{ input, output, context }` for the judges.
+2. **DB seeding** — [`evals/seed.ts`](../evals/seed.ts) populates the database with test data so agents can run against real records.
+3. **Task execution** — Each task function ([`evals/tasks/*.ts`](../evals/tasks/)) calls the real agent and returns `{ input, output, context }` for the judges.
 4. **Scoring** — Opik's `evaluate()` runs the three judge metrics against each task result.
 5. **Results** — Stored as Opik experiments linked to their datasets, viewable in the Opik dashboard.
 
@@ -147,11 +211,11 @@ Automated prompt improvement using `opik-optimizer` (`optimize/`). Each agent ha
 
 ### Optimizer scripts
 
-| Script                                                 | Agent                       | Model         |
-| ------------------------------------------------------ | --------------------------- | ------------- |
-| `optimize/meta_optimizers/user_skill_agent.py`         | UserSkillAgent              | `gpt-4o-mini` |
-| `optimize/meta_optimizers/skill_resource_retriever.py` | SkillResourceRetrieverAgent | `gpt-4o-mini` |
-| `optimize/meta_optimizers/challenge_generator.py`      | ChallengeGeneratorAgent     | `gpt-4o-mini` |
+| Script                                                                                   | Agent                       | Model         |
+| ---------------------------------------------------------------------------------------- | --------------------------- | ------------- |
+| [`user_skill_agent.py`](../optimize/meta_optimizers/user_skill_agent.py)                 | UserSkillAgent              | `gpt-4o-mini` |
+| [`skill_resource_retriever.py`](../optimize/meta_optimizers/skill_resource_retriever.py) | SkillResourceRetrieverAgent | `gpt-4o-mini` |
+| [`challenge_generator.py`](../optimize/meta_optimizers/challenge_generator.py)           | ChallengeGeneratorAgent     | `gpt-4o-mini` |
 
 ### CLI usage
 

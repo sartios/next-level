@@ -1,5 +1,7 @@
 # Embeddings Architecture
 
+See also: [agents](agents.md) (semantic search usage), [opik](opik.md) (tracing), [architecture](architecture.md).
+
 ## Overview
 
 Semantic search over curated learning resources using OpenAI embeddings + PostgreSQL pgvector.
@@ -14,13 +16,13 @@ Semantic search over curated learning resources using OpenAI embeddings + Postgr
 | Text Truncation      | 30,000 chars             |
 | Similarity Threshold | 0.5                      |
 
-## Embedding Creation (`lib/embeddings/index.ts`)
+## [`Embedding Creation`](../lib/embeddings/index.ts)
 
 - `createEmbedding(text)` — single text → `number[]`
 - `createEmbeddings(texts)` — batch texts → `number[][]`, processes in groups of 100
 - Singleton `OpenAIEmbeddings` client, auto-truncates text to 30k chars
 
-## Database Schema (`lib/db/schema.ts`)
+## [`Database Schema`](../lib/db/schema.ts)
 
 Table `resource_embeddings`:
 
@@ -36,7 +38,7 @@ learningResources (1) → many(resourceEmbeddings)
 learningResourceSections (1) → many(resourceEmbeddings)
 ```
 
-## Storage & Search (`lib/db/embeddingRepository.ts`)
+## [`Storage & Search`](../lib/db/embeddingRepository.ts)
 
 **Write:**
 
@@ -47,7 +49,7 @@ learningResourceSections (1) → many(resourceEmbeddings)
 - `searchEmbeddings(queryEmbedding, options)` — generic search with optional content type filter
 - `getUniqueResourcesFromResults()` — deduplicates by resource ID, keeps best similarity score
 
-## Resource Import Pipeline (`lib/resources/importer.ts`)
+## [`Resource Import Pipeline`](../lib/resources/importer.ts)
 
 When a resource is imported, multiple embeddings are generated:
 
@@ -59,14 +61,14 @@ When a resource is imported, multiple embeddings are generated:
 
 Flow: `importResourcesFromJson()` → `importSingleResource()` → `prepareEmbeddingItems()` → `createEmbeddings()` → `insertResourceEmbeddings()`
 
-## Search Tool (`lib/tools/searchCuratedResourcesTool.ts`)
+## [`Search Tool`](../lib/tools/searchCuratedResourcesTool.ts)
 
 - `searchCuratedResources(query, limit)` — embeds query, searches with 2x limit for dedup headroom, filters by similarity ≥ 0.5, returns unique resources
 - `searchCuratedResourcesTool` — LangChain tool wrapper for agent use
 
 ## Agent Usage
 
-**SkillResourceRetrieverAgent** (`lib/agents/SkillResourceRetrieverAgent.ts`):
+[**`SkillResourceRetrieverAgent`**](../lib/agents/SkillResourceRetrieverAgent.ts)
 
 1. LLM generates 5 search queries based on user profile/goals
 2. Each query → `searchCuratedResources(query, 3)`

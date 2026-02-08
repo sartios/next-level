@@ -54,7 +54,8 @@ cp .env.example .env
 | `OPENAI_API_KEY`    | OpenAI API key for LangChain agents and embeddings | Yes      |
 | `DATABASE_URL`      | PostgreSQL connection string                       | Yes      |
 | `OPIK_API_KEY`      | Opik API key for tracing                           | Yes      |
-| `OPIK_PROJECT_NAME` | Opik project name (default: `next-level`)          | Yes      |
+| `OPIK_PROJECT_NAME` | Opik project name                                  | Yes      |
+| `OPIK_WORKSPACE`    | Opik workspace                                     | Yes      |
 | `NODE_ENV`          | Environment (`development`, `production`)          | No       |
 
 3. Start the database and run migrations:
