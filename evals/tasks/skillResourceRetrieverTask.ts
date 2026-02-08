@@ -1,4 +1,4 @@
-import skillResourceAgent from '@/lib/agents/SkillResourceRetrieverAgent';
+import { streamResources } from '@/lib/agents/SkillResourceRetrieverAgent';
 import { SkillResourceDatasetItem } from '../types';
 import { getAgentPrompt } from '@/lib/prompts';
 import { LearningResourceWithSections } from '@/lib/types';
@@ -15,7 +15,7 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   // Use streaming method and collect the complete result
   let resources: LearningResourceWithSections[] = [];
 
-  for await (const event of skillResourceAgent.streamResources(item.input.user, item.input.goal, {
+  for await (const event of streamResources(item.input.user, item.input.goal, {
     tags: ['evaluation', 'skill-resource-retriever'],
     metadata: {
       evaluationId: item.id,

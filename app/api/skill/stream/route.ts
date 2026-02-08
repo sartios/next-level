@@ -1,4 +1,4 @@
-import UserSkillAgent from '@/lib/agents/UserSkillAgent';
+import { streamSkillSuggestions } from '@/lib/agents/UserSkillAgent';
 import { getUserById } from '@/lib/db/userRepository';
 import { NextRequest } from 'next/server';
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const eventGenerator = UserSkillAgent.streamSkillSuggestions(user, {
+        const eventGenerator = streamSkillSuggestions(user, {
           metadata: { invokedBy: 'GET /api/skill/stream' }
         });
 

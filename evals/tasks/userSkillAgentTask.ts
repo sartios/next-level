@@ -1,4 +1,4 @@
-import userSkillAgent from '@/lib/agents/UserSkillAgent';
+import { streamSkillSuggestions } from '@/lib/agents/UserSkillAgent';
 import { UserSkillDatasetItem } from '../types';
 import { getAgentPrompt } from '@/lib/prompts';
 
@@ -14,7 +14,7 @@ export async function userSkillAgentTask(item: UserSkillDatasetItem): Promise<{
   // Use streaming method with dataset user and collect the complete result
   let skills: { name: string; priority: number; reasoning: string }[] = [];
 
-  for await (const event of userSkillAgent.streamSkillSuggestions(item.input.user, {
+  for await (const event of streamSkillSuggestions(item.input.user, {
     tags: ['evaluation', 'user-skill-agent'],
     metadata: {
       evaluationId: item.id,

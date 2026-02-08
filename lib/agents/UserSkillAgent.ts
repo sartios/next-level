@@ -61,96 +61,94 @@ interface SkillSuggestionResponse {
   skills: SuggestedSkill[];
 }
 
-class UserSkillAgent {
-  protected readonly agentName = 'user-skill-agent';
+const AGENT_NAME = 'user-skill-agent';
 
-  public async *streamSkillSuggestions(user: User, opikOptions?: OpikHandlerOptions): AsyncGenerator<UserSkillStreamEvent> {
-    if (!user) {
-      throw new Error('User is required');
-    }
-    const userId = user.id;
+export async function* streamSkillSuggestions(user: User, opikOptions?: OpikHandlerOptions): AsyncGenerator<UserSkillStreamEvent> {
+  if (!user) {
+    throw new Error('User is required');
+  }
+  const userId = user.id;
 
-    const emittedSkills: SuggestedSkill[] = [];
+  const emittedSkills: SuggestedSkill[] = [];
 
-    const trace = createAgentTrace(this.agentName, 'stream', {
-      input: { role: user.role, skills: user.skills, careerGoals: user.careerGoals },
-      metadata: { userId, ...opikOptions?.metadata },
-      tags: opikOptions?.tags,
-      threadId: opikOptions?.threadId
+  const trace = createAgentTrace(AGENT_NAME, 'stream', {
+    input: { role: user.role, skills: user.skills, careerGoals: user.careerGoals },
+    metadata: { userId, ...opikOptions?.metadata },
+    tags: opikOptions?.tags,
+    threadId: opikOptions?.threadId
+  });
+
+  try {
+    yield { type: 'token', userId, content: 'Analyzing your profile...' };
+
+    const llm = createStreamingLLM('gpt-5-mini');
+    const [systemPrompt, userPrompt] = await Promise.all([buildSystemPrompt(user), buildUserPrompt(user)]);
+
+    yield { type: 'token', userId, content: 'Generating skill suggestions...' };
+
+    const traceHandler = new NextLevelOpikCallbackHandler({ parent: trace });
+    const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
+      callbacks: [traceHandler],
+      runName: `${AGENT_NAME}:stream`
     });
 
-    try {
-      yield { type: 'token', userId, content: 'Analyzing your profile...' };
+    let skillIndex = 0;
+    let buffer = '';
 
-      const llm = createStreamingLLM('gpt-5-mini');
-      const [systemPrompt, userPrompt] = await Promise.all([buildSystemPrompt(user), buildUserPrompt(user)]);
+    for await (const chunk of stream) {
+      const content = chunk.content;
+      if (typeof content !== 'string') continue;
 
-      yield { type: 'token', userId, content: 'Generating skill suggestions...' };
+      buffer += content;
 
-      const traceHandler = new NextLevelOpikCallbackHandler({ parent: trace });
-      const stream = await llm.stream([new SystemMessage(systemPrompt), new HumanMessage(userPrompt)], {
-        callbacks: [traceHandler],
-        runName: `${this.agentName}:stream`
-      });
+      // Try to extract complete JSON lines
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || ''; // Keep incomplete line in buffer
 
-      let skillIndex = 0;
-      let buffer = '';
+      for (const line of lines) {
+        const parsed = tryParseJsonLine(line);
+        if (parsed !== null) {
+          const skill: SuggestedSkill = {
+            id: `skill-${userId}-${skillIndex++}`,
+            userId,
+            name: parsed.name,
+            priority: parsed.priority,
+            reasoning: parsed.reasoning
+          };
+          emittedSkills.push(skill);
 
-      for await (const chunk of stream) {
-        const content = chunk.content;
-        if (typeof content !== 'string') continue;
-
-        buffer += content;
-
-        // Try to extract complete JSON lines
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || ''; // Keep incomplete line in buffer
-
-        for (const line of lines) {
-          const parsed = tryParseJsonLine(line);
-          if (parsed !== null) {
-            const skill: SuggestedSkill = {
-              id: `skill-${userId}-${skillIndex++}`,
-              userId,
-              name: parsed.name,
-              priority: parsed.priority,
-              reasoning: parsed.reasoning
-            };
-            emittedSkills.push(skill);
-
-            yield { type: 'skill', userId, skill };
-          }
+          yield { type: 'skill', userId, skill };
         }
       }
-
-      // Process any remaining content in buffer
-      const lastParsed = tryParseJsonLine(buffer);
-      if (lastParsed !== null) {
-        const skill: SuggestedSkill = {
-          id: `skill-${userId}-${skillIndex++}`,
-          userId,
-          name: lastParsed.name,
-          priority: lastParsed.priority,
-          reasoning: lastParsed.reasoning
-        };
-        emittedSkills.push(skill);
-        yield { type: 'skill', userId, skill };
-      }
-
-      yield {
-        type: 'complete',
-        userId,
-        result: { skills: emittedSkills }
-      };
-    } catch (err) {
-      const errorInfo = parseErrorInfo(err);
-      trace?.update({ errorInfo });
-      yield { type: 'token', userId, content: `__stream_error__: ${errorInfo.message}` };
-      throw err;
-    } finally {
-      trace?.update({ endTime: new Date() });
-      await getOpikClient()?.flush();
     }
+
+    // Process any remaining content in buffer
+    const lastParsed = tryParseJsonLine(buffer);
+    if (lastParsed !== null) {
+      const skill: SuggestedSkill = {
+        id: `skill-${userId}-${skillIndex++}`,
+        userId,
+        name: lastParsed.name,
+        priority: lastParsed.priority,
+        reasoning: lastParsed.reasoning
+      };
+      emittedSkills.push(skill);
+      yield { type: 'skill', userId, skill };
+    }
+
+    yield {
+      type: 'complete',
+      userId,
+      result: { skills: emittedSkills }
+    };
+  } catch (err) {
+    const errorInfo = parseErrorInfo(err);
+    trace?.update({ errorInfo });
+    yield { type: 'token', userId, content: `__stream_error__: ${errorInfo.message}` };
+    throw err;
+  } finally {
+    trace?.update({ endTime: new Date() });
+    await getOpikClient()?.flush();
   }
 }
 
@@ -164,6 +162,3 @@ export interface UserSkillStreamEvent {
   skill?: SuggestedSkill;
   result?: SkillSuggestionResponse;
 }
-
-const userSkillAgentInstance = new UserSkillAgent();
-export default userSkillAgentInstance;
