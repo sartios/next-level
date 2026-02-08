@@ -1,5 +1,7 @@
 # Embeddings Architecture
 
+See also: [agents](agents.md) (semantic search usage), [opik](opik.md) (tracing), [architecture](architecture.md).
+
 ## Overview
 
 Semantic search over curated learning resources using OpenAI embeddings + PostgreSQL pgvector.

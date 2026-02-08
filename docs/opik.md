@@ -1,5 +1,7 @@
 # Opik Integration
 
+See also: [agents](agents.md) | [embeddings](embeddings.md) | [scheduling](scheduling.md) | [architecture](architecture.md).
+
 Next Level uses [Opik](https://www.comet.com/docs/opik/) for full LLM observability: tracing, prompt management, evaluations, and prompt optimization.
 
 ## What We Trace
