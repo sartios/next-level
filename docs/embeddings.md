@@ -6,13 +6,13 @@ Semantic search over curated learning resources using OpenAI embeddings + Postgr
 
 ## Configuration
 
-| Parameter            | Value                    | Location                                  |
-| -------------------- | ------------------------ | ----------------------------------------- |
-| Model                | `text-embedding-3-small` | `lib/embeddings/index.ts`                 |
-| Dimensions           | 1536                     | `lib/embeddings/index.ts`                 |
-| Batch Size           | 100                      | `lib/embeddings/index.ts`                 |
-| Text Truncation      | 30,000 chars             | `lib/embeddings/index.ts`                 |
-| Similarity Threshold | 0.5                      | `lib/tools/searchCuratedResourcesTool.ts` |
+| Parameter            | Value                    |
+| -------------------- | ------------------------ |
+| Model                | `text-embedding-3-small` |
+| Dimensions           | 1536                     |
+| Batch Size           | 100                      |
+| Text Truncation      | 30,000 chars             |
+| Similarity Threshold | 0.5                      |
 
 ## Embedding Creation (`lib/embeddings/index.ts`)
 
@@ -40,11 +40,12 @@ learningResourceSections (1) → many(resourceEmbeddings)
 
 **Write:**
 
+- `insertResourceEmbedding()` — single insert
 - `insertResourceEmbeddings()` — batch insert
 
 **Search (pgvector cosine distance `<=>`):**
 
-- `searchEmbeddings(queryEmbedding, options)` — generic search with optional `contentTypes` filter and `limit`
+- `searchEmbeddings(queryEmbedding, options)` — generic search with optional content type filter
 - `getUniqueResourcesFromResults()` — deduplicates by resource ID, keeps best similarity score
 
 ## Resource Import Pipeline (`lib/resources/importer.ts`)
