@@ -69,6 +69,8 @@ export default function Calendar({ isLoading, selectedSlots, toggleSlot }: Calen
               return (
                 <button
                   key={day}
+                  aria-label={day}
+                  aria-pressed={isActive}
                   onClick={() => setSelectedDay(day)}
                   disabled={isLoading}
                   className={`shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
