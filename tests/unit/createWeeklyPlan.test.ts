@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  createWeeklyPlans,
   generateSingleWeekPlan,
   generateSessionsForNewSlots,
   scheduleToAvailabilitySlots,
@@ -473,6 +474,177 @@ describe('createWeeklyPlan utility functions', () => {
 
       // Introduction section has topics: ['Overview', 'Setup']
       expect(result.sessions[0].activities).toEqual(['Overview', 'Setup']);
+    });
+
+    it('should stay on last section when all sections have time fully spent', () => {
+      const input: GenerateSessionsForNewSlotsInput = {
+        newSlots: [{ dayOfWeek: 'Monday', startTime: '09:00', endTime: '09:30', durationMinutes: 30 }],
+        resource: mockResource,
+        completedSectionTitles: [],
+        allExistingSessions: [
+          { topic: 'Introduction', durationMinutes: 30 },
+          { topic: 'Core Concepts', durationMinutes: 60 },
+          { topic: 'Advanced Topics', durationMinutes: 45 }
+        ]
+      };
+
+      const result = generateSessionsForNewSlots(input);
+
+      expect(result.sessions).toHaveLength(1);
+      expect(result.sessions[0].topic).toBe('Advanced Topics');
+    });
+
+    it('should use fallback activity when section has no topics', () => {
+      const resourceWithNoTopics = {
+        ...mockResource,
+        sections: [
+          {
+            id: 'section-no-topics',
+            resourceId: 'resource-1',
+            title: 'Empty Topics Section',
+            estimatedMinutes: 30,
+            orderIndex: 0,
+            topics: []
+          }
+        ]
+      } as LearningResourceWithSections;
+
+      const input: GenerateSessionsForNewSlotsInput = {
+        newSlots: [{ dayOfWeek: 'Monday', startTime: '09:00', endTime: '09:30', durationMinutes: 30 }],
+        resource: resourceWithNoTopics,
+        completedSectionTitles: [],
+        allExistingSessions: []
+      };
+
+      const result = generateSessionsForNewSlots(input);
+
+      expect(result.sessions[0].activities).toEqual(['Study Empty Topics Section']);
+    });
+
+    it('should default slot duration to 30 when durationMinutes is 0', () => {
+      const input: GenerateSessionsForNewSlotsInput = {
+        newSlots: [{ dayOfWeek: 'Monday', startTime: '09:00', endTime: '09:30', durationMinutes: 0 }],
+        resource: mockResource,
+        completedSectionTitles: [],
+        allExistingSessions: []
+      };
+
+      const result = generateSessionsForNewSlots(input);
+
+      expect(result.sessions).toHaveLength(1);
+      // durationMinutes 0 is falsy, so `|| 30` fallback kicks in for section tracking
+      expect(result.sessions[0].durationMinutes).toBe(30);
+    });
+  });
+
+  describe('createWeeklyPlans', () => {
+    it('should create a single week plan when resource fits within weekly hours', () => {
+      // Total resource: 30 + 60 + 45 = 135 minutes
+      // Weekly hours: 3 (180 minutes) — fits in 1 week
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 3, '2024-01-01');
+
+      expect(result.totalWeeks).toBe(1);
+      expect(result.weeks).toHaveLength(1);
+      expect(result.weeks[0].plan.weekNumber).toBe(1);
+      expect(result.weeks[0].plan.goalId).toBe('goal-1');
+    });
+
+    it('should create multiple weeks when resource exceeds weekly capacity', () => {
+      // Total resource: 135 minutes, weekly hours: 1 (60 minutes) → 3 weeks
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 1, '2024-01-01');
+
+      expect(result.totalWeeks).toBe(3);
+      expect(result.weeks).toHaveLength(3);
+      expect(result.weeks[0].plan.weekNumber).toBe(1);
+      expect(result.weeks[1].plan.weekNumber).toBe(2);
+      expect(result.weeks[2].plan.weekNumber).toBe(3);
+    });
+
+    it('should calculate estimated completion date', () => {
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 3, '2024-01-01');
+
+      // 1 week → completion = start + 7 days
+      expect(result.estimatedCompletionDate).toBe('2024-01-08');
+    });
+
+    it('should set week start dates correctly', () => {
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 1, '2024-01-01');
+
+      expect(result.weeks[0].plan.weekStartDate.toISOString()).toContain('2024-01-01');
+      expect(result.weeks[1].plan.weekStartDate.toISOString()).toContain('2024-01-08');
+      expect(result.weeks[2].plan.weekStartDate.toISOString()).toContain('2024-01-15');
+    });
+
+    it('should distribute sessions across slots sorted by day', () => {
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 3, '2024-01-01');
+
+      const sessions = result.weeks[0].sessions;
+      expect(sessions[0].dayOfWeek).toBe('Monday');
+      expect(sessions[1].dayOfWeek).toBe('Wednesday');
+      expect(sessions[2].dayOfWeek).toBe('Friday');
+    });
+
+    it('should track completion percentage across weeks', () => {
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 1, '2024-01-01');
+
+      // Completion should increase across weeks
+      expect(result.weeks[0].plan.completionPercentage).toBeGreaterThan(0);
+      expect(result.weeks[0].plan.completionPercentage).toBeLessThanOrEqual(100);
+
+      const lastWeek = result.weeks[result.weeks.length - 1];
+      expect(lastWeek.plan.completionPercentage).toBe(100);
+    });
+
+    it('should set focusArea from section titles covered that week', () => {
+      const result = createWeeklyPlans('goal-1', mockResource, mockAvailabilitySlots, 3, '2024-01-01');
+
+      expect(result.weeks[0].plan.focusArea).toContain('Introduction');
+    });
+
+    it('should handle resource with no sections', () => {
+      const emptyResource = { ...mockResource, sections: [] } as LearningResourceWithSections;
+
+      const result = createWeeklyPlans('goal-1', emptyResource, mockAvailabilitySlots, 3, '2024-01-01');
+
+      expect(result.totalWeeks).toBe(1);
+      expect(result.weeks[0].sessions).toHaveLength(0);
+      expect(result.weeks[0].plan.focusArea).toBe('Getting Started');
+    });
+
+    it('should handle sections without estimatedMinutes by defaulting to 30', () => {
+      const resourceWithNoEstimate = {
+        ...mockResource,
+        sections: [
+          {
+            id: 'section-1',
+            resourceId: 'resource-1',
+            title: 'No Estimate Section',
+            estimatedMinutes: null,
+            orderIndex: 0,
+            topics: ['Topic 1']
+          }
+        ]
+      } as unknown as LearningResourceWithSections;
+
+      const result = createWeeklyPlans('goal-1', resourceWithNoEstimate, mockAvailabilitySlots, 1, '2024-01-01');
+
+      // 30 minutes default / 60 weekly minutes = 1 week
+      expect(result.totalWeeks).toBe(1);
+    });
+
+    it('should advance to next section when current section time is exhausted', () => {
+      // 2 slots of 30 min each, first section is 30 min
+      const slots: AvailabilitySlot[] = [
+        { day: 'Monday', startTime: '09:00', endTime: '09:30', durationMinutes: 30 },
+        { day: 'Tuesday', startTime: '09:00', endTime: '09:30', durationMinutes: 30 }
+      ];
+
+      const result = createWeeklyPlans('goal-1', mockResource, slots, 3, '2024-01-01');
+
+      const sessions = result.weeks[0].sessions;
+      // First slot covers Introduction (30 min), second should move to Core Concepts
+      expect(sessions[0].topic).toBe('Introduction');
+      expect(sessions[1].topic).toBe('Core Concepts');
     });
   });
 });
