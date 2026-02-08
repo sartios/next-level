@@ -2,7 +2,7 @@
 
 Most new year's resolutions fail because people set ambitious goals without a clear plan to get there. Next Level turns career growth resolutions into actionable learning paths. Users define their role, current skills, and career goals, and LangChain agents take it from there: recommending skills to acquire, discovering curated learning resources via semantic search, and generating quiz challenges to reinforce knowledge. Adaptive weekly study plans are built around the user's availability without AI, using [algorithmic scheduling](docs/scheduling.md).
 
-Built as part of the [Opik Hackathon](https://www.comet.com/site/opik/).
+Built as part of the [Opik Hackathon](https://www.encodeclub.com/programmes/comet-resolution-v2-hackathon).
 
 ## Architecture
 
@@ -18,7 +18,7 @@ Next.js frontend streams responses from LangChain agents, backed by PostgreSQL w
 
 ## Opik Integration
 
-This project uses [Opik](https://www.comet.com/site/opik/) across the full LLM development lifecycle. See [docs/opik.md](docs/opik.md) for the detailed integration guide.
+This project uses [Opik](https://www.comet.com/docs/opik/) across the full LLM development lifecycle. See [docs/opik.md](docs/opik.md) for the detailed integration guide.
 
 - **Tracing** — Every agent call is traced with hierarchical parent/child spans via a custom LangChain callback handler, giving full visibility into LLM inputs, outputs, and token usage.
 - **Prompt Management** — Agent prompts are versioned and managed in Opik. Prompts are fetched at runtime with a local fallback, enabling A/B testing and iteration without code changes.
