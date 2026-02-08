@@ -68,7 +68,7 @@ Flow: `importResourcesFromJson()` → `importSingleResource()` → `prepareEmbed
 
 ## Agent Usage
 
-**SkillResourceRetrieverAgent** (`lib/agents/SkillResourceRetrieverAgent.ts`):
+[**`SkillResourceRetrieverAgent`**](../lib/agents/SkillResourceRetrieverAgent.ts)
 
 1. LLM generates 5 search queries based on user profile/goals
 2. Each query → `searchCuratedResources(query, 3)`
