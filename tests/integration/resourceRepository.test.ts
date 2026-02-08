@@ -7,8 +7,6 @@ import {
   getLearningResourceByUrl,
   getLearningResourceById,
   getLearningResourceWithSections,
-  getLearningResourcesByIds,
-  getLearningResourcesWithSections,
   getResourceSections,
   insertResourceSections
 } from '../../lib/db/resourceRepository';
@@ -137,38 +135,6 @@ describe('resourceRepository integration tests', () => {
       const result = await getLearningResourceWithSections('00000000-0000-0000-0000-000000000000');
 
       expect(result).toBeUndefined();
-    });
-  });
-
-  describe('getLearningResourcesByIds', () => {
-    it('should retrieve multiple resources by IDs', async () => {
-      const result = await getLearningResourcesByIds([insertedResourceId]);
-
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe(insertedResourceId);
-    });
-
-    it('should return empty array for empty ID list', async () => {
-      const result = await getLearningResourcesByIds([]);
-
-      expect(result).toEqual([]);
-    });
-  });
-
-  describe('getLearningResourcesWithSections', () => {
-    it('should retrieve multiple resources with sections', async () => {
-      const result = await getLearningResourcesWithSections([insertedResourceId]);
-
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe(insertedResourceId);
-      expect(result[0].sections).toBeDefined();
-      expect(result[0].sections.length).toBeGreaterThanOrEqual(3);
-    });
-
-    it('should return empty array for empty ID list', async () => {
-      const result = await getLearningResourcesWithSections([]);
-
-      expect(result).toEqual([]);
     });
   });
 });

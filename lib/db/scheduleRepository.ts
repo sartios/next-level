@@ -78,21 +78,6 @@ export async function createSchedule(scheduleData: NewSchedule, slots: NewSchedu
 }
 
 /**
- * Get a schedule by ID with its slots
- */
-export async function getScheduleById(id: string): Promise<ScheduleWithSlots | undefined> {
-  const db = requireDb();
-  const results = await db.select().from(schedules).where(eq(schedules.id, id)).limit(1);
-
-  if (results.length === 0) return undefined;
-
-  const schedule = results[0];
-  const slots = await db.select().from(scheduleSlots).where(eq(scheduleSlots.scheduleId, id));
-
-  return { ...schedule, slots };
-}
-
-/**
  * Get schedule by user and goal
  */
 export async function getScheduleByUserAndGoal(userId: string, goalId: string): Promise<ScheduleWithSlots | undefined> {
@@ -109,14 +94,6 @@ export async function getScheduleByUserAndGoal(userId: string, goalId: string): 
   const slots = await db.select().from(scheduleSlots).where(eq(scheduleSlots.scheduleId, schedule.id));
 
   return { ...schedule, slots };
-}
-
-/**
- * Get all schedules for a user
- */
-export async function getSchedulesByUserId(userId: string): Promise<Schedule[]> {
-  const db = requireDb();
-  return db.select().from(schedules).where(eq(schedules.userId, userId));
 }
 
 /**
@@ -162,15 +139,6 @@ export async function updateSchedule(
   }
 
   return { ...updated, slots };
-}
-
-/**
- * Delete a schedule and its slots
- */
-export async function deleteSchedule(id: string): Promise<boolean> {
-  const db = requireDb();
-  const result = await db.delete(schedules).where(eq(schedules.id, id)).returning();
-  return result.length > 0;
 }
 
 /**

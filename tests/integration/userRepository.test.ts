@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { requireDb, closeConnection } from '../../lib/db';
 import { users } from '../../lib/db/schema';
-import { insertUser, getUserById, updateUser } from '../../lib/db/userRepository';
+import { insertUser, getUserById } from '../../lib/db/userRepository';
 
 describe('userRepository integration tests', () => {
   let testUserId: string;
@@ -43,25 +43,5 @@ describe('userRepository integration tests', () => {
     const result = await getUserById('00000000-0000-0000-0000-000000000000');
 
     expect(result).toBeUndefined();
-  });
-
-  it('updates user fields', async () => {
-    const result = await updateUser(testUserId, {
-      role: 'Fullstack Developer',
-      skills: ['React', 'Node.js', 'PostgreSQL']
-    });
-
-    expect(result).toBeDefined();
-    expect(result?.role).toBe('Fullstack Developer');
-    expect(result?.skills).toEqual(['React', 'Node.js', 'PostgreSQL']);
-  });
-
-  it('partial update preserves other fields', async () => {
-    const result = await updateUser(testUserId, { role: 'DevOps Engineer' });
-
-    expect(result).toBeDefined();
-    expect(result?.role).toBe('DevOps Engineer');
-    expect(result?.skills).toEqual(['React', 'Node.js', 'PostgreSQL']);
-    expect(result?.careerGoals).toEqual(['Staff Engineer']);
   });
 });

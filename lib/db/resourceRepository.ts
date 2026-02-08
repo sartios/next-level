@@ -54,30 +54,6 @@ export async function getLearningResourceWithSections(id: string): Promise<Learn
   return { ...resource, sections };
 }
 
-/**
- * Get multiple learning resources by IDs
- */
-export async function getLearningResourcesByIds(ids: string[]): Promise<LearningResource[]> {
-  if (ids.length === 0) return [];
-  const db = requireDb();
-  return db.select().from(learningResources).where(inArray(learningResources.id, ids));
-}
-
-/**
- * Get multiple learning resources by IDs with sections
- */
-export async function getLearningResourcesWithSections(ids: string[]): Promise<LearningResourceWithSections[]> {
-  if (ids.length === 0) return [];
-
-  const resources = await getLearningResourcesByIds(ids);
-  const sectionsMap = await getResourceSectionsBatch(ids);
-
-  return resources.map((r) => ({
-    ...r,
-    sections: sectionsMap.get(r.id) || []
-  }));
-}
-
 // ============================================================================
 // Learning Resource Sections
 // ============================================================================
