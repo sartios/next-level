@@ -59,12 +59,11 @@ Remember to exclude skills they already have.
 User Profile:
 - Role: {{userRole}}
 - Current Skills: {{userSkills}}
-- Career Goals: {{userCareerGoals}}
 
 Learning Goal: {{goalName}}
 Goal Reasoning: {{goalReasoning}}
 
-Generate 3-5 search queries to find the most relevant learning resources for this user's goal.
+Generate 3-5 search queries to find the most relevant learning resources for this user's learning goal.
 `,
     metadata: {
       agent: 'skill-resource-retriever-agent',

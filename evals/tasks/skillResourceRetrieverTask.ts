@@ -1,11 +1,14 @@
 import { streamResources } from '@/lib/agents/SkillResourceRetrieverAgent';
 import { SkillResourceDatasetItem } from '../types';
-import { getAgentPrompt } from '@/lib/prompts';
 import { LearningResourceWithSections } from '@/lib/types';
 
 /**
  * Evaluation task for the SkillResourceRetrieverAgent.
  * Tests RAG retrieval quality using streaming and Opik's built-in LLM-as-judge metrics.
+ *
+ * The agent uses a hybrid approach: LLM generates search queries internally, then semantic search
+ * retrieves resources from embeddings. The judge evaluates the final resource output, not the
+ * intermediate query generation step.
  */
 export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem): Promise<{
   input: string;
@@ -27,20 +30,6 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
       resources = event.result.resources;
     }
   }
-
-  // Resolve prompts with the same variables the agent uses
-  const queryPromptVariables = {
-    userRole: item.input.user.role,
-    userSkills: item.input.user.skills.join(', '),
-    userCareerGoals: item.input.user.careerGoals.join(', '),
-    goalName: item.input.goal.name,
-    goalReasoning: item.input.goal.reasoning
-  };
-
-  const [systemPrompt, userPrompt] = await Promise.all([
-    getAgentPrompt('skill-resource-retriever-agent:query-generation-system-prompt'),
-    getAgentPrompt('skill-resource-retriever-agent:query-generation-user-prompt', queryPromptVariables)
-  ]);
 
   // Build context for grounding the evaluation
   // Include retrieved resources as context so the Hallucination metric can verify
@@ -73,7 +62,10 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   }));
 
   return {
-    input: `${systemPrompt}\n\n${userPrompt}`,
+    // Build the input describing the end-to-end resource retrieval task.
+    // The agent has no standalone system prompt — it only has query-generation prompts used internally.
+    // The judge should evaluate whether the retrieved resources match the user's profile and goal.
+    input: 'Find curated learning resources for this user and goal.',
     output: JSON.stringify(output),
     context
   };
