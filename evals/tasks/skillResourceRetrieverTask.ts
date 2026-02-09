@@ -31,6 +31,18 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
     }
   }
 
+  // Build the input describing the end-to-end resource retrieval task.
+  // The agent has no standalone system prompt — it only has query-generation prompts used internally.
+  // The judge should evaluate whether the retrieved resources match the user's profile and goal.
+  const input = [
+    `User profile and learning goal:`,
+    `Role: ${item.input.user.role}`,
+    `Current skills: ${item.input.user.skills.join(', ')}`,
+    `Learning goal: ${item.input.goal.name}`,
+    `Goal reasoning: ${item.input.goal.reasoning}`,
+    `Retrieve a curated set of learning resources that best help this user achieve the learning goal`
+  ];
+
   // Build context for grounding the evaluation
   // Include retrieved resources as context so the Hallucination metric can verify
   // the output faithfully represents what was fetched from the database
@@ -62,10 +74,7 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   }));
 
   return {
-    // Build the input describing the end-to-end resource retrieval task.
-    // The agent has no standalone system prompt — it only has query-generation prompts used internally.
-    // The judge should evaluate whether the retrieved resources match the user's profile and goal.
-    input: 'Find curated learning resources for this user and goal.',
+    input: input.join(','),
     output: JSON.stringify(output),
     context
   };
