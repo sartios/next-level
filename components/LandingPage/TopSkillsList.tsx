@@ -40,10 +40,12 @@ function TopSkillsListSkeleton({ occupation }: { occupation: string }) {
 interface TopSkillsListProps {
   userId: string | undefined;
   occupation: string;
+  cachedSkills?: StreamedSkill[];
   onGoalCreated: (goalId: string, goalName: string) => void;
+  onSkillsFetched?: (skills: StreamedSkill[]) => void;
 }
 
-export default function TopSkillsList({ userId, occupation, onGoalCreated }: TopSkillsListProps) {
+export default function TopSkillsList({ userId, occupation, cachedSkills, onGoalCreated, onSkillsFetched }: TopSkillsListProps) {
   const [selectedSkill, setSelectedSkill] = useState('');
   const [isConfirming, setIsConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,10 +53,14 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
   const skillStream = useSkillStream({
     onError: (err) => {
       setError(err.message);
-    }
+    },
+    onFinish: (skills) => {
+      onSkillsFetched?.(skills);
+    },
+    initialSkills: cachedSkills
   });
 
-  // Start fetching skills when userId is available
+  // Start fetching skills when userId is available and no cached skills
   useEffect(() => {
     if (userId && skillStream.skills.length === 0 && !skillStream.isLoading) {
       skillStream.submit(userId);
@@ -65,11 +71,12 @@ export default function TopSkillsList({ userId, occupation, onGoalCreated }: Top
     if (!userId) return;
     setSelectedSkill('');
     setError(null);
+    onSkillsFetched?.([]);
     skillStream.submit(userId);
     setTimeout(() => {
       document.getElementById('top-skills')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
-  }, [userId, skillStream]);
+  }, [userId, skillStream, onSkillsFetched]);
 
   const handleConfirm = useCallback(async () => {
     if (!userId || !selectedSkill || skillStream.skills.length === 0) return;

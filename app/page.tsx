@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import type { StreamedSkill } from '@/hooks/useSkillStream';
 import { useRouter } from 'next/navigation';
 
 import HeroSection from '@/components/LandingPage/HeroSection';
@@ -23,6 +24,7 @@ export default function Home() {
   const [goalName, setGoalName] = useState<string>('');
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [cachedSkills, setCachedSkills] = useState<StreamedSkill[]>([]);
 
   const handleUserCreated = useCallback((newUserId: string, userOccupation: string) => {
     setUserId(newUserId);
@@ -100,7 +102,13 @@ export default function Home() {
       <div className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-20">
         <div className="max-w-6xl mx-auto space-y-10">
           <BackButton onBack={handleBackFromTopSkillsForm} />
-          <TopSkillsList userId={userId} occupation={occupation} onGoalCreated={handleGoalCreated} />
+          <TopSkillsList
+            userId={userId}
+            occupation={occupation}
+            cachedSkills={cachedSkills}
+            onGoalCreated={handleGoalCreated}
+            onSkillsFetched={setCachedSkills}
+          />
         </div>
       </div>
     );
