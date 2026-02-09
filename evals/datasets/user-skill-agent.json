@@ -11,7 +11,7 @@
       }
     },
     "expected": {
-      "skillCount": 10,
+      "skillCount": 4,
       "excludedSkills": ["JavaScript", "React", "CSS", "HTML"],
       "expectedCategories": ["backend", "databases", "devops"]
     }
@@ -28,7 +28,7 @@
       }
     },
     "expected": {
-      "skillCount": 10,
+      "skillCount": 4,
       "excludedSkills": ["SQL", "Excel", "Power BI", "Basic Python"],
       "expectedCategories": ["machine learning", "statistics", "programming"]
     }
@@ -45,7 +45,7 @@
       }
     },
     "expected": {
-      "skillCount": 10,
+      "skillCount": 4,
       "excludedSkills": ["Python", "Git", "Unit Testing"],
       "expectedCategories": ["architecture", "leadership", "system design"]
     }
@@ -62,7 +62,7 @@
       }
     },
     "expected": {
-      "skillCount": 10,
+      "skillCount": 4,
       "excludedSkills": ["Figma", "Sketch", "Visual Design", "Prototyping"],
       "expectedCategories": ["user research", "leadership", "strategy"]
     }
@@ -79,7 +79,7 @@
       }
     },
     "expected": {
-      "skillCount": 10,
+      "skillCount": 4,
       "excludedSkills": ["Node.js", "PostgreSQL", "REST APIs", "Docker"],
       "expectedCategories": ["cloud", "ci/cd", "infrastructure"]
     }

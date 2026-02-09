@@ -23,13 +23,31 @@ export async function challengeGeneratorAgentTask(item: ChallengeGeneratorDatase
 
   const questions = await generateChallengeQuestions(user, goal, resource, challenge);
 
-  // Get input prompt for LLM-as-judge metrics
-  const systemPrompt = await getAgentPrompt('challenge-generator-agent:system-prompt', {
-    questionsPerChallenge: QUESTIONS_PER_CHALLENGE,
-    difficultyDescription: DIFFICULTY_DESCRIPTIONS[challenge.difficulty],
-    sectionTitle: challenge.sectionTitle,
-    difficultyUpper: challenge.difficulty.toUpperCase()
-  });
+  // Resolve prompts with the same variables the agent uses
+  const [systemPrompt, userPrompt] = await Promise.all([
+    getAgentPrompt('challenge-generator-agent:system-prompt', {
+      questionsPerChallenge: QUESTIONS_PER_CHALLENGE,
+      difficultyDescription: DIFFICULTY_DESCRIPTIONS[challenge.difficulty],
+      sectionTitle: challenge.sectionTitle,
+      difficultyUpper: challenge.difficulty.toUpperCase()
+    }),
+    getAgentPrompt('challenge-generator-agent:user-prompt', {
+      questionsPerChallenge: QUESTIONS_PER_CHALLENGE,
+      difficulty: challenge.difficulty,
+      userRole: user.role,
+      userSkills: user.skills.join(', ') || 'Not specified',
+      userCareerGoals: user.careerGoals.join(', ') || 'Not specified',
+      goalName: goal.name,
+      goalReasoning: goal.reasoning,
+      resourceTitle: resource.title,
+      resourceProvider: resource.provider,
+      resourceType: resource.resourceType,
+      resourceDescription: resource.description || 'No description',
+      learningObjectives: resource.learningObjectives?.join(', ') || 'Not specified',
+      sectionTitle: challenge.sectionTitle,
+      sectionTopics: challenge.sectionTopics?.join(', ') || 'General topics'
+    })
+  ]);
 
   // Build context for grounding the evaluation
   // Include the actual output schema that the agent returns
@@ -53,7 +71,7 @@ export async function challengeGeneratorAgentTask(item: ChallengeGeneratorDatase
   ];
 
   return {
-    input: systemPrompt,
+    input: `${systemPrompt}\n\n${userPrompt}`,
     output: JSON.stringify(questions),
     context
   };

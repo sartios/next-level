@@ -50,7 +50,6 @@ export async function* streamResources(user: User, goal: Goal, opikOptions?: Opi
     const queryUserPrompt = await getAgentPrompt('skill-resource-retriever-agent:query-generation-user-prompt', {
       userRole: user.role,
       userSkills: user.skills.join(', '),
-      userCareerGoals: user.careerGoals.join(', '),
       goalName: goal.name,
       goalReasoning: goal.reasoning
     });
