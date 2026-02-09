@@ -45,6 +45,7 @@ export default function GoalPage() {
 
   const fetchGoal = useCallback(async () => {
     if (!userId || !goalId) {
+      setLoading(false);
       return;
     }
 
@@ -85,7 +86,7 @@ export default function GoalPage() {
       );
     }
 
-    if (!goalId) {
+    if (!userId || !goalId || !goal) {
       return (
         <Card className="p-8 text-center border-2 border-muted shadow-none mx-4 xl:mx-0 h-120 flex flex-col items-center justify-center">
           <Target className="h-12 w-12 mx-auto text-accent mb-4" />
