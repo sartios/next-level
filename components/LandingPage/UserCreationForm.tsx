@@ -5,15 +5,23 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+export interface UserFormValues {
+  occupation: string;
+  skills: string;
+  careerGoals: string;
+}
+
 interface UserCreationFormProps {
   onUserCreated: (userId: string, occupation: string) => void;
+  onFormChange?: (values: UserFormValues) => void;
+  initialValues?: UserFormValues;
   isLoading?: boolean;
 }
 
-export default function UserCreationForm({ onUserCreated, isLoading = false }: UserCreationFormProps) {
-  const [occupation, setOccupation] = useState('');
-  const [userSkills, setUserSkills] = useState('');
-  const [careerGoals, setCareerGoals] = useState('');
+export default function UserCreationForm({ onUserCreated, onFormChange, initialValues, isLoading = false }: UserCreationFormProps) {
+  const [occupation, setOccupation] = useState(initialValues?.occupation ?? '');
+  const [userSkills, setUserSkills] = useState(initialValues?.skills ?? '');
+  const [careerGoals, setCareerGoals] = useState(initialValues?.careerGoals ?? '');
   const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +33,10 @@ export default function UserCreationForm({ onUserCreated, isLoading = false }: U
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    onFormChange?.({ occupation, skills: userSkills, careerGoals });
+  }, [occupation, userSkills, careerGoals, onFormChange]);
 
   const handleProfileCreation = useCallback(async () => {
     if (isSubmitted) return;

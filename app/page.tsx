@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import HeroSection from '@/components/LandingPage/HeroSection';
 import FeaturesSection from '@/components/LandingPage/FeaturesSection';
 import HowItWorksSection from '@/components/LandingPage/HowItWorksSection';
-import UserCreationForm from '@/components/LandingPage/UserCreationForm';
+import UserCreationForm, { UserFormValues } from '@/components/LandingPage/UserCreationForm';
 import TopSkillsList from '@/components/LandingPage/TopSkillsList';
 import BackButton from '@/components/shared/BackButton';
 import Resources from '@/components/LandingPage/Resources';
@@ -25,6 +25,7 @@ export default function Home() {
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [cachedSkills, setCachedSkills] = useState<StreamedSkill[]>([]);
+  const [formValues, setFormValues] = useState<UserFormValues>({ occupation: '', skills: '', careerGoals: '' });
 
   const handleUserCreated = useCallback((newUserId: string, userOccupation: string) => {
     setUserId(newUserId);
@@ -48,6 +49,8 @@ export default function Home() {
   }, []);
 
   const handleBackFromTopSkillsForm = useCallback(() => {
+    setUserId(undefined);
+    setCachedSkills([]);
     setShowUserCreationForm(true);
     setShowTopSkills(false);
   }, []);
@@ -91,7 +94,12 @@ export default function Home() {
       <div className="min-h-screen bg-background text-foreground p-6 md:p-12 lg:p-20">
         <div className="max-w-3xl mx-auto space-y-10">
           <BackButton onBack={handleBackFromUserCreationForm} />
-          <UserCreationForm onUserCreated={handleUserCreated} isLoading={!!userId} />
+          <UserCreationForm
+            onUserCreated={handleUserCreated}
+            onFormChange={setFormValues}
+            initialValues={formValues}
+            isLoading={!!userId}
+          />
         </div>
       </div>
     );
