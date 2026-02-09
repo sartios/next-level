@@ -10,6 +10,7 @@ export interface StreamedSkill {
 
 interface UseSkillStreamOptions {
   apiUrl?: string;
+  initialSkills?: StreamedSkill[];
   onSkill?: (skill: StreamedSkill) => void;
   onError?: (error: Error) => void;
   onFinish?: (skills: StreamedSkill[]) => void;
@@ -25,9 +26,9 @@ interface UseSkillStreamReturn {
 }
 
 export function useSkillStream(options: UseSkillStreamOptions = {}): UseSkillStreamReturn {
-  const { apiUrl = '/api/skill/stream', onSkill, onError, onFinish } = options;
+  const { apiUrl = '/api/skill/stream', initialSkills, onSkill, onError, onFinish } = options;
 
-  const [skills, setSkills] = useState<StreamedSkill[]>([]);
+  const [skills, setSkills] = useState<StreamedSkill[]>(initialSkills ?? []);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [status, setStatus] = useState('');
