@@ -14,15 +14,12 @@ load_dotenv()
 
 # Load prompts and dataset from Opik
 client = opik.Opik()
-system_prompt = client.get_prompt("skill-resource-retriever-agent:system-prompt")
+system_prompt = client.get_prompt("skill-resource-retriever-agent:query-generation-system-prompt")
+user_prompt = client.get_prompt("skill-resource-retriever-agent:query-generation-user-prompt")
 
 # Get the dataset to evaluate the prompt on
 dataset = client.get_dataset(name="skill-resource-retriever-evaluation")
-items = dataset.get_items()
-
-# Format system prompt — no mustache placeholders
-system_text = system_prompt.format()
-
+items = [dataset.get_items()[0]]
 
 # Define metrics
 def answer_relevance(dataset_item, llm_output):
@@ -71,9 +68,19 @@ for item in items:
         }
     )
 
+
+    # Format prompts — replace mustache placeholders with actual dataset values
+    system_text = system_prompt.format()
+    user_text = user_prompt.format(
+        userRole=item["input"]["user"]["role"],
+        userSkills=", ".join(item["input"]["user"]["skills"]),
+        goalName=item["input"]["goal"]["name"],
+        goalReasoning=item["input"]["goal"]["reasoning"],
+    )
+
     prompt = ChatPrompt(
         system=system_text,
-        user=user_input,
+        user=user_text,
     )
 
     print(f"\nOptimizing for: {item['name']}")
