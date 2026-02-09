@@ -69,7 +69,7 @@ docker compose up -d
 npm run db:migrate
 ```
 
-4. Sync learning resources and generate embeddings:
+4. Sync learning resources and generate embeddings (currently ships with curated resources for software engineers and designers — see [docs/resources.md](docs/resources.md)):
 
 ```bash
 npm run resources:sync
