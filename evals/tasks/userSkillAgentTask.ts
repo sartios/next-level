@@ -1,6 +1,7 @@
 import { streamSkillSuggestions } from '@/lib/agents/UserSkillAgent';
 import { UserSkillDatasetItem } from '../types';
 import { getAgentPrompt } from '@/lib/prompts';
+import { SKILLS_PER_USER } from '@/lib/prompts/agentPrompts';
 
 /**
  * Evaluation task for the UserSkillAgent.
@@ -26,8 +27,18 @@ export async function userSkillAgentTask(item: UserSkillDatasetItem): Promise<{
     }
   }
 
-  // Get input prompt for LLM-as-judge metrics
-  const systemPrompt = await getAgentPrompt('user-skill-agent:system-prompt');
+  // Resolve prompts with the same variables the agent uses
+  const promptVariables = {
+    skillsPerUser: SKILLS_PER_USER,
+    userRole: item.input.user.role,
+    userSkills: item.input.user.skills.join(', '),
+    userCareerGoals: item.input.user.careerGoals.join(', ')
+  };
+
+  const [systemPrompt, userPrompt] = await Promise.all([
+    getAgentPrompt('user-skill-agent:system-prompt', promptVariables),
+    getAgentPrompt('user-skill-agent:user-prompt', promptVariables)
+  ]);
 
   // Build context for grounding the evaluation
   const context = [
@@ -43,7 +54,7 @@ export async function userSkillAgentTask(item: UserSkillDatasetItem): Promise<{
   const jsonLines = skills.map((s) => JSON.stringify({ name: s.name, priority: s.priority, reasoning: s.reasoning })).join('\n');
 
   return {
-    input: systemPrompt,
+    input: `${systemPrompt}\n\n${userPrompt}`,
     output: jsonLines,
     context
   };

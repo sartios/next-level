@@ -28,8 +28,19 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
     }
   }
 
-  // Get input prompt for LLM-as-judge metrics
-  const systemPrompt = await getAgentPrompt('skill-resource-retriever-agent:system-prompt');
+  // Resolve prompts with the same variables the agent uses
+  const queryPromptVariables = {
+    userRole: item.input.user.role,
+    userSkills: item.input.user.skills.join(', '),
+    userCareerGoals: item.input.user.careerGoals.join(', '),
+    goalName: item.input.goal.name,
+    goalReasoning: item.input.goal.reasoning
+  };
+
+  const [systemPrompt, userPrompt] = await Promise.all([
+    getAgentPrompt('skill-resource-retriever-agent:query-generation-system-prompt'),
+    getAgentPrompt('skill-resource-retriever-agent:query-generation-user-prompt', queryPromptVariables)
+  ]);
 
   // Build context for grounding the evaluation
   // Include retrieved resources as context so the Hallucination metric can verify
@@ -62,7 +73,7 @@ export async function skillResourceRetrieverTask(item: SkillResourceDatasetItem)
   }));
 
   return {
-    input: systemPrompt,
+    input: `${systemPrompt}\n\n${userPrompt}`,
     output: JSON.stringify(output),
     context
   };

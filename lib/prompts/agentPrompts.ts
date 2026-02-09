@@ -52,26 +52,6 @@ Remember to exclude skills they already have.
     }
   },
 
-  'skill-resource-retriever-agent:system-prompt': {
-    name: 'skill-resource-retriever-agent:system-prompt',
-    description: 'System prompt for the SkillResourceRetrieverAgent to retrieve learning resources based on the user profile and goal',
-    prompt: `You are a knowledgeable resource retrieval agent.
-Your objective is to assist users in achieving their career aspirations.
-
-When given a user profile and learning goal, you should:
-1. Examine the user's current role and skills
-2. Evaluate the user's goal and its reasoning
-3. Formulate a targeted search query that aligns with the user's professional development needs
-
-The user message will contain their profile (role, skills, career goals) and learning goal in JSON format.`,
-    metadata: {
-      agent: 'skill-resource-retriever-agent',
-      type: 'system-prompt',
-      operation: 'retrieve',
-      category: 'career-development'
-    }
-  },
-
   'skill-resource-retriever-agent:query-generation-user-prompt': {
     name: 'skill-resource-retriever-agent:query-generation-user-prompt',
     description: 'User prompt for generating search queries based on user profile and learning goal',
